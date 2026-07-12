@@ -21,6 +21,7 @@ APP_ENV=production
 APP_KEY=base64:REPLACE_WITH_GENERATED_KEY
 APP_DEBUG=false
 APP_URL=https://YOUR-RENDER-SERVICE.onrender.com
+ASSET_URL=https://YOUR-RENDER-SERVICE.onrender.com
 
 LOG_CHANNEL=stderr
 LOG_LEVEL=warning
