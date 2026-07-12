@@ -1,0 +1,24 @@
+@csrf
+@if($video->exists) @method('PUT') @endif
+<div class="form-grid">
+    <div class="form-field"><label>Title</label><input name="title" value="{{ old('title',$video->title) }}" required></div>
+    <div class="form-field"><label>Slug</label><input name="slug" value="{{ old('slug',$video->slug) }}" placeholder="auto-generated if empty"></div>
+    <div class="form-field"><label>Category</label><select name="category"><option value="">Select category</option>@foreach($categories as $category)<option value="{{ $category }}" @selected(old('category',$video->category) === $category)>{{ $category }}</option>@endforeach</select></div>
+    <div class="form-field"><label>Related Service</label><select name="related_service"><option value="">None</option>@foreach($services as $service)<option value="{{ $service }}" @selected(old('related_service',$video->related_service) === $service)>{{ $service }}</option>@endforeach</select></div>
+    <div class="form-field"><label>Related Project</label><select name="related_project_id"><option value="">None</option>@foreach($projects as $project)<option value="{{ $project->id }}" @selected((string) old('related_project_id',$video->related_project_id) === (string) $project->id)>{{ $project->title }}</option>@endforeach</select></div>
+    <div class="form-field"><label>Related Branch</label><select name="related_branch_id"><option value="">None</option>@foreach($branches as $branch)<option value="{{ $branch->id }}" @selected((string) old('related_branch_id',$video->related_branch_id) === (string) $branch->id)>{{ $branch->name }}{{ $branch->country ? ' — '.$branch->country : '' }}</option>@endforeach</select></div>
+    <div class="form-field"><label>Related Equipment</label><select name="related_equipment_id"><option value="">None</option>@foreach($equipmentItems as $item)<option value="{{ $item->id }}" @selected((string) old('related_equipment_id',$video->related_equipment_id) === (string) $item->id)>{{ $item->name }}{{ $item->category ? ' — '.$item->category : '' }}</option>@endforeach</select></div>
+    <div class="form-field"><label>Video Type</label><select name="video_type" required><option value="external" @selected(old('video_type',$video->video_type ?: 'external') === 'external')>External</option><option value="upload" @selected(old('video_type',$video->video_type ?: 'external') === 'upload')>Upload</option></select></div>
+    <div class="form-field full"><label>External Video URL</label><input type="url" name="external_url" value="{{ old('external_url',$video->external_url) }}" placeholder="YouTube, Vimeo, MP4 or WebM URL"><span class="field-help">Do not paste iframe code. Paste the normal video URL only.</span></div>
+    <div class="form-field"><label>Uploaded Video</label><input type="file" name="uploaded_video" accept=".mp4,.webm,.mov,video/mp4,video/webm,video/quicktime"><span class="field-help">MP4, WebM or MOV only. Max 30MB.</span></div>
+    <div class="form-field"><label>Thumbnail</label><input type="file" name="thumbnail" accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp"><span class="field-help">JPG, PNG or WebP only. Max 5MB.</span></div>
+    <div class="form-field full"><label>Caption</label><textarea name="caption" rows="3">{{ old('caption',$video->caption) }}</textarea></div>
+    <div class="form-field full"><label>Description</label><textarea name="description" rows="6">{{ old('description',$video->description) }}</textarea></div>
+    <div class="form-field"><label>Status</label><select name="status" required>@foreach($statuses as $status)<option value="{{ $status }}" @selected(old('status',$video->status ?: 'draft') === $status)>{{ ucfirst($status) }}</option>@endforeach</select></div>
+    <div class="form-field"><label>Published At</label><input type="datetime-local" name="published_at" value="{{ old('published_at', optional($video->published_at)->format('Y-m-d\TH:i')) }}"></div>
+    <div class="form-field"><label>Sort Order</label><input type="number" min="0" name="sort_order" value="{{ old('sort_order',$video->sort_order ?? 0) }}"></div>
+    <label style="display:flex;align-items:center;gap:8px;margin-top:26px"><input type="checkbox" name="is_featured" value="1" @checked(old('is_featured',$video->is_featured)) style="width:auto"> Feature video</label>
+    <div class="form-field full"><label>SEO Description</label><input name="seo_description" maxlength="255" value="{{ old('seo_description',$video->seo_description) }}"></div>
+</div>
+@if($video->uploaded_video_path || $video->thumbnail_path)<p class="field-help" style="margin-top:14px">Current media: {{ $video->uploaded_video_path ?: 'no video upload' }}{{ $video->thumbnail_path ? ' · '.$video->thumbnail_path : '' }}</p>@endif
+<button class="btn btn-primary" style="margin-top:20px">Save Video</button>

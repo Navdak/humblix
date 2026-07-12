@@ -1,0 +1,7 @@
+@extends('layouts.app')
+@section('title','Founder — HUMELIX SYSTEMS')
+@section('content')
+@include('components.page-hero',['eyebrow'=>'Founder','title'=>'UGOCHUKWU HUMBLE CHIEMELA','subtitle'=>'Founder & Lead Engineer · Electrical/Electronics Engineering · Abia State University · 6+ years field practice.'])
+<section class="section"><div class="container founder-block"><div class="founder-visual" data-animate="slide-right"><img src="{{ asset('images/generated/careers/careers-engineers-inspecting-systems.jpg') }}" alt="UGOCHUKWU HUMBLE CHIEMELA, Founder and Lead Engineer"></div><article class="founder-copy prose" data-animate="slide-left"><span class="eyebrow">Leadership Statement</span><h2 class="section-title">Technical confidence should feel straightforward.</h2><p>{{ $globalSettings['founder_snapshot'] ?? 'At HUMELIX SYSTEMS, our mission is simple: deliver safe, precise and reliable engineering solutions that improve comfort, power reliability and operational performance.' }}</p><p>HUMELIX SYSTEMS is built around direct communication, competent field execution, professional service delivery and long-term client support.</p><p>Every installation should solve the immediate site need while remaining safe, serviceable and appropriate for the building it serves.</p><a href="{{ route('contact') }}" class="btn btn-primary">Work With HUMELIX SYSTEMS</a></article></div></section>
+@include('partials.public-cta')
+@endsection

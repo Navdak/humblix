@@ -1,0 +1,8 @@
+@extends('layouts.app')
+@section('title','Resources - HUMELIX SYSTEMS')
+@section('content')
+@include('components.page-hero',['eyebrow'=>'Resources','title'=>'Practical engineering guides, maintenance advice and safety resources.','subtitle'=>'Clear technical content to help clients plan, operate and maintain reliable building systems.'])
+<section class="section" style="padding-bottom:0"><div class="container"><div class="empty-state"><h2>Looking for field videos?</h2><p class="section-sub">The Humelix Video Library now houses project, product, safety and service demonstration videos.</p><a class="btn btn-primary" href="{{ route('videos.index') }}" style="margin-top:18px">Open Video Library</a></div></div></section>
+<section class="section"><div class="container"><div class="grid grid-3">@forelse($articles as $article)<a class="project-card" href="{{ route('articles.show',$article) }}" data-animate="fade-up" data-delay="{{ ($loop->index % 3) * 70 }}"><div class="image-frame"><img loading="lazy" src="{{ \App\Support\UchContent::imageUrl($article->featured_image_path, 'images/generated/services/service-hvac-installation.jpg') }}" alt="{{ $article->title }}"></div><div class="project-body"><span class="badge">Resource</span><h3 style="margin-top:12px">{{ $article->title }}</h3><p>{{ $article->excerpt }}</p><span class="card-link">Read article <span>&rarr;</span></span></div></a>@empty<div class="empty-state"><h2>New resources are being prepared.</h2><p class="section-sub">Contact HUMELIX SYSTEMS directly if you need guidance for a current HVAC, electrical or maintenance challenge.</p></div>@endforelse</div><div style="margin-top:28px">{{ $articles->links() }}</div></div></section>
+@include('partials.public-cta')
+@endsection

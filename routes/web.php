@@ -1,0 +1,95 @@
+<?php
+
+use App\Http\Controllers\Admin\ArticleController as AdminArticleController;
+use App\Http\Controllers\Admin\BranchController as AdminBranchController;
+use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\EquipmentController as AdminEquipmentController;
+use App\Http\Controllers\Admin\EnquiryController as AdminEnquiryController;
+use App\Http\Controllers\Admin\FoundationController;
+use App\Http\Controllers\Admin\JobOpeningController as AdminJobOpeningController;
+use App\Http\Controllers\Admin\MediaController;
+use App\Http\Controllers\Admin\ProjectController as AdminProjectController;
+use App\Http\Controllers\Admin\ReviewController as AdminReviewController;
+use App\Http\Controllers\Admin\SeoSettingsController as AdminSeoSettingsController;
+use App\Http\Controllers\Admin\SettingsController;
+use App\Http\Controllers\Admin\TeamController as AdminTeamController;
+use App\Http\Controllers\Admin\UserController as AdminUserController;
+use App\Http\Controllers\Admin\VideoController as AdminVideoController;
+use App\Http\Controllers\AdminAuthController;
+use App\Http\Controllers\ArticleController;
+use App\Http\Controllers\ChatController;
+use App\Http\Controllers\ContactController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\LegalPageController;
+use App\Http\Controllers\PageController;
+use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\SeoController;
+use App\Http\Controllers\ServiceController;
+use App\Http\Controllers\VideoController;
+use Illuminate\Support\Facades\Route;
+
+Route::get('/', HomeController::class)->name('home');
+Route::get('/services', [ServiceController::class, 'index'])->name('services.index');
+Route::get('/services/{slug}', [ServiceController::class, 'show'])->name('services.show');
+Route::get('/industries', [PageController::class, 'industries'])->name('industries.index');
+Route::get('/industries/{slug}', [PageController::class, 'industry'])->name('industries.show');
+Route::redirect('/sectors', '/industries', 301)->name('sectors.index');
+Route::get('/sectors/{slug}', [PageController::class, 'sector'])->name('sectors.show');
+Route::get('/projects', [ProjectController::class, 'index'])->name('projects.index');
+Route::get('/projects/{project:slug}', [ProjectController::class, 'show'])->name('projects.show');
+Route::get('/about', [PageController::class, 'about'])->name('about');
+Route::get('/founder', [PageController::class, 'founder'])->name('founder');
+Route::get('/safety', [PageController::class, 'safety'])->name('safety');
+Route::get('/safety/{slug}', [PageController::class, 'safetyTopic'])->name('safety.topic');
+Route::get('/team', [PageController::class, 'team'])->name('team.index');
+Route::get('/branches', [PageController::class, 'branches'])->name('branches.index');
+Route::get('/careers', [PageController::class, 'careers'])->name('careers.index');
+Route::get('/equipment', [PageController::class, 'equipment'])->name('equipment.index');
+Route::get('/reviews', [PageController::class, 'reviews'])->name('reviews.index');
+Route::get('/resources', [ArticleController::class, 'index'])->name('articles.index');
+Route::get('/resources/{article:slug}', [ArticleController::class, 'show'])->name('articles.show');
+Route::get('/videos', [VideoController::class, 'index'])->name('videos.index');
+Route::get('/sitemap.xml', [SeoController::class, 'sitemap'])->name('seo.sitemap');
+Route::get('/robots.txt', [SeoController::class, 'robots'])->name('seo.robots');
+Route::get('/{page}', LegalPageController::class)
+    ->whereIn('page', ['privacy-policy', 'terms', 'cookie-policy', 'accessibility'])
+    ->name('legal.show');
+Route::get('/contact', [ContactController::class, 'create'])->name('contact');
+Route::post('/contact', [ContactController::class, 'store'])->middleware('throttle:5,1')->name('contact.store');
+Route::post('/chat/enquiry', ChatController::class)->middleware('throttle:10,1')->name('chat.enquiry');
+Route::redirect('/login', '/admin/login')->name('login');
+
+Route::middleware('guest')->group(function () {
+    Route::get('/admin/login', [AdminAuthController::class, 'showLogin'])->name('admin.login');
+    Route::post('/admin/login', [AdminAuthController::class, 'login'])->middleware('throttle:5,1')->name('admin.login.store');
+});
+Route::post('/admin/logout', [AdminAuthController::class, 'logout'])->middleware('auth')->name('admin.logout');
+
+Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(function () {
+    Route::get('/', DashboardController::class)->name('dashboard');
+    Route::middleware('admin.module:settings')->group(function () {
+        Route::get('/settings', [SettingsController::class, 'edit'])->name('settings.edit');
+        Route::put('/settings', [SettingsController::class, 'update'])->name('settings.update');
+        Route::get('/seo-settings', [AdminSeoSettingsController::class, 'index'])->name('seo-settings.index');
+        Route::get('/seo-settings/{seoSetting}/edit', [AdminSeoSettingsController::class, 'edit'])->name('seo-settings.edit');
+        Route::put('/seo-settings/{seoSetting}', [AdminSeoSettingsController::class, 'update'])->name('seo-settings.update');
+    });
+    Route::get('/services', [FoundationController::class, 'services'])->middleware('admin.module:services')->name('services.index');
+    Route::get('/safety', [FoundationController::class, 'safety'])->middleware('admin.module:safety')->name('safety.index');
+    Route::resource('articles', AdminArticleController::class)->middleware('admin.module:articles')->except(['show']);
+    Route::resource('projects', AdminProjectController::class)->middleware('admin.module:projects')->except(['show']);
+    Route::resource('branches', AdminBranchController::class)->middleware('admin.module:branches')->except(['show']);
+    Route::resource('jobs', AdminJobOpeningController::class)->middleware('admin.module:jobs')->except(['show']);
+    Route::resource('equipment', AdminEquipmentController::class)->middleware('admin.module:equipment')->except(['show']);
+    Route::resource('videos', AdminVideoController::class)->middleware('admin.module:videos')->except(['show']);
+    Route::resource('team', AdminTeamController::class)->middleware('admin.module:team')->except(['show']);
+    Route::resource('users', AdminUserController::class)->middleware('admin.module:users')->except(['show']);
+    Route::get('/enquiries/export', [AdminEnquiryController::class, 'export'])->middleware('admin.module:enquiries')->name('enquiries.export');
+    Route::resource('enquiries', AdminEnquiryController::class)->middleware('admin.module:enquiries')->only(['index', 'show', 'update', 'destroy']);
+    Route::get('/reviews', [AdminReviewController::class, 'index'])->middleware('admin.module:reviews')->name('reviews.index');
+    Route::put('/reviews/{review}', [AdminReviewController::class, 'update'])->middleware('admin.module:reviews')->name('reviews.update');
+    Route::delete('/reviews/{review}', [AdminReviewController::class, 'destroy'])->middleware('admin.module:reviews')->name('reviews.destroy');
+    Route::get('/media', [MediaController::class, 'index'])->middleware('admin.module:media')->name('media.index');
+    Route::post('/media', [MediaController::class, 'store'])->middleware('admin.module:media')->name('media.store');
+    Route::delete('/media/{mediaAsset}', [MediaController::class, 'destroy'])->middleware('admin.module:media')->name('media.destroy');
+});
