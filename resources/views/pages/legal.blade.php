@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', $content['title'].' - HUMELIX SYSTEMS')
+@section('title', $content['title'].' - HUMELIX LIMITED')
 @section('meta_description', $content['intro'])
 @section('seo_key', $page)
 @section('content')
@@ -15,7 +15,7 @@
         <div class="cta-panel" data-animate="fade-up">
             <div>
                 <span class="eyebrow">Need clarification?</span>
-                <h2>Contact HUMELIX SYSTEMS</h2>
+                <h2>Contact HUMELIX LIMITED</h2>
                 <p>For privacy, terms, cookie or accessibility questions, contact the Humelix team through the enquiry page.</p>
             </div>
             <a class="btn btn-primary" href="{{ route('contact') }}">Contact Humelix</a>

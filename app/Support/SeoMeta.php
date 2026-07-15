@@ -14,8 +14,8 @@ class SeoMeta
         $pageKey = $fallbacks['page_key'] ?? self::pageKeyFromRoute();
         $setting = self::setting($pageKey);
 
-        $title = $setting?->meta_title ?: ($fallbacks['title'] ?? config('app.name', 'HUMELIX SYSTEMS'));
-        $description = $setting?->meta_description ?: ($fallbacks['description'] ?? 'Humelix Systems provides HVAC, solar, electrical, maintenance and equipment solutions for residential, commercial and industrial clients.');
+        $title = $setting?->meta_title ?: ($fallbacks['title'] ?? config('app.name', 'HUMELIX LIMITED'));
+        $description = $setting?->meta_description ?: ($fallbacks['description'] ?? 'Humelix Limited provides HVAC, solar, electrical, maintenance and equipment solutions for residential, commercial and industrial clients.');
         $canonical = $setting?->canonical_url ?: url()->current();
         $ogTitle = $setting?->og_title ?: $title;
         $ogDescription = $setting?->og_description ?: $description;
@@ -97,7 +97,7 @@ class SeoMeta
         return [
             '@context' => 'https://schema.org',
             '@type' => 'Organization',
-            'name' => 'HUMELIX SYSTEMS',
+            'name' => 'HUMELIX LIMITED',
             'url' => url('/'),
             'email' => config('mail.from.address'),
             'description' => 'Global engineering services for HVAC, solar, electrical, maintenance, equipment supply and home appliance installation.',
@@ -109,7 +109,7 @@ class SeoMeta
         return [
             '@context' => 'https://schema.org',
             '@type' => 'WebSite',
-            'name' => 'HUMELIX SYSTEMS',
+            'name' => 'HUMELIX LIMITED',
             'url' => url('/'),
             'potentialAction' => [
                 '@type' => 'SearchAction',

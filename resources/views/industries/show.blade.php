@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title',$industry['title'].' - Industries - HUMELIX SYSTEMS')
+@section('title',$industry['title'].' - Industries - HUMELIX LIMITED')
 @section('meta_description',$industry['description'])
 @section('content')
 @include('components.page-hero',['eyebrow'=>'Industry','title'=>$industry['title'],'subtitle'=>$industry['description']])

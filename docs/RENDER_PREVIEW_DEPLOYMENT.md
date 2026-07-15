@@ -16,7 +16,7 @@ This setup is for a temporary client preview before the main production hosting 
 Set these in Render before deploying:
 
 ```env
-APP_NAME=HUMELIX SYSTEMS
+APP_NAME=HUMELIX LIMITED
 APP_ENV=production
 APP_KEY=base64:REPLACE_WITH_GENERATED_KEY
 APP_DEBUG=false

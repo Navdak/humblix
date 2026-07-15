@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title',$topic['title'].' - Safety Centre - Humelix Systems')
+@section('title',$topic['title'].' - Safety Centre - Humelix Limited')
 @section('meta_description',$topic['description'])
 @section('content')
 <section class="safety-topic-hero" style="--safety-hero-image:url('{{ asset(\App\Support\UchContent::safetyImage($topic['title'])) }}')">

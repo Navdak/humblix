@@ -6,5 +6,5 @@ return [
         'log' => ['transport' => 'log'],
         'array' => ['transport' => 'array'],
     ],
-    'from' => ['address' => env('MAIL_FROM_ADDRESS', 'info@uchsystems.com'), 'name' => env('MAIL_FROM_NAME', 'UCH SYSTEMS')],
+    'from' => ['address' => env('MAIL_FROM_ADDRESS', 'info@uchsystems.com'), 'name' => env('MAIL_FROM_NAME', 'HUMELIX LIMITED')],
 ];

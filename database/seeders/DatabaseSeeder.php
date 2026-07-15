@@ -16,7 +16,7 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $admin = User::firstOrCreate(['email'=>'admin@humelix.com'], [
-            'name'=>'HUMELIX SYSTEMS Admin',
+            'name'=>'HUMELIX LIMITED Admin',
             'password'=>Hash::make('password123'),
             'role'=>'super_admin',
             'region'=>'Global',
@@ -26,8 +26,8 @@ class DatabaseSeeder extends Seeder
         foreach ([
             'hero_headline'=>'Engineering Comfort. Powering Reliability.',
             'hero_subtext'=>'HVAC, solar, electrical, maintenance and equipment solutions for residential, commercial and industrial clients worldwide.',
-            'founder_snapshot'=>'At HUMELIX SYSTEMS, our mission is simple: deliver safe, precise and reliable engineering solutions that improve comfort, power reliability and operational performance.',
-            'footer_copyright'=>'© '.date('Y').' HUMELIX SYSTEMS. All rights reserved.',
+            'founder_snapshot'=>'At HUMELIX LIMITED, our mission is simple: deliver safe, precise and reliable engineering solutions that improve comfort, power reliability and operational performance.',
+            'footer_copyright'=>'© '.date('Y').' HUMELIX LIMITED. All rights reserved.',
             'company_email'=>'info@humelix.com',
             'support_email'=>'support@humelix.com',
             'phone_primary'=>'+234 900 123 4567',
@@ -44,7 +44,7 @@ class DatabaseSeeder extends Seeder
             $project = Project::firstOrCreate(['slug'=>$slug], [
                 'title'=>$title,'location'=>$location,'sector'=>$sector,'system_type'=>$system,'client_type'=>$clientType,'is_featured'=>$featured,'status'=>'published',
                 'challenge'=>'Client required a reliable climate solution with minimal interruption to facility operations.',
-                'solution'=>'HUMELIX SYSTEMS completed site assessment, selected suitable equipment and delivered a phased installation plan.',
+                'solution'=>'HUMELIX LIMITED completed site assessment, selected suitable equipment and delivered a phased installation plan.',
                 'result'=>'Improved system reliability, better comfort and a maintainable structure.',
                 'equipment_used'=>'HVAC equipment, ducting support, control systems and safety accessories.',
             ]);
@@ -89,7 +89,7 @@ class DatabaseSeeder extends Seeder
         foreach ([
             ['Facility Manager','Lagos','Professional team, excellent service and top-quality installation. Highly recommended.'],
             ['Operations Director','Abuja','Their response was fast and the installation process was organized from start to finish.'],
-            ['Property Manager','Port Harcourt','HUMELIX SYSTEMS handled our site requirement professionally and delivered clean work.'],
+            ['Property Manager','Port Harcourt','HUMELIX LIMITED handled our site requirement professionally and delivered clean work.'],
         ] as [$role,$location,$comment]) {
             Review::firstOrCreate(['comment'=>$comment], [
                 'client_name'=>$role,'client_role'=>$role,'location'=>$location,'project_category'=>'Engineering Installation','rating'=>5,'is_approved'=>true,

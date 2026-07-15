@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title',$project->title.' - HUMELIX SYSTEMS')
+@section('title',$project->title.' - HUMELIX LIMITED')
 @section('meta_description',str($project->challenge ?: $project->result ?: $project->title)->limit(155))
 @section('content')
 @include('components.page-hero',['eyebrow'=>'Case Study','title'=>$project->title,'subtitle'=>($project->service_division ?: $project->system_type).' · '.trim(($project->country ? $project->country.' · ' : '').$project->location)])

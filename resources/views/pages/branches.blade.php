@@ -1,6 +1,6 @@
 @extends('layouts.app')
-@section('title','Branches - HUMELIX SYSTEMS')
-@section('meta_description','Find published HUMELIX SYSTEMS branch contact points and regional engineering service coverage.')
+@section('title','Branches - HUMELIX LIMITED')
+@section('meta_description','Find published HUMELIX LIMITED branch contact points and regional engineering service coverage.')
 @section('content')
 @include('components.page-hero',['eyebrow'=>'Branches','title'=>'Regional engineering support, prepared for branch-led service.','subtitle'=>'Our regional structure supports site response, project coordination and client service across multiple operating locations as Humelix continues to expand.'])
 <section class="section phase6-section">

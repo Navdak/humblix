@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title',$service['title'].' - HUMELIX SYSTEMS')
+@section('title',$service['title'].' - HUMELIX LIMITED')
 @section('meta_description',$service['excerpt'])
 @section('content')
 @php

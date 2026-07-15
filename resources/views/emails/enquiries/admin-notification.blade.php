@@ -1,4 +1,4 @@
-<p>A new HUMELIX SYSTEMS enquiry has been submitted.</p>
+<p>A new HUMELIX LIMITED enquiry has been submitted.</p>
 
 <p><strong>Reference number:</strong> {{ $enquiry->reference_number }}</p>
 <p><strong>Client:</strong> {{ $enquiry->full_name }}</p>

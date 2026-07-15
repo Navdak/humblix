@@ -1,6 +1,6 @@
 @extends('layouts.app')
-@section('title','Careers - HUMELIX SYSTEMS')
-@section('meta_description','Explore published job openings and career opportunities at HUMELIX SYSTEMS.')
+@section('title','Careers - HUMELIX LIMITED')
+@section('meta_description','Explore published job openings and career opportunities at HUMELIX LIMITED.')
 @section('content')
 @include('components.page-hero',['eyebrow'=>'Careers','title'=>'Build practical engineering work with Humelix.','subtitle'=>'As Humelix continues to expand globally, we continue to welcome disciplined engineers, technicians, safety-conscious installers, project coordinators and support professionals.'])
 <section class="section">

@@ -1,6 +1,6 @@
-# HUMELIX SYSTEMS Laravel Platform
+# HUMELIX LIMITED Laravel Platform
 
-Production-ready Laravel 12 website and admin platform for HUMELIX SYSTEMS, a global engineering services company covering HVAC, solar, electrical, maintenance, equipment/vendor support and home appliance installation.
+Production-ready Laravel 12 website and admin platform for HUMELIX LIMITED, a global engineering services company covering HVAC, solar, electrical, maintenance, equipment/vendor support and home appliance installation.
 
 ## Included modules
 

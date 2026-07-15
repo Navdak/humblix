@@ -1,6 +1,6 @@
 <?php
 return [
-    'name' => env('APP_NAME', 'UCH SYSTEMS'),
+    'name' => env('APP_NAME', 'HUMELIX LIMITED'),
     'env' => env('APP_ENV', 'production'),
     'debug' => (bool) env('APP_DEBUG', false),
     'url' => env('APP_URL', 'http://localhost'),

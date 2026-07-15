@@ -1,11 +1,11 @@
 @extends('layouts.app')
-@section('title','About - HUMELIX SYSTEMS')
-@section('meta_description','About HUMELIX SYSTEMS, a global engineering services company for HVAC, solar, electrical, maintenance, vendor equipment and home appliance installation.')
+@section('title','About - HUMELIX LIMITED')
+@section('meta_description','About HUMELIX LIMITED, a global engineering services company for HVAC, solar, electrical, maintenance, vendor equipment and home appliance installation.')
 @section('content')
 @include('components.page-hero',[
     'eyebrow'=>'About Humelix',
     'title'=>'Global engineering services founded in 2018.',
-    'subtitle'=>'HUMELIX SYSTEMS delivers HVAC, solar, electrical, maintenance, equipment/vendor support and home appliance installation for residential, commercial and industrial clients.'
+    'subtitle'=>'HUMELIX LIMITED delivers HVAC, solar, electrical, maintenance, equipment/vendor support and home appliance installation for residential, commercial and industrial clients.'
 ])
 <section class="section">
     <div class="container why-layout">

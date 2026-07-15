@@ -1,8 +1,8 @@
 @extends('layouts.app')
-@section('title','Humelix Video Library - HUMELIX SYSTEMS')
-@section('meta_description','Watch HUMELIX SYSTEMS field work, project, product, safety and service demonstration videos.')
+@section('title','Humelix Video Library - HUMELIX LIMITED')
+@section('meta_description','Watch HUMELIX LIMITED field work, project, product, safety and service demonstration videos.')
 @section('content')
-@include('components.page-hero',['eyebrow'=>'Video Library','title'=>'Humelix Video Library','subtitle'=>'Short field, project, product, safety and service demonstration videos from HUMELIX SYSTEMS.'])
+@include('components.page-hero',['eyebrow'=>'Video Library','title'=>'Humelix Video Library','subtitle'=>'Short field, project, product, safety and service demonstration videos from HUMELIX LIMITED.'])
 @if($featuredVideos->isNotEmpty())
     @include('partials.video-section',['videos'=>$featuredVideos,'eyebrow'=>'Featured Videos','title'=>'Field Work & Product Highlights','subtitle'=>'Featured published videos selected by the Humelix team.','cta'=>false])
 @endif

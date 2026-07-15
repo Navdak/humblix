@@ -39,7 +39,7 @@ class ChatController extends Controller
         ]);
 
         return response()->json([
-            'message' => "Thank you. Your request has been sent to HUMELIX SYSTEMS. Your reference number is {$enquiry->reference_number}. A team member will follow up shortly.",
+            'message' => "Thank you. Your request has been sent to HUMELIX LIMITED. Your reference number is {$enquiry->reference_number}. A team member will follow up shortly.",
             'reference_number' => $enquiry->reference_number,
         ]);
     }

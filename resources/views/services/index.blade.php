@@ -1,6 +1,6 @@
 @extends('layouts.app')
-@section('title','Engineering Service Divisions - HUMELIX SYSTEMS')
-@section('meta_description','Explore Humelix Systems service divisions for HVAC, solar, electrical maintenance, equipment supply and home appliance installation.')
+@section('title','Engineering Service Divisions - HUMELIX LIMITED')
+@section('meta_description','Explore Humelix Limited service divisions for HVAC, solar, electrical maintenance, equipment supply and home appliance installation.')
 @section('content')
 @php
     $whatsapp = 'https://wa.me/'.preg_replace('/\D+/', '', $globalSettings['whatsapp_number'] ?? '+2349001234567');

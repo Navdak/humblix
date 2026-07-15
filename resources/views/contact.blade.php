@@ -1,6 +1,6 @@
 @extends('layouts.app')
-@section('title','Contact & Quote - HUMELIX SYSTEMS')
-@section('meta_description','Request a Humelix Systems consultation for HVAC, solar, electrical, maintenance, vendor or home appliance installation services.')
+@section('title','Contact & Quote - HUMELIX LIMITED')
+@section('meta_description','Request a Humelix Limited consultation for HVAC, solar, electrical, maintenance, vendor or home appliance installation services.')
 @section('content')
 @include('components.page-hero',[
     'eyebrow' => 'Contact Humelix',

@@ -21,7 +21,7 @@
 @endphp
 
 <section class="hero">
-    <div class="hero-media" role="img" aria-label="Humelix Systems engineer servicing engineering equipment"></div>
+    <div class="hero-media" role="img" aria-label="Humelix Limited engineer servicing engineering equipment"></div>
     <div class="hero-shade"></div>
     <div class="container hero-grid">
         <div class="hero-copy" data-animate="fade-up">
@@ -41,7 +41,7 @@
     </div>
 </section>
 
-<section class="trust-strip" aria-label="HUMELIX SYSTEMS capabilities">
+<section class="trust-strip" aria-label="HUMELIX LIMITED capabilities">
     <div class="container trust-inner">
         @foreach($trustBadges as $badge)
             <div class="trust-item" data-animate="fade-up" data-delay="{{ $loop->index * 60 }}">
@@ -99,7 +99,7 @@
 
 <section class="section why-section">
     <div class="container why-layout">
-        <div class="why-intro" data-animate="slide-right"><span class="eyebrow">Why Choose HUMELIX SYSTEMS?</span><h2 class="section-title">Reliable engineering. Clear accountability.</h2><p>Our teams combine practical field knowledge with responsive service and disciplined safety standards.</p><a href="{{ route('about') }}" class="text-link">Learn about our approach <span aria-hidden="true">→</span></a></div>
+        <div class="why-intro" data-animate="slide-right"><span class="eyebrow">Why Choose HUMELIX LIMITED?</span><h2 class="section-title">Reliable engineering. Clear accountability.</h2><p>Our teams combine practical field knowledge with responsive service and disciplined safety standards.</p><a href="{{ route('about') }}" class="text-link">Learn about our approach <span aria-hidden="true">→</span></a></div>
         <div class="why-grid">
             @foreach($whyChoose as $item)<div class="feature-row" data-animate="fade-up" data-delay="{{ ($loop->index % 2) * 70 }}"><span class="feature-number">0{{ $loop->iteration }}</span><div><h3>{{ $item['title'] }}</h3><p>{{ $item['text'] }}</p></div></div>@endforeach
         </div>
@@ -120,7 +120,7 @@
 
 <section class="section founder-section">
     <div class="container founder-block">
-        <div class="founder-copy" data-animate="slide-right"><span class="eyebrow">Founder’s Message</span><h2 class="section-title">Engineering leadership grounded in the field.</h2><p>{{ $globalSettings['founder_snapshot'] ?? 'At HUMELIX SYSTEMS, our mission is simple: deliver safe, precise and reliable engineering solutions that improve comfort, power reliability and operational performance.' }}</p><div class="founder-signature"><strong>UGOCHUKWU HUMBLE CHIEMELA</strong><span>Founder & Lead Engineer</span></div><a href="{{ route('founder') }}" class="btn btn-primary">Read Founder Profile</a></div>
+        <div class="founder-copy" data-animate="slide-right"><span class="eyebrow">Founder’s Message</span><h2 class="section-title">Engineering leadership grounded in the field.</h2><p>{{ $globalSettings['founder_snapshot'] ?? 'At HUMELIX LIMITED, our mission is simple: deliver safe, precise and reliable engineering solutions that improve comfort, power reliability and operational performance.' }}</p><div class="founder-signature"><strong>UGOCHUKWU HUMBLE CHIEMELA</strong><span>Founder & Lead Engineer</span></div><a href="{{ route('founder') }}" class="btn btn-primary">Read Founder Profile</a></div>
         <div class="founder-visual" data-animate="slide-left"><img src="{{ asset('images/generated/careers/careers-engineers-inspecting-systems.jpg') }}" alt="UGOCHUKWU HUMBLE CHIEMELA, Founder and Lead Engineer"></div>
     </div>
 </section>

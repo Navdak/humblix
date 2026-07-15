@@ -1,6 +1,6 @@
 @extends('layouts.app')
-@section('title','Resources - HUMELIX SYSTEMS')
-@section('meta_description','HVAC, solar, electrical, safety, maintenance, vendor and company resources from HUMELIX SYSTEMS.')
+@section('title','Resources - HUMELIX LIMITED')
+@section('meta_description','HVAC, solar, electrical, safety, maintenance, vendor and company resources from HUMELIX LIMITED.')
 @section('content')
 @include('components.page-hero',[
     'eyebrow'=>'Resources',
@@ -37,7 +37,7 @@
             @empty
                 <div class="empty-state">
                     <h2>New resources are being prepared.</h2>
-                    <p class="section-sub">Contact HUMELIX SYSTEMS directly if you need guidance for a current HVAC, solar, electrical, maintenance, safety or vendor challenge.</p>
+                    <p class="section-sub">Contact HUMELIX LIMITED directly if you need guidance for a current HVAC, solar, electrical, maintenance, safety or vendor challenge.</p>
                 </div>
             @endforelse
         </div>

@@ -1,6 +1,6 @@
 @extends('layouts.app')
-@section('title','Safety Centre - Humelix Systems')
-@section('meta_description','Explore Humelix Systems safety-first approach to HVAC, solar, electrical, maintenance, equipment and home appliance projects.')
+@section('title','Safety Centre - Humelix Limited')
+@section('meta_description','Explore Humelix Limited safety-first approach to HVAC, solar, electrical, maintenance, equipment and home appliance projects.')
 @section('content')
 @php
     $maintenanceContact = route('contact').'?service='.urlencode('Maintenance');

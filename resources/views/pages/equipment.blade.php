@@ -1,6 +1,6 @@
 @extends('layouts.app')
-@section('title','Equipment & Vendor Supply - HUMELIX SYSTEMS')
-@section('meta_description','Request HVAC, solar, electrical, maintenance and home installation equipment from HUMELIX SYSTEMS vendor support.')
+@section('title','Equipment & Vendor Supply - HUMELIX LIMITED')
+@section('meta_description','Request HVAC, solar, electrical, maintenance and home installation equipment from HUMELIX LIMITED vendor support.')
 @section('content')
 @php
     $vendorQuoteUrl = route('contact').'?type_of_work=Vendor&service='.urlencode('Vendor / Equipment Quote');

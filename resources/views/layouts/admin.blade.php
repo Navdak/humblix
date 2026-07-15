@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>@yield('title', 'Admin') · HUMELIX SYSTEMS</title>
+    <title>@yield('title', 'Admin') · HUMELIX LIMITED</title>
     <link rel="icon" href="{{ asset('images/uch-favicon.svg') }}" type="image/svg+xml">
     <link rel="stylesheet" href="{{ asset('css/uch.css') }}">
     @vite('resources/js/app.js')
@@ -14,7 +14,7 @@
 <div class="admin-shell">
     <aside class="admin-sidebar" data-admin-sidebar aria-label="Admin navigation">
         <div class="admin-sidebar-head">
-            <a href="{{ route('admin.dashboard') }}" class="admin-brand" aria-label="HUMELIX SYSTEMS Admin home"><span class="brand-mark">H</span><span><strong>HUMELIX</strong><small>SYSTEMS</small></span></a>
+            <a href="{{ route('admin.dashboard') }}" class="admin-brand" aria-label="HUMELIX LIMITED Admin home"><span class="brand-mark">H</span><span><strong>HUMELIX</strong><small>LIMITED</small></span></a>
             <button type="button" class="admin-sidebar-close" aria-label="Close navigation" data-admin-menu-toggle><span>×</span></button>
         </div>
         <nav class="admin-nav">
@@ -78,7 +78,7 @@
             </div>
         </header>
         <main class="admin-main">
-            <div class="admin-page-heading"><div><h1>@yield('page_title','Dashboard')</h1><p>@yield('page_subtitle','Manage HUMELIX SYSTEMS operations and content.')</p></div>@yield('page_actions')</div>
+            <div class="admin-page-heading"><div><h1>@yield('page_title','Dashboard')</h1><p>@yield('page_subtitle','Manage HUMELIX LIMITED operations and content.')</p></div>@yield('page_actions')</div>
             @if(session('success'))<div class="alert alert-success">{{ session('success') }}</div>@endif
             @if($errors->any())<div class="alert alert-error"><strong>Fix these fields:</strong><ul>@foreach($errors->all() as $error)<li>{{ $error }}</li>@endforeach</ul></div>@endif
             @yield('content')

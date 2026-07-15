@@ -1,7 +1,7 @@
 <footer class="footer" data-animate="fade-in">
     <div class="container footer-grid">
         <div class="footer-brand">
-            <a href="{{ route('home') }}" class="brand"><span class="brand-mark">H</span><span class="brand-text"><strong>HUMELIX</strong><small>SYSTEMS</small></span></a>
+            <a href="{{ route('home') }}" class="brand"><span class="brand-mark">H</span><span class="brand-text"><strong>HUMELIX</strong><small>LIMITED</small></span></a>
             <p>HVAC, solar, electrical, maintenance, equipment/vendor and home installation solutions delivered by an expanding global team of 500+ staff with disciplined workmanship and dependable aftercare.</p>
             <div class="footer-contact"><a href="tel:{{ $globalSettings['phone_primary'] ?? '+2349001234567' }}">{{ $globalSettings['phone_primary'] ?? '+234 900 123 4567' }}</a><a href="mailto:{{ $globalSettings['company_email'] ?? 'info@humelix.com' }}">{{ $globalSettings['company_email'] ?? 'info@humelix.com' }}</a></div>
         </div>
@@ -11,5 +11,5 @@
         <div><h4>Legal</h4><a href="{{ route('legal.show', 'privacy-policy') }}">Privacy Policy</a><a href="{{ route('legal.show', 'terms') }}">Terms</a><a href="{{ route('legal.show', 'cookie-policy') }}">Cookie Policy</a><a href="{{ route('legal.show', 'accessibility') }}">Accessibility</a></div>
         <div><h4>Contact</h4><a href="{{ route('contact') }}">Contact Humelix</a><a href="{{ route('contact') }}">Request Service</a><button type="button" data-chat-open>Chat with Engineer</button><a href="https://wa.me/{{ preg_replace('/\D+/', '', $globalSettings['whatsapp_number'] ?? '+2349001234567') }}" target="_blank" rel="noopener">WhatsApp Us</a></div>
     </div>
-    <div class="container footer-bottom"><span>{{ $globalSettings['footer_copyright'] ?? '© '.date('Y').' HUMELIX SYSTEMS. All rights reserved.' }}</span><span><a href="{{ route('legal.show', 'privacy-policy') }}">Privacy Policy</a> · <a href="{{ route('legal.show', 'terms') }}">Terms</a> · <a href="{{ route('legal.show', 'cookie-policy') }}">Cookie Policy</a> · <a href="{{ route('legal.show', 'accessibility') }}">Accessibility</a></span></div>
+    <div class="container footer-bottom"><span>{{ $globalSettings['footer_copyright'] ?? '© '.date('Y').' HUMELIX LIMITED. All rights reserved.' }}</span><span><a href="{{ route('legal.show', 'privacy-policy') }}">Privacy Policy</a> · <a href="{{ route('legal.show', 'terms') }}">Terms</a> · <a href="{{ route('legal.show', 'cookie-policy') }}">Cookie Policy</a> · <a href="{{ route('legal.show', 'accessibility') }}">Accessibility</a></span></div>
 </footer>

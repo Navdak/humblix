@@ -1,6 +1,6 @@
 @extends('layouts.app')
-@section('title','Industries Served - HUMELIX SYSTEMS')
-@section('meta_description','Explore the industries Humelix Systems supports with HVAC, solar, electrical, maintenance, vendor and home appliance services.')
+@section('title','Industries Served - HUMELIX LIMITED')
+@section('meta_description','Explore the industries Humelix Limited supports with HVAC, solar, electrical, maintenance, vendor and home appliance services.')
 @section('content')
 @include('components.page-hero',['eyebrow'=>'Industries','title'=>'Industries Served','subtitle'=>'Humelix supports residential, commercial, industrial, institutional and public-sector environments with practical engineering services.'])
 <section class="section phase6-section">

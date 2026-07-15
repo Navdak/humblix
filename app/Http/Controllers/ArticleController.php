@@ -28,11 +28,11 @@ class ArticleController extends Controller
                 'dateModified' => optional($article->updated_at)->toAtomString(),
                 'author' => [
                     '@type' => 'Organization',
-                    'name' => 'HUMELIX SYSTEMS',
+                    'name' => 'HUMELIX LIMITED',
                 ],
                 'publisher' => [
                     '@type' => 'Organization',
-                    'name' => 'HUMELIX SYSTEMS',
+                    'name' => 'HUMELIX LIMITED',
                 ],
                 'mainEntityOfPage' => route('articles.show', $article),
             ]],

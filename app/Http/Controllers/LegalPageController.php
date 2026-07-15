@@ -22,7 +22,7 @@ class LegalPageController extends Controller
             'privacy-policy' => [
                 'title' => 'Privacy Policy',
                 'eyebrow' => 'Website governance',
-                'intro' => 'This policy explains how HUMELIX SYSTEMS handles information submitted through this website. It is general website guidance and can be reviewed by legal counsel before launch in each operating market.',
+                'intro' => 'This policy explains how HUMELIX LIMITED handles information submitted through this website. It is general website guidance and can be reviewed by legal counsel before launch in each operating market.',
                 'sections' => [
                     ['Information we collect', 'We may collect contact details, company details, project location, service interests, uploaded project photos, enquiry messages and communication preferences when you submit a form or chat request.'],
                     ['How we use information', 'We use submitted information to respond to enquiries, prepare consultations or quotations, manage service requests, improve website content and maintain internal records.'],
@@ -33,7 +33,7 @@ class LegalPageController extends Controller
             'terms' => [
                 'title' => 'Terms of Use',
                 'eyebrow' => 'Website terms',
-                'intro' => 'These terms govern general use of the HUMELIX SYSTEMS website. They do not replace a signed quotation, service agreement, warranty document or project contract.',
+                'intro' => 'These terms govern general use of the HUMELIX LIMITED website. They do not replace a signed quotation, service agreement, warranty document or project contract.',
                 'sections' => [
                     ['Website content', 'Website content is provided for general information about Humelix services, safety culture, projects and contact pathways. It may be updated without notice.'],
                     ['Service requests', 'Submitting an enquiry does not create a binding contract. Scope, pricing, timing, availability and responsibilities must be confirmed through an official Humelix quotation or agreement.'],
@@ -44,7 +44,7 @@ class LegalPageController extends Controller
             'cookie-policy' => [
                 'title' => 'Cookie Policy',
                 'eyebrow' => 'Cookie notice',
-                'intro' => 'This cookie policy explains the basic cookie categories that may be used by the HUMELIX SYSTEMS website.',
+                'intro' => 'This cookie policy explains the basic cookie categories that may be used by the HUMELIX LIMITED website.',
                 'sections' => [
                     ['Essential cookies', 'Essential cookies may be used for security, form protection, sessions and basic website operation.'],
                     ['Analytics cookies', 'If analytics are enabled later, cookies or similar technologies may help Humelix understand page performance and improve website content.'],
@@ -55,7 +55,7 @@ class LegalPageController extends Controller
             'accessibility' => [
                 'title' => 'Accessibility Statement',
                 'eyebrow' => 'Inclusive access',
-                'intro' => 'HUMELIX SYSTEMS aims to make this website clear, navigable and usable for as many visitors as possible.',
+                'intro' => 'HUMELIX LIMITED aims to make this website clear, navigable and usable for as many visitors as possible.',
                 'sections' => [
                     ['Our approach', 'The website uses semantic HTML, readable contrast, skip links, keyboard-friendly navigation and responsive layouts where practical.'],
                     ['Ongoing improvement', 'Accessibility is reviewed as the website evolves. New media, downloads and interactive modules should be checked before production publication.'],

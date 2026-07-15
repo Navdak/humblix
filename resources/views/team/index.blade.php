@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title','Team & Leadership - HUMELIX SYSTEMS')
+@section('title','Team & Leadership - HUMELIX LIMITED')
 @section('meta_description','Meet the Humelix engineering, technical, support and regional team structure behind safe project delivery.')
 @section('content')
 @include('components.page-hero',[
@@ -39,7 +39,7 @@
             @empty
                 <div class="empty-state">
                     <h2>Our team directory is being updated.</h2>
-                    <p class="section-sub">HUMELIX SYSTEMS remains available for project enquiries and support.</p>
+                    <p class="section-sub">HUMELIX LIMITED remains available for project enquiries and support.</p>
                     <a href="{{ route('contact') }}" class="btn btn-primary" style="margin-top:18px">Contact the Team</a>
                 </div>
             @endforelse

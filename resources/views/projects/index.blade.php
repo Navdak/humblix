@@ -1,6 +1,6 @@
 @extends('layouts.app')
-@section('title','Projects - HUMELIX SYSTEMS')
-@section('meta_description','Explore HUMELIX SYSTEMS case studies across HVAC, solar, electrical, maintenance, vendor and home installation work.')
+@section('title','Projects - HUMELIX LIMITED')
+@section('meta_description','Explore HUMELIX LIMITED case studies across HVAC, solar, electrical, maintenance, vendor and home installation work.')
 @section('content')
 @include('components.page-hero',['eyebrow'=>'Projects','title'=>'Engineering case studies and project proof.','subtitle'=>'Selected work across industrial, commercial, residential, institutional and public-sector environments.'])
 <section class="section">

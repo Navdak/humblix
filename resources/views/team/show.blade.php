@@ -1,6 +1,6 @@
 @extends('layouts.app')
-@section('title',$member->name.' - Team - HUMELIX SYSTEMS')
-@section('meta_description',\Illuminate\Support\Str::limit(strip_tags($member->bio ?: $member->role.' at HUMELIX SYSTEMS.'), 155))
+@section('title',$member->name.' - Team - HUMELIX LIMITED')
+@section('meta_description',\Illuminate\Support\Str::limit(strip_tags($member->bio ?: $member->role.' at HUMELIX LIMITED.'), 155))
 @section('content')
 @include('components.page-hero',[
     'eyebrow'=>'Team Profile',

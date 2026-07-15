@@ -6,8 +6,8 @@
     @php
         $seo = \App\Support\SeoMeta::forCurrentPage([
             'page_key' => trim($__env->yieldContent('seo_key')) ?: null,
-            'title' => trim($__env->yieldContent('title', 'HUMELIX SYSTEMS - HVAC, Solar, Electrical & Maintenance Solutions')),
-            'description' => trim($__env->yieldContent('meta_description', 'Humelix Systems provides HVAC, solar, electrical, maintenance and equipment solutions for residential, commercial and industrial clients.')),
+            'title' => trim($__env->yieldContent('title', 'HUMELIX LIMITED - HVAC, Solar, Electrical & Maintenance Solutions')),
+            'description' => trim($__env->yieldContent('meta_description', 'Humelix Limited provides HVAC, solar, electrical, maintenance and equipment solutions for residential, commercial and industrial clients.')),
             'structured_data' => $structuredData ?? [],
             'image' => $seoImage ?? null,
         ]);
@@ -18,7 +18,7 @@
     <link rel="canonical" href="{{ $seo['canonical'] }}">
     <meta name="robots" content="{{ $seo['robots'] }}">
     <meta property="og:type" content="website">
-    <meta property="og:site_name" content="HUMELIX SYSTEMS">
+    <meta property="og:site_name" content="HUMELIX LIMITED">
     <meta property="og:title" content="{{ $seo['og_title'] }}">
     <meta property="og:description" content="{{ $seo['og_description'] }}">
     <meta property="og:url" content="{{ $seo['canonical'] }}">
@@ -38,9 +38,9 @@
 <a class="skip-link" href="#main-content">Skip to content</a>
 <header class="site-header" data-site-header>
     <div class="container navbar">
-        <a href="{{ route('home') }}" class="brand" aria-label="HUMELIX SYSTEMS home">
+        <a href="{{ route('home') }}" class="brand" aria-label="HUMELIX LIMITED home">
             <span class="brand-mark" aria-hidden="true">H</span>
-            <span class="brand-text"><strong>HUMELIX</strong><small>SYSTEMS</small></span>
+            <span class="brand-text"><strong>HUMELIX</strong><small>LIMITED</small></span>
         </a>
         <nav class="nav-links" aria-label="Primary navigation">
             <a class="{{ request()->routeIs('about') ? 'is-active' : '' }}" href="{{ route('about') }}">About</a>
