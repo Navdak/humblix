@@ -34,10 +34,46 @@
 </section>
 
 <section class="admin-analytics-grid">
-    <article class="admin-panel admin-chart-panel admin-reveal"><header class="admin-panel-head"><div><h2>Enquiries over last {{ $period }} days</h2><p>Daily request volume from public forms and chat.</p></div><span class="admin-panel-chip">Daily</span></header><div class="admin-chart-wrap">@if(collect($chartData['enquiryTrend']['values'])->sum() > 0)<canvas data-enquiry-trend aria-label="Enquiries over the selected period"></canvas>@else@include('admin.partials.empty',['title'=>'No enquiry activity yet','message'=>'New enquiries will appear in this trend.'])@endif</div></article>
-    <article class="admin-panel admin-chart-panel admin-reveal"><header class="admin-panel-head"><div><h2>Enquiries by Type of Work</h2><p>HVAC, Solar, Electrical, Maintenance, Vendor and other request patterns.</p></div></header><div class="admin-chart-wrap admin-chart-doughnut">@if(collect($chartData['enquiryTypes']['values'])->sum() > 0)<canvas data-enquiry-type-chart aria-label="Enquiry type breakdown"></canvas>@else@include('admin.partials.empty',['title'=>'No type data yet','message'=>'Enquiry type data will appear here.'])@endif</div></article>
-    <article class="admin-panel admin-chart-panel admin-reveal"><header class="admin-panel-head"><div><h2>Project / Service Distribution</h2><p>Published and draft project mix by service division.</p></div></header><div class="admin-chart-wrap">@if(collect($chartData['projects']['values'])->sum() > 0)<canvas data-project-chart aria-label="Project service distribution"></canvas>@else@include('admin.partials.empty',['title'=>'No project distribution yet','message'=>'Project service mix will appear here.'])@endif</div></article>
-    <article class="admin-panel admin-chart-panel admin-reveal"><header class="admin-panel-head"><div><h2>Videos & Equipment</h2><p>Content catalogue mix by category.</p></div></header><div class="admin-chart-wrap">@if(collect($chartData['catalogue']['values'])->sum() > 0)<canvas data-video-equipment-chart aria-label="Video and equipment category distribution"></canvas>@else@include('admin.partials.empty',['title'=>'No catalogue data yet','message'=>'Video and equipment category data will appear here.'])@endif</div></article>
+    <article class="admin-panel admin-chart-panel admin-reveal">
+        <header class="admin-panel-head"><div><h2>Enquiries over last {{ $period }} days</h2><p>Daily request volume from public forms and chat.</p></div><span class="admin-panel-chip">Daily</span></header>
+        <div class="admin-chart-wrap">
+            @if(collect($chartData['enquiryTrend']['values'])->sum() > 0)
+                <canvas data-enquiry-trend aria-label="Enquiries over the selected period"></canvas>
+            @else
+                @include('admin.partials.empty',['title'=>'No enquiry activity yet','message'=>'New enquiries will appear in this trend.'])
+            @endif
+        </div>
+    </article>
+    <article class="admin-panel admin-chart-panel admin-reveal">
+        <header class="admin-panel-head"><div><h2>Enquiries by Type of Work</h2><p>HVAC, Solar, Electrical, Maintenance, Vendor and other request patterns.</p></div></header>
+        <div class="admin-chart-wrap admin-chart-doughnut">
+            @if(collect($chartData['enquiryTypes']['values'])->sum() > 0)
+                <canvas data-enquiry-type-chart aria-label="Enquiry type breakdown"></canvas>
+            @else
+                @include('admin.partials.empty',['title'=>'No type data yet','message'=>'Enquiry type data will appear here.'])
+            @endif
+        </div>
+    </article>
+    <article class="admin-panel admin-chart-panel admin-reveal">
+        <header class="admin-panel-head"><div><h2>Project / Service Distribution</h2><p>Published and draft project mix by service division.</p></div></header>
+        <div class="admin-chart-wrap">
+            @if(collect($chartData['projects']['values'])->sum() > 0)
+                <canvas data-project-chart aria-label="Project service distribution"></canvas>
+            @else
+                @include('admin.partials.empty',['title'=>'No project distribution yet','message'=>'Project service mix will appear here.'])
+            @endif
+        </div>
+    </article>
+    <article class="admin-panel admin-chart-panel admin-reveal">
+        <header class="admin-panel-head"><div><h2>Videos & Equipment</h2><p>Content catalogue mix by category.</p></div></header>
+        <div class="admin-chart-wrap">
+            @if(collect($chartData['catalogue']['values'])->sum() > 0)
+                <canvas data-video-equipment-chart aria-label="Video and equipment category distribution"></canvas>
+            @else
+                @include('admin.partials.empty',['title'=>'No catalogue data yet','message'=>'Video and equipment category data will appear here.'])
+            @endif
+        </div>
+    </article>
 </section>
 
 <section class="admin-data-grid">
@@ -58,7 +94,16 @@
 
 <section class="admin-bottom-grid">
     <article class="admin-panel admin-reveal"><header class="admin-panel-head"><div><h2>Quick Actions</h2><p>Common administrative tasks.</p></div></header><div class="quick-action-grid">@if(auth()->user()?->canManage('projects'))<a href="{{ route('admin.projects.create') }}"><x-admin-icon name="projects"/>Add Project</a>@endif @if(auth()->user()?->canManage('branches'))<a href="{{ route('admin.branches.create') }}"><x-admin-icon name="branches"/>Add Branch</a>@endif @if(auth()->user()?->canManage('jobs'))<a href="{{ route('admin.jobs.create') }}"><x-admin-icon name="careers"/>Add Job</a>@endif @if(auth()->user()?->canManage('equipment'))<a href="{{ route('admin.equipment.create') }}"><x-admin-icon name="equipment"/>Add Equipment Item</a>@endif @if(auth()->user()?->canManage('videos'))<a href="{{ route('admin.videos.create') }}"><x-admin-icon name="videos"/>Add Video</a>@endif @if(auth()->user()?->canManage('articles'))<a href="{{ route('admin.articles.create') }}"><x-admin-icon name="articles"/>Create Article</a>@endif @if(auth()->user()?->canManage('reviews'))<a href="{{ route('admin.reviews.index') }}"><x-admin-icon name="reviews"/>Manage Reviews</a>@endif @if(auth()->user()?->canManage('settings'))<a href="{{ route('admin.settings.edit') }}"><x-admin-icon name="settings"/>Update Site Settings</a>@endif</div></article>
-    <article class="admin-panel admin-reveal"><header class="admin-panel-head"><div><h2>Review Status</h2><p>Approved versus pending social proof.</p></div></header><div class="admin-chart-wrap admin-chart-doughnut">@if(collect($chartData['reviews']['values'])->sum() > 0)<canvas data-review-chart aria-label="Review status summary"></canvas>@else@include('admin.partials.empty',['title'=>'No reviews yet','message'=>'Review status will appear here.'])@endif</div></article>
+    <article class="admin-panel admin-reveal">
+        <header class="admin-panel-head"><div><h2>Review Status</h2><p>Approved versus pending social proof.</p></div></header>
+        <div class="admin-chart-wrap admin-chart-doughnut">
+            @if(collect($chartData['reviews']['values'])->sum() > 0)
+                <canvas data-review-chart aria-label="Review status summary"></canvas>
+            @else
+                @include('admin.partials.empty',['title'=>'No reviews yet','message'=>'Review status will appear here.'])
+            @endif
+        </div>
+    </article>
     <article class="admin-panel admin-reveal"><header class="admin-panel-head"><div><h2>System Status</h2><p>Operational readiness.</p></div></header><dl class="system-list"><div><dt>Application</dt><dd><i class="status-dot is-good"></i> Online</dd></div><div><dt>Storage link</dt><dd><i class="status-dot {{ $systemStatus['storageLinked'] ? 'is-good' : 'is-warn' }}"></i> {{ $systemStatus['storageLinked'] ? 'Ready' : 'Check' }}</dd></div><div><dt>Environment</dt><dd>{{ ucfirst($systemStatus['environment']) }}</dd></div><div><dt>Debug mode</dt><dd>{{ $systemStatus['debug'] ? 'Enabled' : 'Disabled' }}</dd></div><div><dt>Last checked</dt><dd>{{ $systemStatus['updatedAt']->format('H:i') }}</dd></div></dl></article>
 </section>
 @endsection

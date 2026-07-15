@@ -3,11 +3,13 @@ namespace Database\Seeders;
 
 use App\Models\Article;
 use App\Models\Enquiry;
+use App\Models\EquipmentItem;
 use App\Models\Project;
 use App\Models\Review;
 use App\Models\SiteSetting;
 use App\Models\TeamMember;
 use App\Models\User;
+use App\Models\Video;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
@@ -102,6 +104,42 @@ class DatabaseSeeder extends Seeder
             'content'=>'<p>Commercial HVAC systems need scheduled inspection, filter cleaning, drainage checks and performance testing. Preventive maintenance reduces breakdowns and improves system lifespan.</p><h2>Recommended Checks</h2><ul><li>Inspect filters monthly.</li><li>Check drainage lines.</li><li>Monitor cooling performance.</li><li>Schedule professional servicing.</li></ul>',
             'status'=>'published','published_at'=>now(),
         ]);
+
+        foreach ([
+            ['Commercial HVAC Equipment Package','HVAC Equipment','Request-based HVAC equipment package for commercial installation planning.','Cooling equipment, controls and installation accessories for quotation-led projects.','images/generated/equipment/equipment-ac-units.jpg',10],
+            ['Solar Panel System Kit','Solar Panels','Solar panel system components for residential and commercial project enquiries.','Panel supply, mounting support and project-specific specification review.','images/generated/equipment/equipment-solar-panels.jpg',20],
+            ['Inverter and Battery Backup Set','Inverters & Batteries','Power reliability equipment for backup and solar-linked installations.','Inverter, battery and protection components supplied after site requirement review.','images/generated/equipment/equipment-inverters.jpg',30],
+            ['Electrical Components Pack','Electrical Components','Electrical accessories and control components for safe installation work.','Breakers, isolators, cabling accessories and support components for managed projects.','images/generated/equipment/equipment-electrical-components.jpg',40],
+            ['Home Installation Accessories','Home Installation Products','Accessories for appliance, comfort and residential installation requests.','Installation kits, fittings and approved accessories quoted according to client scope.','images/generated/equipment/equipment-home-installation-products.jpg',50],
+        ] as [$name,$category,$shortDescription,$specification,$imagePath,$sortOrder]) {
+            EquipmentItem::firstOrCreate(['name'=>$name], [
+                'category'=>$category,
+                'short_description'=>$shortDescription,
+                'specification'=>$specification,
+                'availability_status'=>'available_on_request',
+                'image_path'=>$imagePath,
+                'sort_order'=>$sortOrder,
+                'is_published'=>true,
+            ]);
+        }
+
+        foreach ([
+            ['Humelix Safety Briefing Placeholder','humelix-safety-briefing-placeholder','Safety','Safety briefing video placeholder for future uploaded or embedded media.','images/generated/safety/safety-toolbox-talks.jpg',10],
+            ['Vendor Equipment Demo Placeholder','vendor-equipment-demo-placeholder','Vendor / Equipment','Equipment demonstration placeholder for future catalogue videos.','images/generated/equipment/equipment-tools-accessories.jpg',20],
+            ['Field Installation Highlight Placeholder','field-installation-highlight-placeholder','Field Work','Field work highlight placeholder for future project media.','images/generated/home/home-engineering-team-worksite.jpg',30],
+        ] as [$title,$slug,$category,$caption,$thumbnail,$sortOrder]) {
+            Video::firstOrCreate(['slug'=>$slug], [
+                'title'=>$title,
+                'caption'=>$caption,
+                'description'=>'Draft placeholder record used to prepare the admin catalogue dashboard. Replace with real media from the admin page when available.',
+                'category'=>$category,
+                'video_type'=>'external',
+                'thumbnail_path'=>$thumbnail,
+                'status'=>'draft',
+                'is_featured'=>false,
+                'sort_order'=>$sortOrder,
+            ]);
+        }
 
         Enquiry::firstOrCreate(['phone'=>'+2348000000000'], [
             'source'=>'chat_assistant','name'=>'John Doe','email'=>'john@example.com','location'=>'Lagos','building_type'=>'Office Building',
