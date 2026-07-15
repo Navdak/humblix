@@ -35,7 +35,7 @@
         </div>
         <div class="hero-proof" data-animate="slide-left" data-delay="140">
             <strong>Precision Power. Flawless Comfort.</strong>
-            <p>From site assessment to commissioning and aftercare, every stage is handled with technical discipline.</p>
+            <p>Backed by more than 500 staff across global operations, Humelix continues to expand engineering, technical, support and regional teams.</p>
             <div class="hero-proof-row"><span>Industrial</span><span>Commercial</span><span>Residential</span></div>
         </div>
     </div>

@@ -2,11 +2,11 @@
 @section('title','Branches - HUMELIX SYSTEMS')
 @section('meta_description','Find published HUMELIX SYSTEMS branch contact points and regional engineering service coverage.')
 @section('content')
-@include('components.page-hero',['eyebrow'=>'Branches','title'=>'Regional engineering support, prepared for branch-led service.','subtitle'=>'Published Humelix branch information appears here as country and city operations come online.'])
+@include('components.page-hero',['eyebrow'=>'Branches','title'=>'Regional engineering support, prepared for branch-led service.','subtitle'=>'Our regional structure supports site response, project coordination and client service across multiple operating locations as Humelix continues to expand.'])
 <section class="section phase6-section">
     <div class="container">
         <div class="section-head section-head-row">
-            <div><span class="eyebrow">Service Coverage</span><h2 class="section-title">Country and city contact foundations.</h2><p class="section-sub">Use this page to route enquiries to published branch teams. If a branch is not listed yet, the central Humelix team can still receive and triage your request.</p></div>
+            <div><span class="eyebrow">Service Coverage</span><h2 class="section-title">Country and city contact foundations.</h2><p class="section-sub">Use this page to route enquiries to published branch teams. Backed by more than 500 staff across global operations, Humelix can still receive and triage requests through the central team while new regional details are verified.</p></div>
             <a href="{{ route('contact') }}" class="btn btn-primary">Contact Humelix</a>
         </div>
         <div class="phase6-card-grid">

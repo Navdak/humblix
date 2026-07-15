@@ -6,12 +6,14 @@
 <section class="section">
     <div class="container grid grid-2" style="grid-template-columns:minmax(0,1fr) minmax(260px,330px);align-items:start">
         <article class="card prose" data-animate="fade-up">
-            @if($article->featured_image_path)
-                <div class="image-frame" style="margin-bottom:24px">
-                    <img src="{{ \App\Support\UchContent::imageUrl($article->featured_image_path) }}" alt="{{ $article->title }}">
-                </div>
-            @endif
+            <div class="image-frame" style="margin-bottom:24px">
+                <img src="{{ \App\Support\UchContent::imageUrl($article->featured_image_path, 'images/generated/safety/safety-toolbox-talks.jpg') }}" alt="{{ $article->title }}">
+            </div>
             {!! $article->content !!}
+            <div class="service-actions" style="margin-top:28px">
+                <a class="btn btn-primary" href="{{ route('contact') }}?service={{ urlencode('Resource enquiry: '.$article->title) }}">Ask Humelix</a>
+                <a class="btn btn-white" href="{{ route('articles.index') }}">Back to Resources</a>
+            </div>
         </article>
         <aside class="card" data-animate="slide-left">
             <h3>Related Links</h3>

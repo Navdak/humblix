@@ -11,9 +11,9 @@
     <div class="container safety-hero-grid">
         <div class="safety-hero-copy" data-animate="slide-right">
             <span class="eyebrow">Safety Centre</span>
-            <h1>Safety Centre</h1>
+            <h1>Safety Is Built Into Every Humelix Project</h1>
             <p class="safety-hero-lead">Safe engineering delivery for HVAC, solar, electrical, maintenance, equipment and home appliance projects.</p>
-            <p>At Humelix Systems, safety comes before every installation. From HVAC systems to solar mounting, electrical wiring, equipment supply and home appliance installation, our teams follow controlled work procedures designed to protect people, buildings and the environment.</p>
+            <p>Every Humelix project is planned and executed with strict engineering safety controls, site supervision, risk assessment, PPE compliance and disciplined handover procedures. We do not compromise safety on client sites, and we do not treat safety as an afterthought.</p>
             <div class="service-actions">
                 <a class="btn btn-primary" href="{{ route('contact') }}?service={{ urlencode('HVAC') }}">Request Service</a>
                 <a class="btn btn-white" href="{{ $electricalContact }}">Report a Safety Concern</a>
@@ -23,9 +23,11 @@
         <aside class="safety-hero-panel" data-animate="slide-left">
             <span class="safety-seal">SAFE</span>
             <h2>Controlled work procedures.</h2>
-            <p>No job is successful unless workers, clients and property are protected.</p>
+            <p>Backed by more than 500 staff across global operations, Humelix continues to expand safety-conscious engineering, technical and regional teams.</p>
             <div class="safety-panel-list">
                 <span>Risk-aware planning</span>
+                <span>PPE and supervision</span>
+                <span>Electrical isolation</span>
                 <span>Inspection and testing</span>
                 <span>Documented handover</span>
             </div>
@@ -38,7 +40,7 @@
         <div class="section-head">
             <span class="eyebrow">Safety Pillars</span>
             <h2 class="section-title">Three standards guide every Humelix site decision.</h2>
-            <p class="section-sub">The Safety Centre keeps our approach clear: protect people, deliver quality, and build a practical compliance culture.</p>
+            <p class="section-sub">The Safety Centre keeps our approach clear: protect people, deliver quality, and build a practical compliance culture across HVAC, solar, electrical, maintenance, vendor and home installation work.</p>
         </div>
         <div class="grid grid-3">
             @foreach($pillars as $pillar)
@@ -57,7 +59,18 @@
     <div class="container">
         <div class="safety-statement-card" data-animate="fade-up">
             <span class="eyebrow">Safety Statement</span>
-            <blockquote>At Humelix Systems, safety comes before every installation. From HVAC systems to solar mounting, electrical wiring, equipment supply and home appliance installation, our teams follow controlled work procedures designed to protect people, buildings and the environment.</blockquote>
+            <blockquote>Humelix is committed to delivering every project with strict engineering safety controls, disciplined site supervision and adherence to applicable safety procedures.</blockquote>
+            <p>We do not neglect engineering safety rules while working on client sites. Every project is planned and executed with safety, quality and accountability in mind.</p>
+        </div>
+    </div>
+</section>
+
+<section class="section" style="padding-top:0">
+    <div class="container">
+        <div class="credibility-grid">
+            <article class="card" data-animate="fade-up"><span class="eyebrow">Global Staff</span><h2>500+</h2><p>More than 500 staff support Humelix operations across engineering, technical, support and regional functions.</p></article>
+            <article class="card" data-animate="fade-up" data-delay="70"><span class="eyebrow">Safety Controls</span><h2>Site-led</h2><p>Risk assessment, PPE use, electrical isolation, supervision, testing and safe handover are treated as part of engineering delivery.</p></article>
+            <article class="card" data-animate="fade-up" data-delay="140"><span class="eyebrow">Expansion</span><h2>Growing</h2><p>Humelix continues to expand the people, procedures and regional coordination needed to support projects across multiple locations.</p></article>
         </div>
     </div>
 </section>
@@ -77,10 +90,16 @@
                     <div class="image-frame safety-module-image"><img loading="lazy" src="{{ asset($module['image'] ?? \App\Support\UchContent::safetyImage($module['title'])) }}" alt="{{ $module['title'] }}"></div>
                     <div class="safety-module-top">
                         <span>{{ str_pad((string) $loop->iteration, 2, '0', STR_PAD_LEFT) }}</span>
-                        <a href="{{ route('safety.topic', $module['slug']) }}">Learn more</a>
+                        <a href="{{ route('safety.topic', $module['slug']) }}">Read More</a>
                     </div>
                     <h3>{{ $module['title'] }}</h3>
                     <p>{{ $module['description'] }}</p>
+                    <ul class="content-summary-list">
+                        @foreach(array_slice($module['summary'] ?? [], 0, 3) as $item)
+                            <li>{{ $item }}</li>
+                        @endforeach
+                    </ul>
+                    <a class="card-link" href="{{ route('safety.topic', $module['slug']) }}">Read More <span aria-hidden="true">&rarr;</span></a>
                 </article>
             @endforeach
         </div>
@@ -93,7 +112,7 @@
             <div class="controlled-work-copy" data-animate="slide-right">
                 <span class="eyebrow eyebrow-light">Controlled Work Procedure</span>
                 <h2>From site risk review to documented handover.</h2>
-                <p>Humelix keeps safety practical: plan the site, brief the team, control hazards, execute carefully, test the work and hand it over clearly.</p>
+                <p>Humelix keeps safety practical: plan the site, brief the team, control hazards, execute carefully, test the work, commission responsibly and hand it over clearly.</p>
             </div>
             <div class="controlled-work-steps" data-animate="slide-left">
                 @foreach($process as $step)

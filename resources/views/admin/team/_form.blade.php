@@ -6,7 +6,7 @@
     <div class="form-field"><label>Region</label><input name="region" value="{{ old('region',$member->region) }}"></div>
     <div class="form-field"><label>Experience</label><input name="experience" value="{{ old('experience',$member->experience) }}"></div>
     <div class="form-field full"><label>Certifications</label><input name="certifications" value="{{ old('certifications',$member->certifications) }}"></div>
-    <div class="form-field full"><label>Bio</label><textarea name="bio" rows="5">{{ old('bio',$member->bio) }}</textarea></div>
+    <div class="form-field full"><label>Bio</label><textarea name="bio" rows="6" placeholder="Add a short verified professional biography. Avoid fake certifications, universities, awards or client claims.">{{ old('bio',$member->bio) }}</textarea><small>Shown on public Team Read More pages for visible members.</small></div>
     <div class="form-field"><label>Email</label><input type="email" name="email" value="{{ old('email',$member->email) }}"></div>
     <div class="form-field"><label>Phone</label><input name="phone" value="{{ old('phone',$member->phone) }}"></div>
     <div class="form-field full"><label>Social URL</label><input type="url" name="social_url" value="{{ old('social_url',$member->social_url) }}"></div>

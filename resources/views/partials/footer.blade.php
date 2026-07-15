@@ -2,7 +2,7 @@
     <div class="container footer-grid">
         <div class="footer-brand">
             <a href="{{ route('home') }}" class="brand"><span class="brand-mark">H</span><span class="brand-text"><strong>HUMELIX</strong><small>SYSTEMS</small></span></a>
-            <p>HVAC, solar, electrical, maintenance and equipment solutions delivered with disciplined workmanship and dependable aftercare.</p>
+            <p>HVAC, solar, electrical, maintenance, equipment/vendor and home installation solutions delivered by an expanding global team of 500+ staff with disciplined workmanship and dependable aftercare.</p>
             <div class="footer-contact"><a href="tel:{{ $globalSettings['phone_primary'] ?? '+2349001234567' }}">{{ $globalSettings['phone_primary'] ?? '+234 900 123 4567' }}</a><a href="mailto:{{ $globalSettings['company_email'] ?? 'info@humelix.com' }}">{{ $globalSettings['company_email'] ?? 'info@humelix.com' }}</a></div>
         </div>
         <div><h4>Company</h4><a href="{{ route('about') }}">About Humelix</a><a href="{{ route('team.index') }}">Team</a><a href="{{ route('branches.index') }}">Branches</a><a href="{{ route('careers.index') }}">Careers</a></div>

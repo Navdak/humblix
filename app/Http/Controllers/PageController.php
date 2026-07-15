@@ -51,6 +51,20 @@ class PageController extends Controller
             'cultureImages' => UchContent::cultureImages(),
         ]);
     }
+
+    public function teamMember(TeamMember $teamMember)
+    {
+        abort_unless($teamMember->is_visible, 404);
+
+        return view('team.show', [
+            'member' => $teamMember,
+            'relatedMembers' => TeamMember::where('is_visible', true)
+                ->whereKeyNot($teamMember->getKey())
+                ->orderBy('sort_order')
+                ->take(4)
+                ->get(),
+        ]);
+    }
     public function safety()
     {
         return view('pages.safety', [

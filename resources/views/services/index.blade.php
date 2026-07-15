@@ -47,12 +47,17 @@
                     </div>
                     <h3>{{ $service['title'] }}</h3>
                     <p>{{ $service['excerpt'] }}</p>
+                    <ul class="content-summary-list">
+                        @foreach(array_slice($service['included'], 0, 3) as $item)
+                            <li>{{ $item }}</li>
+                        @endforeach
+                    </ul>
                     <div class="division-included" aria-label="Key included services">
                         @foreach(array_slice($service['included'], 0, 5) as $item)
                             <span>{{ $item }}</span>
                         @endforeach
                     </div>
-                    <a class="card-link" href="{{ route('services.show', $service['slug']) }}">{{ $service['slug'] === 'vendor' ? 'Explore Vendor / Equipment' : 'Explore Division' }} <span aria-hidden="true">→</span></a>
+                    <a class="card-link" href="{{ route('services.show', $service['slug']) }}">{{ $service['slug'] === 'vendor' ? 'Read More / Explore Equipment' : 'Read More' }} <span aria-hidden="true">→</span></a>
                 </article>
             @endforeach
         </div>

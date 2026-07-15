@@ -42,6 +42,7 @@ Route::get('/founder', [PageController::class, 'founder'])->name('founder');
 Route::get('/safety', [PageController::class, 'safety'])->name('safety');
 Route::get('/safety/{slug}', [PageController::class, 'safetyTopic'])->name('safety.topic');
 Route::get('/team', [PageController::class, 'team'])->name('team.index');
+Route::get('/team/{teamMember}', [PageController::class, 'teamMember'])->name('team.show');
 Route::get('/branches', [PageController::class, 'branches'])->name('branches.index');
 Route::get('/careers', [PageController::class, 'careers'])->name('careers.index');
 Route::get('/equipment', [PageController::class, 'equipment'])->name('equipment.index');

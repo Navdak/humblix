@@ -16,8 +16,13 @@
                     <span class="phase6-code">{{ str_pad((string) $loop->iteration, 2, '0', STR_PAD_LEFT) }}</span>
                     <h3>{{ $industry['title'] }}</h3>
                     <p>{{ $industry['description'] }}</p>
+                    <ul class="content-summary-list">
+                        @foreach(array_slice($industry['needs'] ?? [], 0, 3) as $need)
+                            <li>{{ $need }}</li>
+                        @endforeach
+                    </ul>
                     <div class="phase6-chip-row">@foreach($services as $service)<span>{{ $service }}</span>@endforeach</div>
-                    <a class="card-link" href="{{ route('industries.show', $industry['slug']) }}">View industry <span>&rarr;</span></a>
+                    <a class="card-link" href="{{ route('industries.show', $industry['slug']) }}">Read More <span>&rarr;</span></a>
                 </article>
             @endforeach
         </div>

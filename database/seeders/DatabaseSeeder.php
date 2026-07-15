@@ -67,16 +67,20 @@ class DatabaseSeeder extends Seeder
         }
 
         foreach ([
-            ['UGOCHUKWU HUMBLE CHIEMELA','Founder & Lead Engineer','Global Operations','6+ years field practice'],
-            ['Chinedu Okafor','Senior Engineer','Lagos','5+ years'],
-            ['Aisha Ibrahim','Project Manager','Abuja','4+ years'],
-            ['Emeka Nwosu','Field Technician','Port Harcourt','3+ years'],
-        ] as $i => [$name,$role,$region,$experience]) {
+            ['UGOCHUKWU HUMBLE CHIEMELA','Founder & Lead Engineer','Global Operations','6+ years field practice','Provides founder-level direction for Humelix engineering delivery, client communication and safety-conscious field execution across service divisions. His public profile remains ready for verified personal details from the client.'],
+            ['Chinedu Okafor','Senior Engineer','Lagos','5+ years','Supports technical assessment, installation coordination and practical handover for HVAC, electrical and maintenance-related client requests.'],
+            ['Aisha Ibrahim','Project Manager','Abuja','4+ years','Coordinates project communication, scheduling and service follow-up so teams can deliver with clearer accountability and safer site organization.'],
+            ['Emeka Nwosu','Field Technician','Port Harcourt','3+ years','Supports field installation, inspection and aftercare tasks with attention to site cleanliness, safe work habits and client handover.'],
+            ['Nneka Adeyemi','Operations Support Lead','Global Support','4+ years','Supports enquiry handling, regional coordination and internal communication for Humelix service requests across multiple operating locations.'],
+        ] as $i => [$name,$role,$region,$experience,$bio]) {
             $member = TeamMember::firstOrCreate(['name'=>$name], [
-                'role'=>$role,'region'=>$region,'experience'=>$experience,'certifications'=>'Electrical/Electronics Engineering, HVAC field operations, safety practices',
-                'bio'=>'Responsible for professional engineering delivery, field coordination and client support.',
+                'role'=>$role,'region'=>$region,'experience'=>$experience,'certifications'=>null,
+                'bio'=>$bio,
                 'is_visible'=>true,'sort_order'=>$i+1,
             ]);
+            if (! $member->bio || $member->bio === 'Responsible for professional engineering delivery, field coordination and client support.') {
+                $member->update(['bio' => $bio, 'certifications' => null]);
+            }
             if ($name === 'UGOCHUKWU HUMBLE CHIEMELA' && ! $member->photo_path) {
                 $member->update(['photo_path' => 'images/generated/careers/careers-engineers-inspecting-systems.jpg']);
             }

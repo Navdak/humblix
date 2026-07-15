@@ -2,11 +2,11 @@
 @section('title','Careers - HUMELIX SYSTEMS')
 @section('meta_description','Explore published job openings and career opportunities at HUMELIX SYSTEMS.')
 @section('content')
-@include('components.page-hero',['eyebrow'=>'Careers','title'=>'Build practical engineering work with Humelix.','subtitle'=>'Opportunities for technicians, engineers, project coordinators, support agents and operations teams will be published here when available.'])
+@include('components.page-hero',['eyebrow'=>'Careers','title'=>'Build practical engineering work with Humelix.','subtitle'=>'As Humelix continues to expand globally, we continue to welcome disciplined engineers, technicians, safety-conscious installers, project coordinators and support professionals.'])
 <section class="section">
     <div class="container">
         <div class="grid grid-3">
-            <article class="card" data-animate="fade-up"><div class="image-frame page-card-image"><img loading="lazy" src="{{ asset('images/generated/careers/careers-technicians-working.jpg') }}" alt="Humelix technicians working"></div><span class="eyebrow">Why Humelix</span><h2>Field-led engineering culture.</h2><p>Work is grounded in practical site discipline, client communication, maintenance thinking and safe execution.</p></article>
+            <article class="card" data-animate="fade-up"><div class="image-frame page-card-image"><img loading="lazy" src="{{ asset('images/generated/careers/careers-technicians-working.jpg') }}" alt="Humelix technicians working"></div><span class="eyebrow">Why Humelix</span><h2>Field-led engineering culture.</h2><p>Backed by more than 500 staff across global operations, work is grounded in practical site discipline, client communication, maintenance thinking and safe execution.</p></article>
             <article class="card" data-animate="fade-up" data-delay="70"><div class="image-frame page-card-image"><img loading="lazy" src="{{ asset('images/generated/careers/careers-engineers-inspecting-systems.jpg') }}" alt="Humelix engineers inspecting systems"></div><span class="eyebrow">Opportunities</span><h2>Technical and support paths.</h2><p>HVAC, solar, electrical, maintenance, project support and customer-service roles can all be represented in the job board.</p></article>
             <article class="card" data-animate="fade-up" data-delay="140"><div class="image-frame page-card-image"><img loading="lazy" src="{{ asset('images/generated/careers/careers-training-safety-briefing.jpg') }}" alt="Humelix safety briefing"></div><span class="eyebrow">Safety First</span><h2>Professional site standards.</h2><p>Humelix expects PPE discipline, risk awareness, clean workmanship, documentation and respectful client-site conduct.</p></article>
         </div>
