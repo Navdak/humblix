@@ -22,7 +22,7 @@
                     <td data-label="Reference / Contact"><strong>{{ $enquiry->reference_number ?: 'Pending reference' }}</strong><br><span class="meta">{{ $enquiry->full_name }}{{ $enquiry->company_name ? ' · '.$enquiry->company_name : '' }}</span></td>
                     <td data-label="Type of Work">{{ $enquiry->display_type_of_work }}<br><span class="meta">{{ $enquiry->building_type ?: 'Building not set' }}</span></td>
                     <td data-label="Location">{{ $enquiry->country ?: '—' }}{{ $enquiry->state_city ? ' · '.$enquiry->state_city : '' }}<br><span class="meta">{{ $enquiry->display_location ?: 'No project location' }}</span></td>
-                    <td data-label="Preferred Contact">{{ $enquiry->preferred_contact ?: '—' }}<br><span class="meta">{{ $enquiry->phone }}{{ $enquiry->email ? ' · '.$enquiry->email : '' }}</span></td>
+                    <td data-label="Preferred Contact" class="admin-contact-cell">{{ $enquiry->preferred_contact ?: '—' }}<br><span class="meta">{{ $enquiry->phone }}{{ $enquiry->email ? ' · '.$enquiry->email : '' }}</span></td>
                     <td data-label="Status"><span class="badge">{{ ucwords(str_replace('_',' ', $enquiry->status)) }}</span></td>
                     <td data-label="Created">{{ $enquiry->created_at->format('M d, Y') }}<br><span class="meta">{{ $enquiry->created_at->format('H:i') }}</span></td>
                     <td data-label="Actions" class="admin-actions"><a class="btn btn-white" href="{{ route('admin.enquiries.show',$enquiry) }}">Manage</a></td>

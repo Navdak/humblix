@@ -40,7 +40,7 @@
         <div class="division-grid">
             @foreach($services as $service)
                 <article class="division-card tone-{{ $service['accent'] }}" data-animate="fade-up" data-delay="{{ ($loop->index % 3) * 70 }}">
-                    <div class="image-frame division-card-image"><img loading="lazy" src="{{ asset($service['image']) }}" alt="{{ $service['title'] }}"></div>
+                    <div class="image-frame division-card-image"><img loading="eager" src="{{ asset($service['image']) }}" alt="{{ $service['title'] }}"></div>
                     <div class="division-card-top">
                         <span class="division-code">{{ $service['code'] }}</span>
                         <span class="division-label">{{ $service['label'] }}</span>

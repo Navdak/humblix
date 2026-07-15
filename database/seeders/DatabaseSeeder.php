@@ -48,6 +48,19 @@ class DatabaseSeeder extends Seeder
                 'result'=>'Improved system reliability, better comfort and a maintainable structure.',
                 'equipment_used'=>'HVAC equipment, ducting support, control systems and safety accessories.',
             ]);
+            $projectPreviewFields = [
+                'industrial-plant-lagos' => ['country' => 'Nigeria', 'service_division' => 'Humelix HVAC Installation', 'duration' => '5 weeks'],
+                'office-complex-abuja' => ['country' => 'Nigeria', 'service_division' => 'Humelix HVAC Installation', 'duration' => '3 weeks'],
+                'high-rise-building-dubai' => ['country' => 'UAE', 'service_division' => 'Humelix HVAC Installation', 'duration' => '8 weeks'],
+                'warehouse-facility-port-harcourt' => ['country' => 'Nigeria', 'service_division' => 'Humelix Electrical & Maintenance', 'duration' => '4 weeks'],
+            ][$slug] ?? [];
+            if ($projectPreviewFields) {
+                $project->fill([
+                    'country' => $project->country ?: $projectPreviewFields['country'],
+                    'service_division' => $project->service_division ?: $projectPreviewFields['service_division'],
+                    'duration' => $project->duration ?: $projectPreviewFields['duration'],
+                ])->save();
+            }
             if (! $project->image_path) {
                 $project->update(['image_path' => \App\Support\UchContent::projectFallbackImages()[$projectIndex]]);
             }

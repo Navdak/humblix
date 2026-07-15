@@ -76,6 +76,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     });
     Route::get('/services', [FoundationController::class, 'services'])->middleware('admin.module:services')->name('services.index');
     Route::get('/safety', [FoundationController::class, 'safety'])->middleware('admin.module:safety')->name('safety.index');
+    Route::redirect('/resources', '/admin/articles', 301)->middleware('admin.module:articles')->name('resources.index');
     Route::resource('articles', AdminArticleController::class)->middleware('admin.module:articles')->except(['show']);
     Route::resource('projects', AdminProjectController::class)->middleware('admin.module:projects')->except(['show']);
     Route::resource('branches', AdminBranchController::class)->middleware('admin.module:branches')->except(['show']);

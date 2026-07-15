@@ -110,18 +110,20 @@ class UchContent
         }
 
         return match (true) {
+            str_contains($routeName, 'about') => 'images/generated/home/home-engineering-team-worksite.jpg',
             str_contains($routeName, 'services') => 'images/generated/services/service-hvac-installation.jpg',
             str_contains($routeName, 'industries'), str_contains($routeName, 'sectors') => 'images/generated/industries/industry-offices.jpg',
             str_contains($routeName, 'projects') => 'images/generated/projects/project-industrial-plant-neutral.jpg',
-            str_contains($routeName, 'articles') => 'images/generated/services/service-hvac-installation.jpg',
-            str_contains($routeName, 'team') => 'images/generated/careers/careers-team-collaboration.jpg',
-            str_contains($routeName, 'branches') => 'images/generated/careers/careers-office-admin-culture.jpg',
+            str_contains($routeName, 'articles') => 'images/generated/safety/safety-toolbox-talks.jpg',
+            str_contains($routeName, 'team') => 'images/generated/careers/careers-engineers-inspecting-systems.jpg',
+            str_contains($routeName, 'branches') => 'images/generated/home/home-engineering-team-worksite.jpg',
             str_contains($routeName, 'careers') => 'images/generated/careers/careers-technicians-working.jpg',
             str_contains($routeName, 'equipment') => 'images/generated/home/home-service-preview-equipment.jpg',
             str_contains($routeName, 'safety') => 'images/generated/safety/safety-ppe.jpg',
             str_contains($routeName, 'founder') => 'images/generated/careers/careers-engineers-inspecting-systems.jpg',
             str_contains($routeName, 'contact') => 'images/generated/home/home-engineering-team-worksite.jpg',
-            str_contains($routeName, 'reviews') => 'images/generated/home/home-engineering-team-worksite.jpg',
+            str_contains($routeName, 'reviews') => 'images/generated/careers/careers-team-collaboration.jpg',
+            str_contains($routeName, 'videos') => 'images/generated/careers/careers-technicians-working.jpg',
             default => 'images/generated/home/home-engineering-team-worksite.jpg',
         };
     }
