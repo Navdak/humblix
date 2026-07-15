@@ -31,6 +31,8 @@ DB_DATABASE=/var/www/html/database/database.sqlite
 
 CACHE_STORE=file
 SESSION_DRIVER=file
+SESSION_SECURE_COOKIE=true
+SESSION_SAME_SITE=lax
 QUEUE_CONNECTION=sync
 FILESYSTEM_DISK=public
 MAIL_MAILER=log
