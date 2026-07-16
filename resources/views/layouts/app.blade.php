@@ -28,8 +28,9 @@
     <meta name="twitter:description" content="{{ $seo['twitter_description'] }}">
     <meta name="twitter:image" content="{{ $seo['twitter_image'] }}">
     <meta name="theme-color" content="#0A192F">
-    <link rel="icon" href="{{ asset('images/uch-favicon.svg') }}" type="image/svg+xml">
-    <link rel="stylesheet" href="{{ asset('css/uch.css') }}?v=20260716a">
+    <link rel="icon" href="{{ asset('images/brand/humelix-favicon-32.png') }}" sizes="32x32" type="image/png">
+    <link rel="apple-touch-icon" href="{{ asset('images/brand/humelix-apple-touch-icon.png') }}">
+    <link rel="stylesheet" href="{{ asset('css/uch.css') }}?v=20260716d">
     @foreach($seo['structured_data'] as $schema)
         <script type="application/ld+json">{!! json_encode($schema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}</script>
     @endforeach
@@ -39,7 +40,7 @@
 <header class="site-header" data-site-header>
     <div class="container navbar">
         <a href="{{ route('home') }}" class="brand" aria-label="HUMELIX LIMITED home">
-            <span class="brand-mark" aria-hidden="true">H</span>
+            <span class="brand-mark" aria-hidden="true"><img src="{{ asset('images/brand/humelix-logo-mark.png') }}" alt=""></span>
             <span class="brand-text"><strong>HUMELIX</strong><small>LIMITED</small></span>
         </a>
         <nav class="nav-links" aria-label="Primary navigation">

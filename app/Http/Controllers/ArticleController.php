@@ -15,15 +15,18 @@ class ArticleController extends Controller
     public function show(Article $article)
     {
         abort_if($article->status !== 'published', 404);
+        $seoImage = UchContent::imageUrl($article->featured_image_path);
+
         return view('articles.show', [
             'article' => $article->load('relatedLinks'),
             'latestArticles' => Article::published()->where('id','!=',$article->id)->latest('published_at')->take(4)->get(),
-            'seoImage' => UchContent::imageUrl($article->featured_image_path),
+            'seoImage' => $seoImage,
             'structuredData' => [[
                 '@context' => 'https://schema.org',
                 '@type' => 'Article',
                 'headline' => $article->title,
                 'description' => $article->excerpt ?: Str::limit(strip_tags($article->content), 150),
+                'image' => $seoImage,
                 'datePublished' => optional($article->published_at)->toAtomString(),
                 'dateModified' => optional($article->updated_at)->toAtomString(),
                 'author' => [

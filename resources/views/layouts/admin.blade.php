@@ -5,8 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'Admin') · HUMELIX LIMITED</title>
-    <link rel="icon" href="{{ asset('images/uch-favicon.svg') }}" type="image/svg+xml">
-    <link rel="stylesheet" href="{{ asset('css/uch.css') }}?v=20260716a">
+    <link rel="icon" href="{{ asset('images/brand/humelix-favicon-32.png') }}" sizes="32x32" type="image/png">
+    <link rel="apple-touch-icon" href="{{ asset('images/brand/humelix-apple-touch-icon.png') }}">
+    <link rel="stylesheet" href="{{ asset('css/uch.css') }}?v=20260716d">
     @vite('resources/js/app.js')
     @stack('head')
 </head>
@@ -14,7 +15,7 @@
 <div class="admin-shell">
     <aside class="admin-sidebar" data-admin-sidebar aria-label="Admin navigation">
         <div class="admin-sidebar-head">
-            <a href="{{ route('admin.dashboard') }}" class="admin-brand" aria-label="HUMELIX LIMITED Admin home"><span class="brand-mark">H</span><span><strong>HUMELIX</strong><small>LIMITED</small></span></a>
+            <a href="{{ route('admin.dashboard') }}" class="admin-brand" aria-label="HUMELIX LIMITED Admin home"><span class="brand-mark" aria-hidden="true"><img src="{{ asset('images/brand/humelix-logo-mark.png') }}" alt=""></span><span><strong>HUMELIX</strong><small>LIMITED</small></span></a>
             <button type="button" class="admin-sidebar-close" aria-label="Close navigation" data-admin-menu-toggle><span>×</span></button>
         </div>
         <nav class="admin-nav">

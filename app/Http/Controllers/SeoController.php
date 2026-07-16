@@ -4,9 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Models\Article;
 use App\Models\Branch;
+use App\Models\EquipmentItem;
+use App\Models\JobOpening;
 use App\Models\Project;
+use App\Models\Review;
+use App\Models\Video;
 use App\Support\UchContent;
 use Illuminate\Http\Response;
+use Illuminate\Support\Carbon;
 
 class SeoController extends Controller
 {
@@ -15,11 +20,11 @@ class SeoController extends Controller
         $urls = collect();
         $add = fn (string $url, mixed $lastmod = null, string $priority = '0.7') => $urls->push([
             'loc' => url($url),
-            'lastmod' => $lastmod ? optional($lastmod)->toAtomString() : null,
+            'lastmod' => $this->atomLastmod($lastmod),
             'priority' => $priority,
         ]);
 
-        foreach (['/', '/about', '/services', '/industries', '/projects', '/safety', '/team', '/branches', '/resources', '/careers', '/contact', '/equipment', '/videos', '/privacy-policy', '/terms', '/cookie-policy', '/accessibility'] as $path) {
+        foreach (['/', '/about', '/services', '/industries', '/projects', '/safety', '/team', '/branches', '/resources', '/careers', '/contact', '/equipment', '/videos', '/reviews', '/privacy-policy', '/terms', '/cookie-policy', '/accessibility'] as $path) {
             $add($path, null, $path === '/' ? '1.0' : '0.8');
         }
 
@@ -40,7 +45,24 @@ class SeoController extends Controller
 
         $latestBranch = Branch::where('is_published', true)->latest('updated_at')->value('updated_at');
         if ($latestBranch) {
-            $urls = $urls->reject(fn ($url) => $url['loc'] === url('/branches'))->push(['loc' => url('/branches'), 'lastmod' => $latestBranch->toAtomString(), 'priority' => '0.8']);
+            $urls = $urls->reject(fn ($url) => $url['loc'] === url('/branches'))->push(['loc' => url('/branches'), 'lastmod' => $this->atomLastmod($latestBranch), 'priority' => '0.8']);
+        }
+
+        $dynamicIndexes = [
+            '/equipment' => EquipmentItem::where('is_published', true)->latest('updated_at')->value('updated_at'),
+            '/videos' => Video::published()->latest('updated_at')->value('updated_at'),
+            '/careers' => JobOpening::published()->latest('updated_at')->value('updated_at'),
+            '/reviews' => Review::where('is_approved', true)->latest('updated_at')->value('updated_at'),
+        ];
+
+        foreach ($dynamicIndexes as $path => $lastmod) {
+            if ($lastmod) {
+                $urls = $urls->reject(fn ($url) => $url['loc'] === url($path))->push([
+                    'loc' => url($path),
+                    'lastmod' => $this->atomLastmod($lastmod),
+                    'priority' => '0.8',
+                ]);
+            }
         }
 
         $xml = view('seo.sitemap', ['urls' => $urls])->render();
@@ -58,5 +80,10 @@ class SeoController extends Controller
         ];
 
         return response(implode("\n", $lines)."\n", 200)->header('Content-Type', 'text/plain; charset=UTF-8');
+    }
+
+    private function atomLastmod(mixed $lastmod): ?string
+    {
+        return $lastmod ? Carbon::parse($lastmod)->toAtomString() : null;
     }
 }

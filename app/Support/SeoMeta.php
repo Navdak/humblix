@@ -21,7 +21,8 @@ class SeoMeta
         $ogDescription = $setting?->og_description ?: $description;
         $twitterTitle = $setting?->twitter_title ?: $ogTitle;
         $twitterDescription = $setting?->twitter_description ?: $ogDescription;
-        $fallbackImage = asset('images/generated/home/home-hero-engineering.jpg');
+        // TODO: Replace this temporary generated/social banner when the client supplies the final approved OG asset.
+        $fallbackImage = asset('images/brand/humelix-og-image.jpg');
         $ogImage = $setting?->ogImageUrl() ? url($setting->ogImageUrl()) : ($fallbacks['image'] ?? $fallbackImage);
         $ogImage = Str::startsWith($ogImage, ['http://', 'https://']) ? $ogImage : url($ogImage);
         $twitterImage = $setting?->twitterImageUrl() ? url($setting->twitterImageUrl()) : $ogImage;
@@ -68,6 +69,7 @@ class SeoMeta
             $route === 'contact' => 'contact',
             str_starts_with((string) $route, 'equipment.') => 'equipment',
             str_starts_with((string) $route, 'videos.') => 'videos',
+            str_starts_with((string) $route, 'reviews.') => 'reviews',
             str_starts_with((string) $route, 'legal.') => (string) request()->route('page', 'privacy-policy'),
             default => 'home',
         };
@@ -99,6 +101,8 @@ class SeoMeta
             '@type' => 'Organization',
             'name' => 'HUMELIX LIMITED',
             'url' => url('/'),
+            'logo' => asset('images/brand/humelix-icon-512.png'),
+            'image' => asset('images/brand/humelix-og-image.jpg'),
             'email' => config('mail.from.address'),
             'description' => 'Global engineering services for HVAC, solar, electrical, maintenance, equipment supply and home appliance installation.',
         ];
@@ -111,11 +115,6 @@ class SeoMeta
             '@type' => 'WebSite',
             'name' => 'HUMELIX LIMITED',
             'url' => url('/'),
-            'potentialAction' => [
-                '@type' => 'SearchAction',
-                'target' => url('/resources').'?q={search_term_string}',
-                'query-input' => 'required name=search_term_string',
-            ],
         ];
     }
 

@@ -3,7 +3,7 @@
     <span>Chat with us</span>
 </button>
 <aside id="chat-panel" class="chat-panel" aria-label="HUMELIX LIMITED assistant" hidden data-chat-panel>
-    <div class="chat-head"><div class="chat-identity"><span class="brand-mark">H</span><div><strong>HUMELIX LIMITED Assistant</strong><span><i></i> Online</span></div></div><button type="button" aria-label="Close assistant" data-chat-close>×</button></div>
+    <div class="chat-head"><div class="chat-identity"><span class="brand-mark" aria-hidden="true"><img src="{{ asset('images/brand/humelix-logo-mark.png') }}" alt=""></span><div><strong>HUMELIX LIMITED Assistant</strong><span><i></i> Online</span></div></div><button type="button" aria-label="Close assistant" data-chat-close>×</button></div>
     <div class="chat-body">
         <div class="chat-message">Hello, welcome to <strong>Humelix Limited.</strong><br>What service do you need today?</div>
         <div class="chat-status" role="status" hidden data-chat-status></div>
