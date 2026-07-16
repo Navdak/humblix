@@ -222,6 +222,7 @@ input[type="file"] { padding: 9px; }
 .technical-partner-toggle { display: inline-flex; align-items: center; gap: 7px; margin-top: 18px; padding: 10px 14px; border: 1px solid #bdd5f2; border-radius: 999px; color: var(--blue); background: #f6fbff; font-size: 12px; font-weight: 900; cursor: pointer; transition: .2s; }
 .technical-partner-toggle:hover { border-color: var(--blue); background: #edf6ff; transform: translateY(-1px); }
 .technical-partner-details { display: grid; gap: 18px; padding: 24px clamp(22px,4vw,38px) clamp(22px,4vw,34px); border-top: 1px solid #e2edf8; background: #f9fcff; }
+.technical-partner-details[hidden] { display: none; }
 .technical-partner-details h3 { margin: 0 0 8px; font-size: 18px; letter-spacing: -.03em; }
 .technical-partner-connect { display: grid; gap: 10px; }
 .technical-partner-links { display: flex; flex-wrap: wrap; gap: 9px; }
