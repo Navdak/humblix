@@ -47,6 +47,64 @@
     </div>
 </section>
 
+@php
+    $technicalPartnerEnabled = ($globalSettings['technical_partner_enabled'] ?? '1') !== '0';
+    $technicalPartnerName = trim($globalSettings['technical_partner_name'] ?? 'Ikechukwu Prince Onyebuchi');
+    $technicalPartnerTitle = trim($globalSettings['technical_partner_title'] ?? 'Website Developer & Platform Maintainer');
+    $technicalPartnerBrand = trim($globalSettings['technical_partner_brand'] ?? 'Navdak Digital');
+    $technicalPartnerSummary = trim($globalSettings['technical_partner_summary'] ?? 'Navdak Digital designed and developed the HUMELIX LIMITED website and admin platform.');
+    $technicalPartnerAbout = trim($globalSettings['technical_partner_about'] ?? 'I support businesses with modern websites, dashboards, admin systems, automation tools and deployment-ready digital platforms. For HUMELIX LIMITED, Navdak Digital delivered the public website structure, content management dashboard, visitor analytics foundation, SEO setup and deployment support.');
+    $technicalPartnerWhatsapp = trim($globalSettings['technical_partner_whatsapp'] ?? '');
+    if ($technicalPartnerWhatsapp && ! \Illuminate\Support\Str::startsWith($technicalPartnerWhatsapp, ['http://', 'https://'])) {
+        $technicalPartnerWhatsapp = 'https://wa.me/'.preg_replace('/\D+/', '', $technicalPartnerWhatsapp);
+    }
+    $technicalPartnerLinks = collect([
+        ['label' => 'Portfolio', 'url' => trim($globalSettings['technical_partner_portfolio_url'] ?? '')],
+        ['label' => 'WhatsApp', 'url' => $technicalPartnerWhatsapp],
+        ['label' => 'GitHub', 'url' => trim($globalSettings['technical_partner_github_url'] ?? '')],
+        ['label' => 'Facebook', 'url' => trim($globalSettings['technical_partner_facebook_url'] ?? '')],
+        ['label' => 'Email', 'url' => filled($globalSettings['technical_partner_email'] ?? '') ? 'mailto:'.trim($globalSettings['technical_partner_email']) : ''],
+        ['label' => 'LinkedIn', 'url' => trim($globalSettings['technical_partner_linkedin_url'] ?? '')],
+        ['label' => trim($globalSettings['technical_partner_extra_label'] ?? ''), 'url' => trim($globalSettings['technical_partner_extra_url'] ?? '')],
+    ])->filter(fn ($link) => filled($link['label']) && filled($link['url']))->values();
+@endphp
+@if($technicalPartnerEnabled && ($technicalPartnerName || $technicalPartnerBrand))
+<section class="section technical-partner-section" style="padding-top:0">
+    <div class="container">
+        <article class="technical-partner-card" data-animate="fade-up">
+            <div class="technical-partner-main">
+                <div class="technical-partner-mark" aria-hidden="true">N</div>
+                <div>
+                    <span class="eyebrow">Technical Partner</span>
+                    <h2>{{ $technicalPartnerName ?: $technicalPartnerBrand }}</h2>
+                    <p class="technical-partner-role">{{ $technicalPartnerTitle }}{{ $technicalPartnerBrand ? ' · '.$technicalPartnerBrand : '' }}</p>
+                    <p>{{ $technicalPartnerSummary }}</p>
+                    <button class="technical-partner-toggle" type="button" aria-expanded="false" aria-controls="technical-partner-details" data-technical-partner-toggle>
+                        See more <span aria-hidden="true">↓</span>
+                    </button>
+                </div>
+            </div>
+            <div class="technical-partner-details" id="technical-partner-details" hidden data-technical-partner-details>
+                <div>
+                    <h3>About the developer</h3>
+                    <p>{{ $technicalPartnerAbout }}</p>
+                </div>
+                @if($technicalPartnerLinks->isNotEmpty())
+                    <div class="technical-partner-links" aria-label="Developer contact links">
+                        @foreach($technicalPartnerLinks as $link)
+                            <a href="{{ $link['url'] }}" target="{{ \Illuminate\Support\Str::startsWith($link['url'], 'mailto:') ? '_self' : '_blank' }}" rel="noopener">{{ $link['label'] }}</a>
+                        @endforeach
+                    </div>
+                @endif
+                <button class="technical-partner-toggle technical-partner-less" type="button" aria-expanded="true" aria-controls="technical-partner-details" data-technical-partner-toggle>
+                    See less <span aria-hidden="true">↑</span>
+                </button>
+            </div>
+        </article>
+    </div>
+</section>
+@endif
+
 <section class="section" style="padding-top:0">
     <div class="container">
         <div class="contact-band" data-animate="fade-up">

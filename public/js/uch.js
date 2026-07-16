@@ -32,6 +32,29 @@
   document.querySelectorAll('[data-chat-open]').forEach((button) => button.addEventListener('click', () => setChat(true)));
   document.querySelector('[data-chat-close]')?.addEventListener('click', () => setChat(false));
 
+  document.querySelectorAll('.technical-partner-card').forEach((card) => {
+    const details = card.querySelector('[data-technical-partner-details]');
+    const toggles = card.querySelectorAll('[data-technical-partner-toggle]');
+    if (!details || toggles.length === 0) return;
+
+    const setPartnerDetails = (open) => {
+      details.hidden = !open;
+      card.classList.toggle('is-expanded', open);
+      toggles.forEach((button) => {
+        button.setAttribute('aria-expanded', String(open));
+      });
+      if (!open) {
+        toggles[0]?.focus({ preventScroll: true });
+      }
+    };
+
+    toggles.forEach((button) => {
+      button.addEventListener('click', () => {
+        setPartnerDetails(details.hidden);
+      });
+    });
+  });
+
   document.addEventListener('keydown', (event) => {
     if (event.key !== 'Escape') return;
     setMenu(false);

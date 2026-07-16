@@ -27,6 +27,20 @@ class SettingsController extends Controller
         'developer_credit_enabled' => 'checkbox',
         'developer_credit_label' => 'text',
         'developer_credit_url' => 'url',
+        'technical_partner_enabled' => 'checkbox',
+        'technical_partner_name' => 'text',
+        'technical_partner_title' => 'text',
+        'technical_partner_brand' => 'text',
+        'technical_partner_summary' => 'textarea',
+        'technical_partner_about' => 'textarea',
+        'technical_partner_portfolio_url' => 'url',
+        'technical_partner_whatsapp' => 'text',
+        'technical_partner_github_url' => 'url',
+        'technical_partner_facebook_url' => 'url',
+        'technical_partner_email' => 'email',
+        'technical_partner_linkedin_url' => 'url',
+        'technical_partner_extra_label' => 'text',
+        'technical_partner_extra_url' => 'url',
     ];
 
     public function edit()
@@ -60,9 +74,23 @@ class SettingsController extends Controller
             $developerData = $request->validate([
                 'developer_credit_label' => ['nullable','string','max:80'],
                 'developer_credit_url' => ['nullable','url','max:255'],
+                'technical_partner_name' => ['nullable','string','max:120'],
+                'technical_partner_title' => ['nullable','string','max:140'],
+                'technical_partner_brand' => ['nullable','string','max:100'],
+                'technical_partner_summary' => ['nullable','string','max:500'],
+                'technical_partner_about' => ['nullable','string','max:1600'],
+                'technical_partner_portfolio_url' => ['nullable','url','max:255'],
+                'technical_partner_whatsapp' => ['nullable','string','max:120'],
+                'technical_partner_github_url' => ['nullable','url','max:255'],
+                'technical_partner_facebook_url' => ['nullable','url','max:255'],
+                'technical_partner_email' => ['nullable','email','max:160'],
+                'technical_partner_linkedin_url' => ['nullable','url','max:255'],
+                'technical_partner_extra_label' => ['nullable','string','max:80'],
+                'technical_partner_extra_url' => ['nullable','url','max:255'],
             ]);
 
             $developerData['developer_credit_enabled'] = $request->boolean('developer_credit_enabled') ? '1' : '0';
+            $developerData['technical_partner_enabled'] = $request->boolean('technical_partner_enabled') ? '1' : '0';
         }
 
         foreach ($data as $key => $value) SiteSetting::setValue($key, $value, 'homepage');
