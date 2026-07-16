@@ -15,6 +15,9 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->trustProxies(at: '*');
         $middleware->redirectGuestsTo('/admin/login');
+        $middleware->web(append: [
+            \App\Http\Middleware\TrackPublicVisitor::class,
+        ]);
         $middleware->alias([
             'admin' => \App\Http\Middleware\EnsureUserIsAdmin::class,
             'admin.module' => \App\Http\Middleware\EnsureUserCanManageAdminModule::class,

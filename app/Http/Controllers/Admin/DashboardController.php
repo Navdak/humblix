@@ -12,6 +12,7 @@ use App\Models\Project;
 use App\Models\Review;
 use App\Models\TeamMember;
 use App\Models\Video;
+use App\Models\VisitorEvent;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -23,11 +24,13 @@ class DashboardController extends Controller
     public function __invoke(Request $request)
     {
         $period = in_array((int) $request->integer('period'), [7, 14, 30], true) ? (int) $request->integer('period') : 14;
+        $trafficPeriod = in_array($request->query('traffic_period'), ['7', '14', '30', 'all'], true) ? (string) $request->query('traffic_period') : '30';
         $trendStart = now()->startOfDay()->subDays($period - 1);
         $trendDates = collect(range(0, $period - 1))->map(fn (int $offset) => $trendStart->copy()->addDays($offset));
 
         $totalReviews = $this->countRecords(Review::class);
         $approvedReviews = $this->countRecords(Review::class, fn ($query) => $query->where('is_approved', true));
+        $visitorAnalytics = auth()->user()?->canManage('analytics') ? $this->visitorAnalytics($trafficPeriod) : null;
 
         return view('admin.dashboard', [
             'stats' => [
@@ -61,11 +64,15 @@ class DashboardController extends Controller
                 'videoStatuses' => $this->groupCounts(Video::class, 'status'),
                 'equipment' => $this->groupCounts(EquipmentItem::class, 'category'),
                 'catalogue' => $this->catalogueCounts(),
+                'visitorTrend' => $visitorAnalytics['trend'] ?? ['labels' => collect(), 'values' => collect()],
+                'topPages' => $visitorAnalytics['topPages'] ?? ['labels' => collect(), 'values' => collect()],
                 'reviews' => [
                     'labels' => collect(['Approved', 'Pending']),
                     'values' => collect([$approvedReviews, max(0, $totalReviews - $approvedReviews)]),
                 ],
             ],
+            'visitorAnalytics' => $visitorAnalytics,
+            'trafficPeriod' => $trafficPeriod,
             'operationalAlerts' => [
                 ['label' => 'New enquiries awaiting review', 'count' => $this->countRecords(Enquiry::class, fn ($query) => $query->where('status', 'new')), 'route' => 'admin.enquiries.index', 'module' => 'enquiries', 'tone' => 'warn'],
                 ['label' => 'Draft videos', 'count' => $this->countRecords(Video::class, fn ($query) => $query->where('status', 'draft')), 'route' => 'admin.videos.index', 'module' => 'videos', 'tone' => 'warn'],
@@ -171,5 +178,102 @@ class DashboardController extends Controller
                 ->values(),
             'values' => $videos['values']->merge($equipment['values'])->values(),
         ];
+    }
+
+    private function visitorAnalytics(string $period): array
+    {
+        if (! $this->tableAvailable(VisitorEvent::class)) {
+            return $this->emptyVisitorAnalytics($period);
+        }
+
+        $query = VisitorEvent::query();
+        $periodStart = null;
+
+        if ($period !== 'all') {
+            $periodStart = now()->startOfDay()->subDays(((int) $period) - 1);
+            $query->where('created_at', '>=', $periodStart);
+        }
+
+        $periodEvents = $query->get(['visitor_hash', 'path', 'created_at']);
+        $allEvents = VisitorEvent::query()->get(['visitor_hash', 'created_at']);
+
+        $trend = $period === 'all'
+            ? $this->visitorMonthlyTrend($allEvents)
+            : $this->visitorDailyTrend((int) $period, $periodEvents, $periodStart ?? now()->startOfDay());
+
+        $topPages = $periodEvents
+            ->groupBy('path')
+            ->map(fn (Collection $events, string $path) => ['path' => $this->readablePath($path), 'count' => $events->count()])
+            ->sortByDesc('count')
+            ->take(8)
+            ->values();
+
+        return [
+            'period' => $period,
+            'periodLabel' => $period === 'all' ? 'All time' : "Last {$period} days",
+            'allTimeVisits' => $allEvents->count(),
+            'allTimeVisitors' => $allEvents->pluck('visitor_hash')->unique()->count(),
+            'periodVisits' => $periodEvents->count(),
+            'periodVisitors' => $periodEvents->pluck('visitor_hash')->unique()->count(),
+            'topPage' => $topPages->first()['path'] ?? 'No visits yet',
+            'trend' => $trend,
+            'topPages' => [
+                'labels' => $topPages->pluck('path')->values(),
+                'values' => $topPages->pluck('count')->map(fn ($value) => (int) $value)->values(),
+            ],
+        ];
+    }
+
+    private function emptyVisitorAnalytics(string $period): array
+    {
+        return [
+            'period' => $period,
+            'periodLabel' => $period === 'all' ? 'All time' : "Last {$period} days",
+            'allTimeVisits' => 0,
+            'allTimeVisitors' => 0,
+            'periodVisits' => 0,
+            'periodVisitors' => 0,
+            'topPage' => 'No visits yet',
+            'trend' => ['labels' => collect(), 'values' => collect()],
+            'topPages' => ['labels' => collect(), 'values' => collect()],
+        ];
+    }
+
+    private function visitorDailyTrend(int $period, Collection $events, Carbon $start): array
+    {
+        $dates = collect(range(0, $period - 1))->map(fn (int $offset) => $start->copy()->addDays($offset));
+        $eventsByDay = $events->groupBy(fn (VisitorEvent $event) => $event->created_at->format('Y-m-d'));
+
+        return [
+            'labels' => $dates->map(fn (Carbon $date) => $date->format('M j'))->values(),
+            'values' => $dates->map(fn (Carbon $date) => (int) ($eventsByDay[$date->format('Y-m-d')] ?? collect())->count())->values(),
+        ];
+    }
+
+    private function visitorMonthlyTrend(Collection $events): array
+    {
+        if ($events->isEmpty()) {
+            return ['labels' => collect(), 'values' => collect()];
+        }
+
+        $start = $events->min('created_at')->copy()->startOfMonth();
+        $end = now()->startOfMonth();
+        $months = collect();
+
+        for ($date = $start->copy(); $date->lte($end); $date->addMonth()) {
+            $months->push($date->copy());
+        }
+
+        $eventsByMonth = $events->groupBy(fn (VisitorEvent $event) => $event->created_at->format('Y-m'));
+
+        return [
+            'labels' => $months->map(fn (Carbon $date) => $date->format('M Y'))->values(),
+            'values' => $months->map(fn (Carbon $date) => (int) ($eventsByMonth[$date->format('Y-m')] ?? collect())->count())->values(),
+        ];
+    }
+
+    private function readablePath(string $path): string
+    {
+        return $path === '/' ? 'Homepage' : $path;
     }
 }

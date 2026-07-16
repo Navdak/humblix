@@ -11,5 +11,24 @@
         <div><h4>Legal</h4><a href="{{ route('legal.show', 'privacy-policy') }}">Privacy Policy</a><a href="{{ route('legal.show', 'terms') }}">Terms</a><a href="{{ route('legal.show', 'cookie-policy') }}">Cookie Policy</a><a href="{{ route('legal.show', 'accessibility') }}">Accessibility</a></div>
         <div><h4>Contact</h4><a href="{{ route('contact') }}">Contact Humelix</a><a href="{{ route('contact') }}">Request Service</a><button type="button" data-chat-open>Chat with Engineer</button><a href="https://wa.me/{{ preg_replace('/\D+/', '', $globalSettings['whatsapp_number'] ?? '+2349001234567') }}" target="_blank" rel="noopener">WhatsApp Us</a></div>
     </div>
-    <div class="container footer-bottom"><span>{{ $globalSettings['footer_copyright'] ?? '© '.date('Y').' HUMELIX LIMITED. All rights reserved.' }}</span><span><a href="{{ route('legal.show', 'privacy-policy') }}">Privacy Policy</a> · <a href="{{ route('legal.show', 'terms') }}">Terms</a> · <a href="{{ route('legal.show', 'cookie-policy') }}">Cookie Policy</a> · <a href="{{ route('legal.show', 'accessibility') }}">Accessibility</a></span></div>
+    @php
+        $developerCreditEnabled = ($globalSettings['developer_credit_enabled'] ?? '1') !== '0';
+        $developerCreditLabel = trim($globalSettings['developer_credit_label'] ?? 'Navdak Digital');
+        $developerCreditUrl = trim($globalSettings['developer_credit_url'] ?? '');
+    @endphp
+    <div class="container footer-bottom">
+        <span>
+            {{ $globalSettings['footer_copyright'] ?? '© '.date('Y').' HUMELIX LIMITED. All rights reserved.' }}
+            @if($developerCreditEnabled && $developerCreditLabel)
+                <span class="footer-credit">Website by
+                    @if($developerCreditUrl)
+                        <a href="{{ $developerCreditUrl }}" target="_blank" rel="noopener">{{ $developerCreditLabel }}</a>
+                    @else
+                        {{ $developerCreditLabel }}
+                    @endif
+                </span>
+            @endif
+        </span>
+        <span><a href="{{ route('legal.show', 'privacy-policy') }}">Privacy Policy</a> · <a href="{{ route('legal.show', 'terms') }}">Terms</a> · <a href="{{ route('legal.show', 'cookie-policy') }}">Cookie Policy</a> · <a href="{{ route('legal.show', 'accessibility') }}">Accessibility</a></span>
+    </div>
 </footer>

@@ -18,18 +18,26 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $admin = User::firstOrCreate(['email'=>'admin@humelix.com'], [
-            'name'=>'HUMELIX LIMITED Admin',
+            'name'=>'Ikechukwu Prince Onyebuchi',
             'password'=>Hash::make('password123'),
             'role'=>'super_admin',
             'region'=>'Global',
             'is_active'=>true,
         ]);
+        $admin->fill([
+            'name' => $admin->name === 'HUMELIX LIMITED Admin' ? 'Ikechukwu Prince Onyebuchi' : $admin->name,
+            'role' => 'super_admin',
+            'is_active' => true,
+        ])->save();
 
         foreach ([
             'hero_headline'=>'Engineering Comfort. Powering Reliability.',
             'hero_subtext'=>'HVAC, solar, electrical, maintenance and equipment solutions for residential, commercial and industrial clients worldwide.',
             'founder_snapshot'=>'At HUMELIX LIMITED, our mission is simple: deliver safe, precise and reliable engineering solutions that improve comfort, power reliability and operational performance.',
             'footer_copyright'=>'© '.date('Y').' HUMELIX LIMITED. All rights reserved.',
+            'developer_credit_enabled'=>'1',
+            'developer_credit_label'=>'Navdak Digital',
+            'developer_credit_url'=>'',
             'company_email'=>'info@humelix.com',
             'support_email'=>'support@humelix.com',
             'phone_primary'=>'+234 900 123 4567',

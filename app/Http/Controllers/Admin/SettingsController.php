@@ -23,9 +23,19 @@ class SettingsController extends Controller
         'linkedin_url' => 'url',
     ];
 
+    private array $developerFields = [
+        'developer_credit_enabled' => 'checkbox',
+        'developer_credit_label' => 'text',
+        'developer_credit_url' => 'url',
+    ];
+
     public function edit()
     {
-        return view('admin.settings.edit', ['settings' => SiteSetting::pluck('value','key')->toArray(), 'fields' => $this->fields]);
+        return view('admin.settings.edit', [
+            'settings' => SiteSetting::pluck('value','key')->toArray(),
+            'fields' => $this->fields,
+            'developerFields' => auth()->user()?->isSuperAdmin() ? $this->developerFields : [],
+        ]);
     }
 
     public function update(Request $request): RedirectResponse
@@ -45,7 +55,24 @@ class SettingsController extends Controller
             'linkedin_url' => ['nullable','url','max:255'],
         ]);
 
+        $developerData = [];
+        if ($request->user()?->isSuperAdmin()) {
+            $developerData = $request->validate([
+                'developer_credit_label' => ['nullable','string','max:80'],
+                'developer_credit_url' => ['nullable','url','max:255'],
+            ]);
+
+            $developerData['developer_credit_enabled'] = $request->boolean('developer_credit_enabled') ? '1' : '0';
+        }
+
         foreach ($data as $key => $value) SiteSetting::setValue($key, $value, 'homepage');
+
+        if ($developerData) {
+            foreach ($developerData as $key => $value) {
+                SiteSetting::setValue($key, $value, 'developer');
+            }
+        }
+
         return back()->with('success','Site settings updated.');
     }
 }

@@ -73,6 +73,46 @@ if (data) {
         });
     }
 
+    const visitorTrendCanvas = document.querySelector('[data-visitor-trend-chart]');
+    if (visitorTrendCanvas && data.visitorTrend.values.some(Number)) {
+        new Chart(visitorTrendCanvas, {
+            type: 'line',
+            data: {
+                labels: data.visitorTrend.labels,
+                datasets: [{
+                    label: 'Visits',
+                    data: data.visitorTrend.values,
+                    borderColor: '#0f766e',
+                    backgroundColor: 'rgba(15, 118, 110, .1)',
+                    fill: true,
+                    borderWidth: 2.5,
+                    tension: .36,
+                    pointRadius: 2,
+                    pointHoverRadius: 5,
+                }],
+            },
+            options: { ...common, plugins: { ...common.plugins, legend: { display: false } }, scales: { x: { grid: { display: false } }, y: { beginAtZero: true, ticks: { precision: 0 }, border: { display: false } } } },
+        });
+    }
+
+    const topPagesCanvas = document.querySelector('[data-top-pages-chart]');
+    if (topPagesCanvas && data.topPages.values.some(Number)) {
+        new Chart(topPagesCanvas, {
+            type: 'bar',
+            data: {
+                labels: data.topPages.labels,
+                datasets: [{
+                    label: 'Visits',
+                    data: data.topPages.values,
+                    backgroundColor: '#075ed1',
+                    borderRadius: 7,
+                    maxBarThickness: 28,
+                }],
+            },
+            options: { ...common, indexAxis: 'y', scales: { x: { beginAtZero: true, ticks: { precision: 0 }, border: { display: false } }, y: { grid: { display: false }, border: { display: false } } } },
+        });
+    }
+
     const reviewCanvas = document.querySelector('[data-review-chart]');
     if (reviewCanvas && data.reviews.values.some(Number)) {
         new Chart(reviewCanvas, {

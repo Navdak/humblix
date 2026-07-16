@@ -4,7 +4,7 @@
 @section('page_subtitle','Monitor enquiries, projects, services, videos, equipment, branches and content activity.')
 @section('page_actions')
 <div class="admin-heading-actions">
-    <form class="admin-date-filter" method="GET"><x-admin-icon name="calendar"/><select name="period" aria-label="Dashboard date range" onchange="this.form.submit()"><option value="7" @selected($period===7)>Last 7 days</option><option value="14" @selected($period===14)>Last 14 days</option><option value="30" @selected($period===30)>Last 30 days</option></select></form>
+    <form class="admin-date-filter" method="GET"><x-admin-icon name="calendar"/><input type="hidden" name="traffic_period" value="{{ $trafficPeriod }}"><select name="period" aria-label="Dashboard date range" onchange="this.form.submit()"><option value="7" @selected($period===7)>Last 7 days</option><option value="14" @selected($period===14)>Last 14 days</option><option value="30" @selected($period===30)>Last 30 days</option></select></form>
     <a class="btn btn-outline" href="{{ route('home') }}" target="_blank" rel="noopener"><x-admin-icon name="external"/> View Website</a>
     @if(auth()->user()?->canManage('articles'))<a class="btn btn-primary" href="{{ route('admin.articles.create') }}"><x-admin-icon name="articles"/> New Article</a>@endif
     @if(auth()->user()?->canManage('projects'))<a class="btn btn-primary" href="{{ route('admin.projects.create') }}"><x-admin-icon name="projects"/> Add Project</a>@endif
@@ -14,6 +14,7 @@
 @endsection
 @section('content')
 @php
+    $adminUser = auth()->user();
     $kpis = [
         ['totalEnquiries','Total Enquiries','enquiries','All time enquiries','blue'],
         ['newEnquiries','New Enquiries','enquiries','Needs attention','cyan'],
@@ -27,11 +28,70 @@
         ['teamMembers','Team Members','team','People profiles','green'],
     ];
 @endphp
+<section class="admin-welcome-card admin-reveal" aria-label="Personalized admin welcome">
+    <div>
+        <span class="admin-welcome-eyebrow">Welcome back</span>
+        <h2 data-admin-greeting data-admin-greeting-name="{{ $adminUser?->displayName() }}">{{ 'Welcome, '.$adminUser?->displayName() }}</h2>
+        <p>{{ $adminUser?->roleLabel() }} · {{ $adminUser?->roleSummary() }}</p>
+    </div>
+    <span class="admin-welcome-role">{{ $adminUser?->roleLabel() }}</span>
+</section>
+
 <section class="admin-kpi-grid" aria-label="Key performance indicators">
 @foreach($kpis as [$key,$label,$icon,$helper,$tone])
     <article class="admin-kpi admin-reveal"><div class="admin-kpi-top"><span class="admin-kpi-icon is-{{ $tone }}"><x-admin-icon :name="$icon"/></span><span class="admin-kpi-trend"><x-admin-icon name="trend"/> Live</span></div><p>{{ $label }}</p><strong>{{ number_format($stats[$key] ?? 0) }}</strong><small>{{ $helper }}</small></article>
 @endforeach
 </section>
+
+@if($visitorAnalytics)
+<section class="visitor-analytics admin-reveal" aria-label="Visitor analytics">
+    <header class="visitor-analytics-head">
+        <div>
+            <span class="admin-welcome-eyebrow">Visitor Analytics</span>
+            <h2>Public website traffic</h2>
+            <p>Public page visits only. Admin pages and logged-in admin sessions are excluded.</p>
+        </div>
+        <form class="admin-date-filter" method="GET">
+            <input type="hidden" name="period" value="{{ $period }}">
+            <x-admin-icon name="calendar"/>
+            <select name="traffic_period" aria-label="Visitor analytics date range" onchange="this.form.submit()">
+                <option value="7" @selected($trafficPeriod === '7')>Last 7 days</option>
+                <option value="14" @selected($trafficPeriod === '14')>Last 14 days</option>
+                <option value="30" @selected($trafficPeriod === '30')>Last 30 days</option>
+                <option value="all" @selected($trafficPeriod === 'all')>All time</option>
+            </select>
+        </form>
+    </header>
+    <div class="visitor-kpi-grid">
+        <article><span>All-Time Visitors</span><strong>{{ number_format($visitorAnalytics['allTimeVisitors']) }}</strong><small>Estimated unique visitors</small></article>
+        <article><span>All-Time Visits</span><strong>{{ number_format($visitorAnalytics['allTimeVisits']) }}</strong><small>Total public page views</small></article>
+        <article><span>{{ $visitorAnalytics['periodLabel'] }} Visits</span><strong>{{ number_format($visitorAnalytics['periodVisits']) }}</strong><small>{{ number_format($visitorAnalytics['periodVisitors']) }} unique visitors</small></article>
+        <article><span>Top Page</span><strong class="visitor-top-page">{{ $visitorAnalytics['topPage'] }}</strong><small>Selected period</small></article>
+    </div>
+    <div class="visitor-chart-grid">
+        <article class="admin-panel">
+            <header class="admin-panel-head"><div><h2>Website visits — {{ $visitorAnalytics['periodLabel'] }}</h2><p>{{ $trafficPeriod === 'all' ? 'Monthly public traffic trend.' : 'Daily public traffic trend.' }}</p></div></header>
+            <div class="admin-chart-wrap">
+                @if(collect($chartData['visitorTrend']['values'])->sum() > 0)
+                    <canvas data-visitor-trend-chart aria-label="Website visitor trend"></canvas>
+                @else
+                    @include('admin.partials.empty',['title'=>'No visitor data yet','message'=>'Public website visits will appear here after visitors browse the site.'])
+                @endif
+            </div>
+        </article>
+        <article class="admin-panel">
+            <header class="admin-panel-head"><div><h2>Top visited pages</h2><p>Highest traffic public pages for the selected period.</p></div></header>
+            <div class="admin-chart-wrap">
+                @if(collect($chartData['topPages']['values'])->sum() > 0)
+                    <canvas data-top-pages-chart aria-label="Top visited public pages"></canvas>
+                @else
+                    @include('admin.partials.empty',['title'=>'No top pages yet','message'=>'Top pages will appear when visitor tracking has data.'])
+                @endif
+            </div>
+        </article>
+    </div>
+</section>
+@endif
 
 <section class="admin-analytics-grid">
     <article class="admin-panel admin-chart-panel admin-reveal">

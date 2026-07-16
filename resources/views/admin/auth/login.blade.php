@@ -18,6 +18,21 @@
         <div class="form-field" style="margin-top:14px"><label>Password</label><input name="password" type="password" required></div>
         <label style="display:flex;align-items:center;gap:8px;margin:16px 0"><input type="checkbox" name="remember" value="1" style="width:auto"> Remember me</label>
         <button class="btn btn-primary" style="width:100%">Login</button>
+        @php
+            $developerCreditEnabled = ($globalSettings['developer_credit_enabled'] ?? '1') !== '0';
+            $developerCreditLabel = trim($globalSettings['developer_credit_label'] ?? 'Navdak Digital');
+            $developerCreditUrl = trim($globalSettings['developer_credit_url'] ?? '');
+        @endphp
+        @if($developerCreditEnabled && $developerCreditLabel)
+            <p class="admin-login-credit">
+                Admin system developed &amp; maintained by
+                @if($developerCreditUrl)
+                    <a href="{{ $developerCreditUrl }}" target="_blank" rel="noopener">{{ $developerCreditLabel }}</a>
+                @else
+                    {{ $developerCreditLabel }}
+                @endif
+            </p>
+        @endif
     </form>
 </body>
 </html>
