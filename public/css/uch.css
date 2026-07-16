@@ -498,9 +498,11 @@ body.video-open { overflow: hidden; }
 .admin-login-credit { margin: 18px 0 0; color: #64748b; font-size: 11px; line-height: 1.5; text-align: center; }
 .admin-login-credit a { color: #075ed1; font-weight: 800; }
 .password-toggle-field { position: relative; display: flex; align-items: center; }
-.password-toggle-field input { width: 100%; padding-right: 78px; }
-.password-toggle-button { position: absolute; right: 8px; min-height: 34px; padding: 0 12px; border: 1px solid #cfe0f3; border-radius: 999px; color: #075ed1; background: #f5faff; font: inherit; font-size: 12px; font-weight: 900; cursor: pointer; transition: .2s; }
+.password-toggle-field input { width: 100%; padding-right: 54px; }
+.password-toggle-button { position: absolute; right: 8px; width: 36px; height: 36px; display: grid; place-items: center; border: 1px solid #cfe0f3; border-radius: 999px; color: #075ed1; background: #f5faff; cursor: pointer; transition: .2s; }
 .password-toggle-button:hover,.password-toggle-button:focus-visible { border-color: #075ed1; background: #eaf4ff; outline: none; }
+.password-eye-icon { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; }
+.password-eye-icon[hidden] { display: none; }
 .legal-content { max-width: 920px; }
 .legal-content .card { margin-bottom: 16px; }
 .legal-content .card h2 { margin-bottom: 8px; font-size: 1.15rem; }

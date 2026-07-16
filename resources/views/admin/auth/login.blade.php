@@ -20,7 +20,15 @@
             <div class="password-toggle-field">
                 <input name="password" type="password" required data-password-input>
                 <button type="button" class="password-toggle-button" aria-label="Show password" aria-pressed="false" data-password-toggle>
-                    <span data-password-toggle-text>Show</span>
+                    <svg class="password-eye-icon" viewBox="0 0 24 24" aria-hidden="true" data-password-eye>
+                        <path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z"/>
+                        <circle cx="12" cy="12" r="3"/>
+                    </svg>
+                    <svg class="password-eye-icon" viewBox="0 0 24 24" aria-hidden="true" hidden data-password-eye-off>
+                        <path d="M3 3l18 18"/>
+                        <path d="M10.7 5.2A10.7 10.7 0 0 1 12 5c6 0 9.5 7 9.5 7a17.8 17.8 0 0 1-2.8 3.7M7.5 7.3C4.4 9 2.5 12 2.5 12s3.5 7 9.5 7c1.6 0 3-.4 4.2-1"/>
+                        <path d="M9.9 9.9A3 3 0 0 0 14.1 14.1"/>
+                    </svg>
                 </button>
             </div>
         </div>
@@ -46,14 +54,16 @@
         document.querySelectorAll('[data-password-toggle]').forEach((button) => {
             const field = button.closest('.password-toggle-field');
             const input = field?.querySelector('[data-password-input]');
-            const label = button.querySelector('[data-password-toggle-text]');
+            const eye = button.querySelector('[data-password-eye]');
+            const eyeOff = button.querySelector('[data-password-eye-off]');
 
-            if (!input || !label) return;
+            if (!input || !eye || !eyeOff) return;
 
             button.addEventListener('click', () => {
                 const show = input.type === 'password';
                 input.type = show ? 'text' : 'password';
-                label.textContent = show ? 'Hide' : 'Show';
+                eye.hidden = show;
+                eyeOff.hidden = !show;
                 button.setAttribute('aria-label', show ? 'Hide password' : 'Show password');
                 button.setAttribute('aria-pressed', String(show));
                 input.focus({ preventScroll: true });
