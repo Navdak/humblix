@@ -64,8 +64,8 @@
 
   const videoModal = document.querySelector('[data-video-modal]');
   const videoPlayer = document.querySelector('[data-video-player]');
-  const videoTitle = document.querySelector('[data-video-title]');
-  const videoCaption = document.querySelector('[data-video-caption]');
+  const videoTitle = videoModal?.querySelector('[data-video-title]');
+  const videoCaption = videoModal?.querySelector('[data-video-caption]');
   const videoCloseButtons = document.querySelectorAll('[data-video-close]');
   let lastVideoTrigger = null;
 
@@ -90,6 +90,7 @@
     const kind = button.dataset.videoKind || 'iframe';
     const title = button.dataset.videoTitle || 'Humelix video';
     const caption = button.dataset.videoCaption || '';
+    const poster = button.dataset.videoPoster || '';
 
     if (videoTitle) videoTitle.textContent = title;
     if (videoCaption) {
@@ -103,6 +104,7 @@
       video.playsInline = true;
       video.preload = 'metadata';
       video.src = src;
+      if (poster) video.poster = poster;
       video.setAttribute('aria-label', title);
       videoPlayer.append(video);
     } else {

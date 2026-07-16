@@ -119,7 +119,51 @@ class Video extends Model
 
     public function thumbnailUrl(): ?string
     {
-        return $this->thumbnail_path ? Storage::disk('public')->url($this->thumbnail_path) : null;
+        if ($this->thumbnail_path) {
+            return Storage::disk('public')->url($this->thumbnail_path);
+        }
+
+        return $this->youtubeThumbnailUrl();
+    }
+
+    public function youtubeThumbnailUrl(): ?string
+    {
+        $id = $this->youtubeVideoId();
+
+        return $id ? "https://img.youtube.com/vi/{$id}/hqdefault.jpg" : null;
+    }
+
+    public function youtubeVideoId(): ?string
+    {
+        foreach (array_filter([$this->external_url, $this->embed_url]) as $url) {
+            $host = strtolower((string) parse_url($url, PHP_URL_HOST));
+            $path = trim((string) parse_url($url, PHP_URL_PATH), '/');
+
+            if (str_contains($host, 'youtu.be')) {
+                $id = strtok($path, '/');
+            } elseif (str_contains($host, 'youtube.com') || str_contains($host, 'youtube-nocookie.com')) {
+                parse_str((string) parse_url($url, PHP_URL_QUERY), $query);
+                $id = $query['v'] ?? null;
+
+                if (! $id && str_starts_with($path, 'embed/')) {
+                    $id = substr($path, strlen('embed/'));
+                    $id = strtok($id, '/');
+                }
+
+                if (! $id && str_starts_with($path, 'shorts/')) {
+                    $id = substr($path, strlen('shorts/'));
+                    $id = strtok($id, '/');
+                }
+            } else {
+                $id = null;
+            }
+
+            if (is_string($id) && preg_match('/^[A-Za-z0-9_-]{6,}$/', $id)) {
+                return $id;
+            }
+        }
+
+        return null;
     }
 
     public function categoryLabel(): string

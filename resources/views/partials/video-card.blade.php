@@ -13,6 +13,7 @@
         data-video-caption="{{ $video->caption }}"
         data-video-src="{{ $playbackUrl }}"
         data-video-kind="{{ $video->playbackKind() }}"
+        data-video-poster="{{ $thumbnailUrl }}"
         aria-label="Play {{ $video->title }}"
     >
         <img loading="lazy" src="{{ $thumbnailUrl }}" alt="{{ $video->title }} thumbnail">
