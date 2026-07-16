@@ -29,7 +29,7 @@
     <meta name="twitter:image" content="{{ $seo['twitter_image'] }}">
     <meta name="theme-color" content="#0A192F">
     <link rel="icon" href="{{ asset('images/uch-favicon.svg') }}" type="image/svg+xml">
-    <link rel="stylesheet" href="{{ asset('css/uch.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/uch.css') }}?v=20260716a">
     @foreach($seo['structured_data'] as $schema)
         <script type="application/ld+json">{!! json_encode($schema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}</script>
     @endforeach
@@ -77,6 +77,6 @@
 <button class="back-to-top" type="button" aria-label="Back to top" data-back-to-top hidden>
     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 14 6-6 6 6M12 8v10"/></svg>
 </button>
-<script src="{{ asset('js/uch.js') }}" defer></script>
+<script src="{{ asset('js/uch.js') }}?v=20260716a" defer></script>
 </body>
 </html>

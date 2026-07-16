@@ -6,7 +6,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'Admin') · HUMELIX LIMITED</title>
     <link rel="icon" href="{{ asset('images/uch-favicon.svg') }}" type="image/svg+xml">
-    <link rel="stylesheet" href="{{ asset('css/uch.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/uch.css') }}?v=20260716a">
     @vite('resources/js/app.js')
     @stack('head')
 </head>
