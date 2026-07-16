@@ -42,6 +42,7 @@ class DatabaseSeeder extends Seeder
             'technical_partner_name'=>'Ikechukwu Prince Onyebuchi',
             'technical_partner_title'=>'Website Developer & Platform Maintainer',
             'technical_partner_brand'=>'Navdak Digital',
+            'technical_partner_image_path'=>'images/generated/careers/careers-office-admin-culture.jpg',
             'technical_partner_summary'=>'Navdak Digital designed and developed the HUMELIX LIMITED website and admin platform.',
             'technical_partner_about'=>'I support businesses with modern websites, dashboards, admin systems, automation tools and deployment-ready digital platforms. For HUMELIX LIMITED, Navdak Digital delivered the public website structure, content management dashboard, visitor analytics foundation, SEO setup and deployment support.',
             'technical_partner_portfolio_url'=>'',
