@@ -497,6 +497,10 @@ body.video-open { overflow: hidden; }
 .footer-credit { display: inline-flex; gap: 3px; margin-left: 8px; padding-left: 8px; border-left: 1px solid rgba(255,255,255,.14); }
 .admin-login-credit { margin: 18px 0 0; color: #64748b; font-size: 11px; line-height: 1.5; text-align: center; }
 .admin-login-credit a { color: #075ed1; font-weight: 800; }
+.password-toggle-field { position: relative; display: flex; align-items: center; }
+.password-toggle-field input { width: 100%; padding-right: 78px; }
+.password-toggle-button { position: absolute; right: 8px; min-height: 34px; padding: 0 12px; border: 1px solid #cfe0f3; border-radius: 999px; color: #075ed1; background: #f5faff; font: inherit; font-size: 12px; font-weight: 900; cursor: pointer; transition: .2s; }
+.password-toggle-button:hover,.password-toggle-button:focus-visible { border-color: #075ed1; background: #eaf4ff; outline: none; }
 .legal-content { max-width: 920px; }
 .legal-content .card { margin-bottom: 16px; }
 .legal-content .card h2 { margin-bottom: 8px; font-size: 1.15rem; }
