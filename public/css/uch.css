@@ -218,16 +218,19 @@ input[type="file"] { padding: 9px; }
 .technical-partner-card h3 { margin: 7px 0 7px; font-size: clamp(1.55rem, 1.2rem + 1.6vw, 2.45rem); line-height: 1.08; letter-spacing: -.045em; }
 .technical-partner-card p { max-width: 760px; margin: 0; color: var(--muted); }
 .technical-partner-role { margin-bottom: 12px !important; color: #24425f !important; font-size: 13px; font-weight: 800; }
+.technical-partner-brief { font-size: 17px; line-height: 1.75; }
 .technical-partner-toggle { display: inline-flex; align-items: center; gap: 7px; margin-top: 18px; padding: 10px 14px; border: 1px solid #bdd5f2; border-radius: 999px; color: var(--blue); background: #f6fbff; font-size: 12px; font-weight: 900; cursor: pointer; transition: .2s; }
 .technical-partner-toggle:hover { border-color: var(--blue); background: #edf6ff; transform: translateY(-1px); }
 .technical-partner-details { display: grid; gap: 18px; padding: 24px clamp(22px,4vw,38px) clamp(22px,4vw,34px); border-top: 1px solid #e2edf8; background: #f9fcff; }
 .technical-partner-details h3 { margin: 0 0 8px; font-size: 18px; letter-spacing: -.03em; }
+.technical-partner-connect { display: grid; gap: 10px; }
 .technical-partner-links { display: flex; flex-wrap: wrap; gap: 9px; }
 .technical-partner-links a { min-width: 42px; min-height: 42px; display: inline-flex; align-items: center; justify-content: center; gap: 7px; padding: 10px; border: 1px solid #d5e4f4; border-radius: 999px; color: #24425f; background: #fff; font-size: 11px; font-weight: 850; transition: .2s; }
 .technical-partner-links a svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
 .technical-partner-links a:not(.is-featured) span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 .technical-partner-links a.is-featured { padding-inline: 14px; color: #fff; border-color: var(--blue); background: var(--blue); }
 .technical-partner-links a:hover { color: var(--blue); border-color: #aecaed; background: #fff; transform: translateY(-1px); }
+.technical-partner-links a.is-featured:hover { color: var(--blue); }
 .technical-partner-less { justify-self: start; margin-top: 0; }
 .credibility-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
 .credibility-grid .card h2 { margin: 8px 0; color: var(--blue); font-size: clamp(2rem, 1.5rem + 1.8vw, 3rem); line-height: 1; }

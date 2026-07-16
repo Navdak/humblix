@@ -53,19 +53,21 @@
     $technicalPartnerTitle = trim($globalSettings['technical_partner_title'] ?? 'Website Developer & Platform Maintainer');
     $technicalPartnerBrand = trim($globalSettings['technical_partner_brand'] ?? 'Navdak Digital');
     $technicalPartnerImage = trim($globalSettings['technical_partner_image_path'] ?? 'images/generated/careers/careers-office-admin-culture.jpg');
-    $technicalPartnerSummary = trim($globalSettings['technical_partner_summary'] ?? 'Navdak Digital designed and developed the HUMELIX LIMITED website and admin platform.');
-    $technicalPartnerAbout = trim($globalSettings['technical_partner_about'] ?? 'I am a web developer focused on building modern business websites, admin dashboards, automation tools and digital platforms that are easy to manage and ready to scale. For HUMELIX LIMITED, I designed and developed the public website, admin dashboard, visitor analytics foundation, SEO setup and deployment workflow.');
-    $technicalPartnerWhatsapp = trim($globalSettings['technical_partner_whatsapp'] ?? '');
+    $technicalPartnerSummary = trim($globalSettings['technical_partner_summary'] ?? '') ?: 'I design and maintain modern business websites, admin dashboards and digital platforms that are clean, scalable and easy for teams to manage.';
+    $technicalPartnerAbout = trim($globalSettings['technical_partner_about'] ?? '') ?: 'I am a website developer and platform maintainer focused on building reliable business systems, admin dashboards, automation-ready workflows and deployment-ready digital platforms. For HUMELIX LIMITED, Navdak Digital delivered the public website structure, editable admin dashboard, visitor analytics foundation, SEO setup, generated visual assets and Render preview deployment workflow.';
+    $technicalPartnerPortfolioUrl = trim($globalSettings['technical_partner_portfolio_url'] ?? '') ?: 'https://example.com/portfolio';
+    $technicalPartnerWhatsapp = trim($globalSettings['technical_partner_whatsapp'] ?? '') ?: 'https://wa.me/2349000000000';
     if ($technicalPartnerWhatsapp && ! \Illuminate\Support\Str::startsWith($technicalPartnerWhatsapp, ['http://', 'https://'])) {
         $technicalPartnerWhatsapp = 'https://wa.me/'.preg_replace('/\D+/', '', $technicalPartnerWhatsapp);
     }
+    $technicalPartnerEmail = trim($globalSettings['technical_partner_email'] ?? '') ?: 'developer@example.com';
     $technicalPartnerLinks = collect([
-        ['label' => 'Visit My Portfolio', 'short' => 'Portfolio', 'icon' => 'portfolio', 'url' => trim($globalSettings['technical_partner_portfolio_url'] ?? ''), 'featured' => true],
+        ['label' => 'Visit My Portfolio', 'short' => 'Portfolio', 'icon' => 'portfolio', 'url' => $technicalPartnerPortfolioUrl, 'featured' => true],
         ['label' => 'WhatsApp', 'short' => 'WhatsApp', 'icon' => 'whatsapp', 'url' => $technicalPartnerWhatsapp],
-        ['label' => 'GitHub', 'short' => 'GitHub', 'icon' => 'github', 'url' => trim($globalSettings['technical_partner_github_url'] ?? '')],
-        ['label' => 'Facebook', 'short' => 'Facebook', 'icon' => 'facebook', 'url' => trim($globalSettings['technical_partner_facebook_url'] ?? '')],
-        ['label' => 'Email', 'short' => 'Email', 'icon' => 'email', 'url' => filled($globalSettings['technical_partner_email'] ?? '') ? 'mailto:'.trim($globalSettings['technical_partner_email']) : ''],
-        ['label' => 'LinkedIn', 'short' => 'LinkedIn', 'icon' => 'linkedin', 'url' => trim($globalSettings['technical_partner_linkedin_url'] ?? '')],
+        ['label' => 'GitHub', 'short' => 'GitHub', 'icon' => 'github', 'url' => trim($globalSettings['technical_partner_github_url'] ?? '') ?: 'https://github.com/navdak'],
+        ['label' => 'Facebook', 'short' => 'Facebook', 'icon' => 'facebook', 'url' => trim($globalSettings['technical_partner_facebook_url'] ?? '') ?: 'https://facebook.com/navdakdigital'],
+        ['label' => 'Email', 'short' => 'Email', 'icon' => 'email', 'url' => 'mailto:'.$technicalPartnerEmail],
+        ['label' => 'LinkedIn', 'short' => 'LinkedIn', 'icon' => 'linkedin', 'url' => trim($globalSettings['technical_partner_linkedin_url'] ?? '') ?: 'https://linkedin.com/in/navdak'],
         ['label' => trim($globalSettings['technical_partner_extra_label'] ?? ''), 'short' => trim($globalSettings['technical_partner_extra_label'] ?? ''), 'icon' => 'link', 'url' => trim($globalSettings['technical_partner_extra_url'] ?? '')],
     ])->filter(fn ($link) => filled($link['label']) && filled($link['url']))->values();
 @endphp
@@ -87,9 +89,9 @@
                     <span class="eyebrow">Technical Partner</span>
                     <h3>{{ $technicalPartnerName ?: $technicalPartnerBrand }}</h3>
                     <p class="technical-partner-role">{{ $technicalPartnerTitle }}{{ $technicalPartnerBrand ? ' · '.$technicalPartnerBrand : '' }}</p>
-                    <p>{{ $technicalPartnerSummary }}</p>
+                    <p class="technical-partner-brief">{{ $technicalPartnerSummary }}</p>
                     <button class="technical-partner-toggle" type="button" aria-expanded="false" aria-controls="technical-partner-details" data-technical-partner-toggle>
-                        See more <span aria-hidden="true">↓</span>
+                        Read More <span aria-hidden="true">↓</span>
                     </button>
                 </div>
             </div>
@@ -99,7 +101,9 @@
                     <p>{{ $technicalPartnerAbout }}</p>
                 </div>
                 @if($technicalPartnerLinks->isNotEmpty())
-                    <div class="technical-partner-links" aria-label="Developer contact links">
+                    <div class="technical-partner-connect">
+                        <h3>Connect with the developer</h3>
+                        <div class="technical-partner-links" aria-label="Developer contact links">
                         @foreach($technicalPartnerLinks as $link)
                             <a class="{{ $link['featured'] ?? false ? 'is-featured' : '' }}" href="{{ $link['url'] }}" target="{{ \Illuminate\Support\Str::startsWith($link['url'], 'mailto:') ? '_self' : '_blank' }}" rel="noopener" aria-label="{{ $link['label'] }}">
                                 @switch($link['icon'])
@@ -127,10 +131,11 @@
                                 <span>{{ $link['featured'] ?? false ? $link['label'] : $link['short'] }}</span>
                             </a>
                         @endforeach
+                        </div>
                     </div>
                 @endif
                 <button class="technical-partner-toggle technical-partner-less" type="button" aria-expanded="true" aria-controls="technical-partner-details" data-technical-partner-toggle>
-                    See less <span aria-hidden="true">↑</span>
+                    See Less <span aria-hidden="true">↑</span>
                 </button>
             </div>
         </article>
