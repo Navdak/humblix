@@ -19,13 +19,21 @@
 </div>
 <button class="btn btn-primary" style="margin-top:20px">Save Article</button>
 @push('head')
-<script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+<script src="https://cdn.tiny.cloud/1/{{ config('tinymce.api_key', 'no-api-key') }}/tinymce/8/tinymce.min.js" referrerpolicy="origin"></script>
 @endpush
 @push('scripts')
 <script>
 function articleLinks({initial}) { return { links: initial.length ? initial : [], add(){ this.links.push({link_text:'', url:''}) }, remove(i){ this.links.splice(i,1) } } }
 if (window.tinymce) {
-    tinymce.init({ selector:'#content', height:460, menubar:false, plugins:'lists link table code paste', toolbar:'undo redo | blocks | bold italic | bullist numlist | link table | removeformat code', paste_as_text:false });
+    tinymce.init({
+        selector:'#content',
+        height:460,
+        menubar:false,
+        plugins:'advlist autolink autoresize code fullscreen help image link lists media preview quickbars searchreplace table visualblocks wordcount',
+        toolbar:'undo redo | blocks | bold italic | bullist numlist | link image media table | searchreplace visualblocks fullscreen preview | removeformat code help',
+        paste_as_text:false,
+        promotion:false
+    });
 }
 </script>
 @endpush
