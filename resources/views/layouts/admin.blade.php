@@ -7,7 +7,7 @@
     <title>@yield('title', 'Admin') · HUMELIX LIMITED</title>
     <link rel="icon" href="{{ asset('images/brand/humelix-favicon-32.png') }}" sizes="32x32" type="image/png">
     <link rel="apple-touch-icon" href="{{ asset('images/brand/humelix-apple-touch-icon.png') }}">
-    <link rel="stylesheet" href="{{ asset('css/uch.css') }}?v=20260716d">
+    <link rel="stylesheet" href="{{ asset('css/uch.css') }}?v=20260717b">
     @vite('resources/js/app.js')
     @stack('head')
 </head>
@@ -72,7 +72,10 @@
         <header class="admin-topbar">
             <div class="admin-topbar-left"><button type="button" class="admin-menu-button" aria-label="Open navigation" aria-expanded="false" data-admin-menu-toggle><x-admin-icon name="menu"/></button><nav class="admin-breadcrumb" aria-label="Breadcrumb"><a href="{{ route('admin.dashboard') }}">Home</a><span>/</span><strong>@yield('page_title','Dashboard')</strong></nav></div>
             <div class="admin-topbar-actions">
-                <label class="admin-search"><x-admin-icon name="search"/><input type="search" placeholder="Search admin…" aria-label="Search admin"></label>
+                <div class="admin-search-wrap">
+                    <label class="admin-search"><x-admin-icon name="search"/><input type="search" placeholder="Search admin…" aria-label="Search admin" data-admin-search></label>
+                    <div class="admin-search-results" hidden data-admin-search-results></div>
+                </div>
                 <button type="button" class="admin-icon-button" aria-label="Notifications"><x-admin-icon name="bell"/><span class="notification-dot" aria-label="New notifications"></span></button>
                 <div class="admin-top-user"><span class="admin-avatar">{{ strtoupper(substr(auth()->user()->name ?? 'A',0,1)) }}</span><span><strong>{{ auth()->user()->name ?? 'Admin User' }}</strong><small>{{ auth()->user()?->roleLabel() ?? 'Administrator' }}</small></span></div>
                 <a class="btn btn-outline admin-view-site" href="{{ route('home') }}" target="_blank" rel="noopener" aria-label="View website"><x-admin-icon name="external"/><span class="admin-view-site-label">View Website</span></a>

@@ -5,7 +5,7 @@
     <title>Admin Login · HUMELIX LIMITED</title>
     <link rel="icon" href="{{ asset('images/brand/humelix-favicon-32.png') }}" sizes="32x32" type="image/png">
     <link rel="apple-touch-icon" href="{{ asset('images/brand/humelix-apple-touch-icon.png') }}">
-    <link rel="stylesheet" href="{{ asset('css/uch.css') }}?v=20260716d">
+    <link rel="stylesheet" href="{{ asset('css/uch.css') }}?v=20260717b">
 </head>
 <body class="login-page">
     <form class="login-card" method="POST" action="{{ route('admin.login.store') }}">

@@ -9,7 +9,7 @@ Production-ready Laravel 12 website and admin platform for HUMELIX LIMITED, a gl
 - SEO: admin-managed metadata, Open Graph/Twitter tags, robots directives, JSON-LD support, `/sitemap.xml` and `/robots.txt`.
 - Lead capture: contact form and floating chat enquiry assistant.
 - Admin platform: dashboard, enquiries, projects, services foundation, branches, jobs, equipment, videos, safety foundation, articles/resources, media, reviews, users/roles, site settings and SEO settings.
-- Role foundation: Super Admin, Content Editor, Service Manager, Country Admin, Support Agent and Safety Officer.
+- Role foundation: protected Technical Super Admin, Company Owner, Content Editor, Service Manager, Country Admin, Support Agent and Safety Officer.
 
 ## Local setup
 
@@ -30,14 +30,14 @@ Admin URL:
 /admin/login
 ```
 
-Development seed admin:
+Development seed admin fallback:
 
 ```txt
 Email: admin@humelix.com
 Password: password123
 ```
 
-Change this password immediately before deployment. Treat it as development-only.
+This fallback is development-only. In production, set `HUMELIX_SUPER_ADMIN_EMAIL` and `HUMELIX_SUPER_ADMIN_PASSWORD` before running seeders.
 
 ## Verification
 
@@ -57,6 +57,7 @@ npm audit --omit=dev
 - Set `APP_ENV=production`.
 - Set `APP_DEBUG=false`.
 - Set `APP_URL=https://humelix.com` or the final production domain.
+- Set `HUMELIX_SUPER_ADMIN_EMAIL` and a strong `HUMELIX_SUPER_ADMIN_PASSWORD`; the protected developer recovery account is created from these values.
 - Configure real MySQL and SMTP credentials in `.env`; never commit secrets.
 - Run `composer install --no-dev --optimize-autoloader`.
 - Run `php artisan migrate --force`.
@@ -70,6 +71,9 @@ Full deployment notes are in [docs/HUMELIX_DEPLOYMENT_GUIDE.md](docs/HUMELIX_DEP
 ## Security notes
 
 - Admin routes are protected by authentication, admin role checks and module permissions.
+- The protected developer recovery account cannot be deleted, deactivated, demoted or edited by another admin.
+- Public article HTML is sanitized before rendering.
+- Security headers are applied at application level, and the Docker image disables PHP version exposure.
 - Public contact and chat endpoints are rate limited.
 - Uploads reject SVG, PHP, JS, HTML, EXE and script files.
 - Images are limited to JPG/JPEG/PNG/WebP.

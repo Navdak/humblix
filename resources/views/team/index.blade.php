@@ -55,19 +55,19 @@
     $technicalPartnerImage = trim($globalSettings['technical_partner_image_path'] ?? 'images/generated/careers/careers-office-admin-culture.jpg');
     $technicalPartnerSummary = trim($globalSettings['technical_partner_summary'] ?? '') ?: 'I design and maintain modern business websites, admin dashboards and digital platforms that are clean, scalable and easy for teams to manage.';
     $technicalPartnerAbout = trim($globalSettings['technical_partner_about'] ?? '') ?: 'I am a website developer and platform maintainer focused on building reliable business systems, admin dashboards, automation-ready workflows and deployment-ready digital platforms. For HUMELIX LIMITED, Navdak Digital delivered the public website structure, editable admin dashboard, visitor analytics foundation, SEO setup, generated visual assets and Render preview deployment workflow.';
-    $technicalPartnerPortfolioUrl = trim($globalSettings['technical_partner_portfolio_url'] ?? '') ?: 'https://example.com/portfolio';
-    $technicalPartnerWhatsapp = trim($globalSettings['technical_partner_whatsapp'] ?? '') ?: 'https://wa.me/2349000000000';
+    $technicalPartnerPortfolioUrl = trim($globalSettings['technical_partner_portfolio_url'] ?? '');
+    $technicalPartnerWhatsapp = trim($globalSettings['technical_partner_whatsapp'] ?? '');
     if ($technicalPartnerWhatsapp && ! \Illuminate\Support\Str::startsWith($technicalPartnerWhatsapp, ['http://', 'https://'])) {
         $technicalPartnerWhatsapp = 'https://wa.me/'.preg_replace('/\D+/', '', $technicalPartnerWhatsapp);
     }
-    $technicalPartnerEmail = trim($globalSettings['technical_partner_email'] ?? '') ?: 'developer@example.com';
+    $technicalPartnerEmail = trim($globalSettings['technical_partner_email'] ?? '');
     $technicalPartnerLinks = collect([
         ['label' => 'Visit My Portfolio', 'short' => 'Portfolio', 'icon' => 'portfolio', 'url' => $technicalPartnerPortfolioUrl, 'featured' => true],
         ['label' => 'WhatsApp', 'short' => 'WhatsApp', 'icon' => 'whatsapp', 'url' => $technicalPartnerWhatsapp],
-        ['label' => 'GitHub', 'short' => 'GitHub', 'icon' => 'github', 'url' => trim($globalSettings['technical_partner_github_url'] ?? '') ?: 'https://github.com/navdak'],
-        ['label' => 'Facebook', 'short' => 'Facebook', 'icon' => 'facebook', 'url' => trim($globalSettings['technical_partner_facebook_url'] ?? '') ?: 'https://facebook.com/navdakdigital'],
-        ['label' => 'Email', 'short' => 'Email', 'icon' => 'email', 'url' => 'mailto:'.$technicalPartnerEmail],
-        ['label' => 'LinkedIn', 'short' => 'LinkedIn', 'icon' => 'linkedin', 'url' => trim($globalSettings['technical_partner_linkedin_url'] ?? '') ?: 'https://linkedin.com/in/navdak'],
+        ['label' => 'GitHub', 'short' => 'GitHub', 'icon' => 'github', 'url' => trim($globalSettings['technical_partner_github_url'] ?? '')],
+        ['label' => 'Facebook', 'short' => 'Facebook', 'icon' => 'facebook', 'url' => trim($globalSettings['technical_partner_facebook_url'] ?? '')],
+        ['label' => 'Email', 'short' => 'Email', 'icon' => 'email', 'url' => $technicalPartnerEmail ? 'mailto:'.$technicalPartnerEmail : ''],
+        ['label' => 'LinkedIn', 'short' => 'LinkedIn', 'icon' => 'linkedin', 'url' => trim($globalSettings['technical_partner_linkedin_url'] ?? '')],
         ['label' => trim($globalSettings['technical_partner_extra_label'] ?? ''), 'short' => trim($globalSettings['technical_partner_extra_label'] ?? ''), 'icon' => 'link', 'url' => trim($globalSettings['technical_partner_extra_url'] ?? '')],
     ])->filter(fn ($link) => filled($link['label']) && filled($link['url']))->values();
 @endphp

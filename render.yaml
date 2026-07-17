@@ -7,10 +7,14 @@ services:
     dockerfilePath: ./Dockerfile
     envVars:
       - key: APP_NAME
-        value: HUMELIX SYSTEMS
+        value: HUMELIX LIMITED
       - key: APP_ENV
         value: production
       - key: APP_KEY
+        sync: false
+      - key: HUMELIX_SUPER_ADMIN_EMAIL
+        sync: false
+      - key: HUMELIX_SUPER_ADMIN_PASSWORD
         sync: false
       - key: APP_DEBUG
         value: false

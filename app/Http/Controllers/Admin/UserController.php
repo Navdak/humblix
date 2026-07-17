@@ -55,6 +55,7 @@ class UserController extends Controller
         $this->authorizeUsersModule();
         $data = $this->validated($request, $user);
         if (blank($data['password'] ?? null)) unset($data['password']);
+        $this->protectDeveloperAccount($user, $data);
         $this->preventLastSuperAdminLoss($user, $data);
         $user->update($data);
 
@@ -65,6 +66,7 @@ class UserController extends Controller
     {
         $this->authorizeUsersModule();
         abort_if($user->is(auth()->user()), 403, 'You cannot delete your own account.');
+        abort_if($user->isProtected(), 403, 'The protected developer recovery account cannot be deleted.');
         abort_if($user->isSuperAdmin() && $this->activeSuperAdminCount() <= 1, 403, 'You cannot delete the last active Super Admin.');
         $user->delete();
 
@@ -97,6 +99,20 @@ class UserController extends Controller
 
         abort_if(($data['role'] ?? $user->role) !== 'super_admin', 403, 'You cannot demote the last active Super Admin.');
         abort_if(! (bool) ($data['is_active'] ?? $user->is_active), 403, 'You cannot deactivate the last active Super Admin.');
+    }
+
+    private function protectDeveloperAccount(User $user, array &$data): void
+    {
+        if (! $user->isProtected()) {
+            return;
+        }
+
+        abort_unless($user->is(auth()->user()), 403, 'Only the protected developer account can update its own profile.');
+
+        $data['email'] = $user->email;
+        $data['role'] = 'super_admin';
+        $data['is_active'] = true;
+        $data['is_protected'] = true;
     }
 
     private function activeSuperAdminCount(): int

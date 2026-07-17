@@ -17,18 +17,33 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        $admin = User::firstOrCreate(['email'=>'admin@humelix.com'], [
+        $adminEmail = env('HUMELIX_SUPER_ADMIN_EMAIL', env('ADMIN_EMAIL', 'admin@humelix.com'));
+        $configuredAdminPassword = env('HUMELIX_SUPER_ADMIN_PASSWORD', env('ADMIN_PASSWORD'));
+        $adminPassword = $configuredAdminPassword;
+
+        if (blank($adminPassword)) {
+            if (app()->environment('production')) {
+                throw new \RuntimeException('Set HUMELIX_SUPER_ADMIN_PASSWORD before running production seeders.');
+            }
+
+            $adminPassword = 'password123';
+        }
+
+        $admin = User::firstOrCreate(['email'=>$adminEmail], [
             'name'=>'Ikechukwu Prince Onyebuchi',
-            'password'=>Hash::make('password123'),
+            'password'=>Hash::make($adminPassword),
             'role'=>'super_admin',
             'region'=>'Global',
             'is_active'=>true,
         ]);
-        $admin->fill([
+        $admin->forceFill([
             'name' => $admin->name === 'HUMELIX LIMITED Admin' ? 'Ikechukwu Prince Onyebuchi' : $admin->name,
             'role' => 'super_admin',
             'is_active' => true,
-        ])->save();
+            'is_protected' => true,
+        ] + (blank($configuredAdminPassword) ? [] : [
+            'password' => Hash::make($configuredAdminPassword),
+        ]))->save();
 
         foreach ([
             'hero_headline'=>'Engineering Comfort. Powering Reliability.',
@@ -45,12 +60,12 @@ class DatabaseSeeder extends Seeder
             'technical_partner_image_path'=>'images/generated/careers/careers-office-admin-culture.jpg',
             'technical_partner_summary'=>'I design and maintain modern business websites, admin dashboards and digital platforms that are clean, scalable and easy for teams to manage.',
             'technical_partner_about'=>'I am a website developer and platform maintainer focused on building reliable business systems, admin dashboards, automation-ready workflows and deployment-ready digital platforms. For HUMELIX LIMITED, Navdak Digital delivered the public website structure, editable admin dashboard, visitor analytics foundation, SEO setup, generated visual assets and Render preview deployment workflow.',
-            'technical_partner_portfolio_url'=>'https://example.com/portfolio',
-            'technical_partner_whatsapp'=>'https://wa.me/2349000000000',
-            'technical_partner_github_url'=>'https://github.com/navdak',
-            'technical_partner_facebook_url'=>'https://facebook.com/navdakdigital',
+            'technical_partner_portfolio_url'=>'',
+            'technical_partner_whatsapp'=>'',
+            'technical_partner_github_url'=>'',
+            'technical_partner_facebook_url'=>'',
             'technical_partner_email'=>'developer@example.com',
-            'technical_partner_linkedin_url'=>'https://linkedin.com/in/navdak',
+            'technical_partner_linkedin_url'=>'',
             'technical_partner_extra_label'=>'',
             'technical_partner_extra_url'=>'',
             'company_email'=>'info@humelix.com',

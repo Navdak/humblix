@@ -5,6 +5,7 @@ use App\Http\Controllers\Controller;
 use App\Models\SiteSetting;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class SettingsController extends Controller
 {
@@ -79,6 +80,7 @@ class SettingsController extends Controller
                 'technical_partner_title' => ['nullable','string','max:140'],
                 'technical_partner_brand' => ['nullable','string','max:100'],
                 'technical_partner_image_path' => ['nullable','string','max:255'],
+                'technical_partner_image' => ['nullable','image','mimes:jpg,jpeg,png,webp','max:5120'],
                 'technical_partner_summary' => ['nullable','string','max:500'],
                 'technical_partner_about' => ['nullable','string','max:1600'],
                 'technical_partner_portfolio_url' => ['nullable','url','max:255'],
@@ -93,6 +95,17 @@ class SettingsController extends Controller
 
             $developerData['developer_credit_enabled'] = $request->boolean('developer_credit_enabled') ? '1' : '0';
             $developerData['technical_partner_enabled'] = $request->boolean('technical_partner_enabled') ? '1' : '0';
+
+            if ($request->hasFile('technical_partner_image')) {
+                $previousImage = $developerData['technical_partner_image_path'] ?? null;
+                if ($previousImage && ! str_starts_with($previousImage, 'images/')) {
+                    Storage::disk('public')->delete($previousImage);
+                }
+
+                $developerData['technical_partner_image_path'] = $request->file('technical_partner_image')->store('technical-partner', 'public');
+            }
+
+            unset($developerData['technical_partner_image']);
         }
 
         foreach ($data as $key => $value) SiteSetting::setValue($key, $value, 'homepage');

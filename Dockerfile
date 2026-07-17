@@ -10,6 +10,7 @@ RUN apt-get update \
         npm \
     && docker-php-ext-install pdo_mysql pdo_sqlite zip \
     && a2enmod rewrite headers \
+    && echo "expose_php=Off" > /usr/local/etc/php/conf.d/production-security.ini \
     && rm -rf /var/lib/apt/lists/*
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer

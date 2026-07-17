@@ -30,7 +30,7 @@
     <meta name="theme-color" content="#0A192F">
     <link rel="icon" href="{{ asset('images/brand/humelix-favicon-32.png') }}" sizes="32x32" type="image/png">
     <link rel="apple-touch-icon" href="{{ asset('images/brand/humelix-apple-touch-icon.png') }}">
-    <link rel="stylesheet" href="{{ asset('css/uch.css') }}?v=20260716d">
+    <link rel="stylesheet" href="{{ asset('css/uch.css') }}?v=20260717b">
     @foreach($seo['structured_data'] as $schema)
         <script type="application/ld+json">{!! json_encode($schema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}</script>
     @endforeach

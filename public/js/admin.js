@@ -16,6 +16,47 @@
     document.addEventListener('keydown', (event) => { if (event.key === 'Escape') setSidebar(false); });
     sidebar?.querySelectorAll('a').forEach((link) => link.addEventListener('click', () => { if (innerWidth < 1024) setSidebar(false); }));
 
+    const searchInput = document.querySelector('[data-admin-search]');
+    const searchResults = document.querySelector('[data-admin-search-results]');
+    if (searchInput && searchResults) {
+        const items = [...document.querySelectorAll('.admin-nav a')]
+            .map((link) => ({
+                label: link.textContent.trim().replace(/\s+/g, ' '),
+                href: link.href,
+                group: link.closest('.admin-nav-group')?.querySelector('.admin-nav-label')?.textContent.trim() || 'Admin',
+            }))
+            .filter((item) => item.label && item.href);
+
+        const renderSearch = () => {
+            const query = searchInput.value.trim().toLowerCase();
+            const matches = query
+                ? items.filter((item) => `${item.group} ${item.label}`.toLowerCase().includes(query)).slice(0, 8)
+                : [];
+
+            searchResults.hidden = matches.length === 0;
+            searchResults.innerHTML = matches.map((item) => `
+                <a href="${item.href}">
+                    <small>${item.group}</small>
+                    <strong>${item.label}</strong>
+                </a>
+            `).join('');
+        };
+
+        searchInput.addEventListener('input', renderSearch);
+        searchInput.addEventListener('focus', renderSearch);
+        searchInput.addEventListener('keydown', (event) => {
+            if (event.key !== 'Enter') return;
+            const first = searchResults.querySelector('a');
+            if (first) {
+                event.preventDefault();
+                first.click();
+            }
+        });
+        document.addEventListener('click', (event) => {
+            if (!event.target.closest('.admin-search-wrap')) searchResults.hidden = true;
+        });
+    }
+
     document.querySelectorAll('[data-admin-greeting]').forEach((element) => {
         const name = element.dataset.adminGreetingName || 'Admin';
         const hour = new Date().getHours();

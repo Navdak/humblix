@@ -3,6 +3,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Article;
+use App\Support\HtmlSanitizer;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -36,6 +37,7 @@ class ArticleController extends Controller
             'title'=>['required','string','max:180'], 'slug'=>['nullable','string','max:220'], 'excerpt'=>['required','string','max:160'],
             'content'=>['required','string'], 'status'=>['required','in:draft,published'], 'featured_image'=>['nullable','image','mimes:jpg,jpeg,png,webp','max:4096'],
         ]);
+        $data['content'] = HtmlSanitizer::clean($data['content']);
         $data['slug'] = $data['slug'] ? Str::slug($data['slug']) : Str::slug($data['title']);
         $data['author_id'] = auth()->id();
         if ($request->hasFile('featured_image')) $data['featured_image_path'] = $request->file('featured_image')->store('articles','public');

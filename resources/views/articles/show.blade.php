@@ -9,7 +9,7 @@
             <div class="image-frame" style="margin-bottom:24px">
                 <img src="{{ \App\Support\UchContent::imageUrl($article->featured_image_path, 'images/generated/safety/safety-toolbox-talks.jpg') }}" alt="{{ $article->title }}">
             </div>
-            {!! $article->content !!}
+            {!! \App\Support\HtmlSanitizer::clean($article->content) !!}
             <div class="service-actions" style="margin-top:28px">
                 <a class="btn btn-primary" href="{{ route('contact') }}?service={{ urlencode('Resource enquiry: '.$article->title) }}">Ask Humelix</a>
                 <a class="btn btn-white" href="{{ route('articles.index') }}">Back to Resources</a>

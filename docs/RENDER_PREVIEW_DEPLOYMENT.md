@@ -22,6 +22,8 @@ APP_KEY=base64:REPLACE_WITH_GENERATED_KEY
 APP_DEBUG=false
 APP_URL=https://YOUR-RENDER-SERVICE.onrender.com
 ASSET_URL=https://YOUR-RENDER-SERVICE.onrender.com
+HUMELIX_SUPER_ADMIN_EMAIL=YOUR_ADMIN_EMAIL
+HUMELIX_SUPER_ADMIN_PASSWORD=YOUR_STRONG_ADMIN_PASSWORD
 
 LOG_CHANNEL=stderr
 LOG_LEVEL=warning
@@ -53,11 +55,11 @@ For this preview, the container creates `database/database.sqlite`, runs migrati
 
 ## After deploy
 
-Use the seeded admin login for preview testing:
+Use the protected seeded admin login you configured in Render:
 
 ```text
-Email: admin@humelix.com
-Password: password123
+Email: value of HUMELIX_SUPER_ADMIN_EMAIL
+Password: value of HUMELIX_SUPER_ADMIN_PASSWORD
 ```
 
-Change these credentials before any real production launch.
+Do not use the local development fallback credentials for a public preview or production launch.

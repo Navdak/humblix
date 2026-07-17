@@ -44,7 +44,7 @@ class User extends Authenticatable
 
     protected function casts(): array
     {
-        return ['email_verified_at' => 'datetime', 'password' => 'hashed', 'is_active' => 'boolean'];
+        return ['email_verified_at' => 'datetime', 'password' => 'hashed', 'is_active' => 'boolean', 'is_protected' => 'boolean'];
     }
 
     public function isAdmin(): bool
@@ -55,6 +55,11 @@ class User extends Authenticatable
     public function isSuperAdmin(): bool
     {
         return $this->hasRole('super_admin');
+    }
+
+    public function isProtected(): bool
+    {
+        return (bool) $this->is_protected;
     }
 
     public function hasRole(string $role): bool
