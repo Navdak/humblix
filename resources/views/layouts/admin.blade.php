@@ -35,6 +35,7 @@
                         ['admin.videos.*','admin.videos.index','videos','Videos','videos'],
                     ],
                     'Content' => [
+                        ['admin.page-heroes.*','admin.page-heroes.index','page-heroes','Page Heroes','page_heroes'],
                         ['admin.articles.*','admin.articles.index','articles','Resources / Articles','articles'],
                         ['admin.media.*','admin.media.index','media','Media Library','media'],
                         ['admin.reviews.*','admin.reviews.index','reviews','Reviews','reviews'],
@@ -46,6 +47,7 @@
                     ],
                     'Configuration' => [
                         ['admin.users.*','admin.users.index','users','Users & Roles','users'],
+                        ['admin.roles.*','admin.roles.index','users','Role Permissions','users'],
                         ['admin.settings.*','admin.settings.edit','settings','Site Settings','settings'],
                         ['admin.seo-settings.*','admin.seo-settings.index','seo','SEO Settings','seo'],
                     ],
@@ -63,7 +65,7 @@
             @endforeach
         </nav>
         <div class="admin-sidebar-foot">
-            <div class="admin-user-mini"><span class="admin-avatar">{{ strtoupper(substr(auth()->user()->name ?? 'A',0,1)) }}</span><div><strong>{{ auth()->user()->name ?? 'Admin User' }}</strong><small>{{ auth()->user()?->roleLabel() ?? 'Administrator' }}</small></div></div>
+            <div class="admin-user-mini">@include('admin.partials.avatar',['user'=>auth()->user()])<div><strong>{{ auth()->user()?->displayName() ?? 'Admin User' }}</strong><small>{{ auth()->user()?->roleLabel() ?? 'Administrator' }}</small></div></div>
             <form method="POST" action="{{ route('admin.logout') }}">@csrf<button type="submit" class="admin-logout"><x-admin-icon name="logout"/> Logout</button></form>
         </div>
     </aside>
@@ -76,19 +78,54 @@
                     <label class="admin-search"><x-admin-icon name="search"/><input type="search" placeholder="Search admin…" aria-label="Search admin" data-admin-search></label>
                     <div class="admin-search-results" hidden data-admin-search-results></div>
                 </div>
-                <button type="button" class="admin-icon-button" aria-label="Notifications"><x-admin-icon name="bell"/><span class="notification-dot" aria-label="New notifications"></span></button>
-                <div class="admin-top-user"><span class="admin-avatar">{{ strtoupper(substr(auth()->user()->name ?? 'A',0,1)) }}</span><span><strong>{{ auth()->user()->name ?? 'Admin User' }}</strong><small>{{ auth()->user()?->roleLabel() ?? 'Administrator' }}</small></span></div>
+                <div class="admin-notification-wrap"
+                    data-admin-notifications
+                    data-endpoint="{{ route('admin.notifications.index') }}"
+                    data-read-endpoint-template="{{ url('/admin/notifications/__ID__/read') }}"
+                    data-read-all-endpoint="{{ route('admin.notifications.read-all') }}"
+                    data-current-module="{{ request()->routeIs('admin.enquiries.index') ? 'enquiries' : '' }}"
+                    data-current-route="{{ Route::currentRouteName() }}">
+                    <button type="button" class="admin-icon-button admin-notification-toggle" aria-label="Notifications" aria-expanded="false" data-notification-toggle>
+                        <x-admin-icon name="bell"/>
+                        <span class="notification-dot" hidden data-notification-dot aria-label="New notifications"></span>
+                        <span class="notification-count" hidden data-notification-count></span>
+                    </button>
+                    <section class="admin-notification-panel" hidden data-notification-panel aria-label="Admin notifications">
+                        <header>
+                            <div>
+                                <strong>Notifications</strong>
+                                <small data-notification-summary>Checking for updates...</small>
+                            </div>
+                            <div class="admin-notification-panel-actions">
+                                <button type="button" data-notification-refresh>Refresh</button>
+                                <button type="button" data-notification-read-all>Mark all read</button>
+                            </div>
+                        </header>
+                        <div class="admin-notification-list" data-notification-list>
+                            <div class="admin-notification-empty">Loading notifications...</div>
+                        </div>
+                    </section>
+                </div>
+                <div class="admin-top-user">@include('admin.partials.avatar',['user'=>auth()->user()])<span><strong>{{ auth()->user()?->displayName() ?? 'Admin User' }}</strong><small>{{ auth()->user()?->roleLabel() ?? 'Administrator' }}</small></span></div>
                 <a class="btn btn-outline admin-view-site" href="{{ route('home') }}" target="_blank" rel="noopener" aria-label="View website"><x-admin-icon name="external"/><span class="admin-view-site-label">View Website</span></a>
             </div>
         </header>
         <main class="admin-main">
             <div class="admin-page-heading"><div><h1>@yield('page_title','Dashboard')</h1><p>@yield('page_subtitle','Manage HUMELIX LIMITED operations and content.')</p></div>@yield('page_actions')</div>
+            <div class="admin-live-banner" hidden data-live-list-banner>
+                <div>
+                    <strong data-live-list-message>Fresh updates are available.</strong>
+                    <span>No page refresh will happen until you choose to update the list.</span>
+                </div>
+                <button type="button" class="btn btn-primary" data-live-list-refresh>Update list</button>
+            </div>
             @if(session('success'))<div class="alert alert-success">{{ session('success') }}</div>@endif
             @if($errors->any())<div class="alert alert-error"><strong>Fix these fields:</strong><ul>@foreach($errors->all() as $error)<li>{{ $error }}</li>@endforeach</ul></div>@endif
             @yield('content')
         </main>
     </div>
 </div>
+<div class="admin-toast-stack" data-admin-toast-stack aria-live="polite" aria-atomic="false"></div>
 <script src="{{ asset('js/admin.js') }}" defer></script>
 @stack('scripts')
 </body>

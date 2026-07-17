@@ -7,6 +7,22 @@
     <div class="form-field"><label>Role</label><select name="role" required @disabled($user->exists && $user->isProtected())>@foreach($roles as $role)<option value="{{ $role }}" @selected(old('role',$user->normalizedRole() ?: 'support_agent')===$role)>{{ $roleLabels[$role] ?? ucwords(str_replace('_',' ', $role)) }}</option>@endforeach</select>@if($user->exists && $user->isProtected())<input type="hidden" name="role" value="super_admin">@endif</div>
     <div class="form-field"><label>Phone</label><input name="phone" value="{{ old('phone',$user->phone) }}"></div>
     <div class="form-field"><label>Region</label><input name="region" value="{{ old('region',$user->region) }}"></div>
+    <div class="form-field full">
+        <label>Admin Profile Photo</label>
+        <div class="admin-avatar-upload">
+            @include('admin.partials.avatar',['user'=>$user,'size'=>'large'])
+            <div>
+                <input type="file" name="avatar" accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp">
+                <small>Upload a professional headshot or clear profile image. JPG, PNG or WebP only, max 4MB. If empty, the letter avatar remains.</small>
+                @if($user->exists && $user->hasUploadedAvatar())
+                    <label style="display:flex;align-items:center;gap:8px;margin-top:10px">
+                        <input type="checkbox" name="remove_avatar" value="1" style="width:auto">
+                        Remove current photo and use letter avatar
+                    </label>
+                @endif
+            </div>
+        </div>
+    </div>
     <label style="display:flex;align-items:center;gap:8px;margin-top:26px"><input type="checkbox" name="is_active" value="1" @checked(old('is_active',$user->exists ? $user->is_active : true)) @disabled($user->exists && $user->isProtected()) style="width:auto"> Active account</label>
     @if($user->exists && $user->isProtected())<input type="hidden" name="is_active" value="1">@endif
 </div>

@@ -4,12 +4,14 @@ namespace Database\Seeders;
 use App\Models\Article;
 use App\Models\Enquiry;
 use App\Models\EquipmentItem;
+use App\Models\PageHero;
 use App\Models\Project;
 use App\Models\Review;
 use App\Models\SiteSetting;
 use App\Models\TeamMember;
 use App\Models\User;
 use App\Models\Video;
+use App\Support\AdminPermissions;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
@@ -17,6 +19,9 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
+        AdminPermissions::syncDefaultRolePermissions();
+        PageHero::seedDefaults();
+
         $adminEmail = env('HUMELIX_SUPER_ADMIN_EMAIL', env('ADMIN_EMAIL', 'admin@humelix.com'));
         $configuredAdminPassword = env('HUMELIX_SUPER_ADMIN_PASSWORD', env('ADMIN_PASSWORD'));
         $adminPassword = $configuredAdminPassword;

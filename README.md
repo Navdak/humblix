@@ -68,6 +68,14 @@ npm audit --omit=dev
 
 Full deployment notes are in [docs/HUMELIX_DEPLOYMENT_GUIDE.md](docs/HUMELIX_DEPLOYMENT_GUIDE.md).
 
+## Live update roadmap
+
+The admin currently uses a safe hybrid notification system: AJAX polling checks every 15 seconds, speeds up to 10 seconds when the dashboard or notification dropdown is active, and slows while the browser tab is hidden. This avoids interrupting admins with forced page refreshes.
+
+Future hosting upgrades can add Server-Sent Events (SSE), Laravel Reverb/WebSockets or push notifications while keeping polling as a fallback for shared hosting.
+
+Full project notes and future plans are maintained in [docs/HUMELIX_PROJECT_DOCUMENTATION.md](docs/HUMELIX_PROJECT_DOCUMENTATION.md).
+
 ## Security notes
 
 - Admin routes are protected by authentication, admin role checks and module permissions.

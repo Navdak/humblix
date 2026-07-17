@@ -8,8 +8,11 @@ use App\Http\Controllers\Admin\EnquiryController as AdminEnquiryController;
 use App\Http\Controllers\Admin\FoundationController;
 use App\Http\Controllers\Admin\JobOpeningController as AdminJobOpeningController;
 use App\Http\Controllers\Admin\MediaController;
+use App\Http\Controllers\Admin\NotificationController as AdminNotificationController;
+use App\Http\Controllers\Admin\PageHeroController as AdminPageHeroController;
 use App\Http\Controllers\Admin\ProjectController as AdminProjectController;
 use App\Http\Controllers\Admin\ReviewController as AdminReviewController;
+use App\Http\Controllers\Admin\RolePermissionController as AdminRolePermissionController;
 use App\Http\Controllers\Admin\SeoSettingsController as AdminSeoSettingsController;
 use App\Http\Controllers\Admin\SettingsController;
 use App\Http\Controllers\Admin\TeamController as AdminTeamController;
@@ -68,9 +71,14 @@ Route::post('/admin/logout', [AdminAuthController::class, 'logout'])->middleware
 
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(function () {
     Route::get('/', DashboardController::class)->name('dashboard');
+    Route::get('/notifications', [AdminNotificationController::class, 'index'])->name('notifications.index');
+    Route::patch('/notifications/read-all', [AdminNotificationController::class, 'markAllRead'])->name('notifications.read-all');
+    Route::patch('/notifications/{notification}/read', [AdminNotificationController::class, 'markRead'])->name('notifications.read');
     Route::middleware('admin.module:settings')->group(function () {
         Route::get('/settings', [SettingsController::class, 'edit'])->name('settings.edit');
         Route::put('/settings', [SettingsController::class, 'update'])->name('settings.update');
+    });
+    Route::middleware('admin.module:seo')->group(function () {
         Route::get('/seo-settings', [AdminSeoSettingsController::class, 'index'])->name('seo-settings.index');
         Route::get('/seo-settings/{seoSetting}/edit', [AdminSeoSettingsController::class, 'edit'])->name('seo-settings.edit');
         Route::put('/seo-settings/{seoSetting}', [AdminSeoSettingsController::class, 'update'])->name('seo-settings.update');
@@ -85,6 +93,10 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::resource('equipment', AdminEquipmentController::class)->middleware('admin.module:equipment')->except(['show']);
     Route::resource('videos', AdminVideoController::class)->middleware('admin.module:videos')->except(['show']);
     Route::resource('team', AdminTeamController::class)->middleware('admin.module:team')->except(['show']);
+    Route::resource('page-heroes', AdminPageHeroController::class)->middleware('admin.module:page_heroes')->only(['index', 'edit', 'update']);
+    Route::get('/roles', [AdminRolePermissionController::class, 'index'])->middleware('admin.module:users')->name('roles.index');
+    Route::get('/roles/{role}/edit', [AdminRolePermissionController::class, 'edit'])->middleware('admin.module:users')->name('roles.edit');
+    Route::put('/roles/{role}', [AdminRolePermissionController::class, 'update'])->middleware('admin.module:users')->name('roles.update');
     Route::resource('users', AdminUserController::class)->middleware('admin.module:users')->except(['show']);
     Route::get('/enquiries/export', [AdminEnquiryController::class, 'export'])->middleware('admin.module:enquiries')->name('enquiries.export');
     Route::resource('enquiries', AdminEnquiryController::class)->middleware('admin.module:enquiries')->only(['index', 'show', 'update', 'destroy']);

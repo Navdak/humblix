@@ -2,7 +2,12 @@
 @section('title','Users & Roles')
 @section('page_title','Users & Roles')
 @section('page_subtitle','Manage administrative access, roles, regions, and account status.')
-@section('page_actions')<a class="btn btn-primary" href="{{ route('admin.users.create') }}"><x-admin-icon name="plus"/> New User</a>@endsection
+@section('page_actions')
+<div class="admin-actions">
+    @if(auth()->user()?->isSuperAdmin())<a class="btn btn-outline" href="{{ route('admin.roles.index') }}">Role Permissions</a>@endif
+    <a class="btn btn-primary" href="{{ route('admin.users.create') }}"><x-admin-icon name="plus"/> New User</a>
+</div>
+@endsection
 @section('content')
 <div class="admin-card">
     <div class="admin-list-intro"><strong>Access directory</strong><span>Protected developer access, company ownership and module-based admin roles.</span></div>
@@ -10,9 +15,14 @@
     @forelse($users as $user)
         <tr>
             <td data-label="User">
-                <strong>{{ $user->name }}</strong><br>
-                <span class="meta">{{ $user->email }}</span>
-                @if($user->isProtected())<br><span class="badge">Protected developer recovery</span>@endif
+                <div class="admin-user-cell">
+                    @include('admin.partials.avatar',['user'=>$user])
+                    <div>
+                        <strong>{{ $user->name }}</strong><br>
+                        <span class="meta">{{ $user->email }}</span>
+                        @if($user->isProtected())<br><span class="badge">Protected developer recovery</span>@endif
+                    </div>
+                </div>
             </td>
             <td data-label="Role"><span class="badge">{{ $user->roleLabel() }}</span></td>
             <td data-label="Region">{{ $user->region ?: '—' }}</td>
@@ -32,15 +42,30 @@
 </div>
 
 <div class="admin-card" style="margin-top:14px">
-    <div class="admin-list-intro"><strong>Admin role matrix</strong><span>Technical controls remain above normal business/content administration.</span></div>
+    <div class="admin-list-intro">
+        <strong>Admin role matrix</strong>
+        <span>These permissions control sidebar visibility and direct route access.</span>
+    </div>
     <table class="admin-table"><thead><tr><th>Role</th><th>Primary modules</th></tr></thead><tbody>
-        <tr><td data-label="Role"><span class="badge">Technical Super Admin</span></td><td data-label="Primary modules">Full access to dashboard, operations, content, users, password resets, settings, SEO, analytics, developer credit and recovery controls. The protected developer recovery account cannot be deleted, demoted, deactivated or modified by another admin.</td></tr>
-        <tr><td data-label="Role"><span class="badge">Company Owner</span></td><td data-label="Primary modules">Business content, operations, media and visitor analytics. No users, settings, SEO or developer credit controls.</td></tr>
-        <tr><td data-label="Role"><span class="badge">Content Editor</span></td><td data-label="Primary modules">Articles/resources, media, videos and reviews.</td></tr>
-        <tr><td data-label="Role"><span class="badge">Service Manager</span></td><td data-label="Primary modules">Services, enquiries, projects, equipment and service-related videos.</td></tr>
-        <tr><td data-label="Role"><span class="badge">Country Admin</span></td><td data-label="Primary modules">Branches, regional enquiries, local projects and team/branch content.</td></tr>
-        <tr><td data-label="Role"><span class="badge">Support Agent</span></td><td data-label="Primary modules">Enquiries, client requests and reviews moderation.</td></tr>
-        <tr><td data-label="Role"><span class="badge">Safety Officer</span></td><td data-label="Primary modules">Safety content and safety-related videos.</td></tr>
+        @foreach($roles as $role)
+            <tr>
+                <td data-label="Role">
+                    <span class="badge">{{ $roleLabels[$role] ?? ucwords(str_replace('_',' ', $role)) }}</span>
+                    @if($role === 'super_admin')<br><small class="meta">Always full access</small>@endif
+                </td>
+                <td data-label="Primary modules">
+                    @foreach(($rolePermissions[$role] ?? []) as $permission)
+                        <span class="badge" style="margin:2px">{{ $permissionLabels[$permission] ?? \App\Support\AdminPermissions::label($permission) }}</span>
+                    @endforeach
+                    @if($role === 'super_admin')
+                        <p class="meta" style="margin-top:8px">The protected developer recovery account cannot be deleted, demoted, deactivated or modified by another admin.</p>
+                    @endif
+                    @if(auth()->user()?->isSuperAdmin() && $role !== 'super_admin')
+                        <div style="margin-top:10px"><a class="admin-row-action" href="{{ route('admin.roles.edit', $role) }}">Edit role permissions</a></div>
+                    @endif
+                </td>
+            </tr>
+        @endforeach
     </tbody></table>
 </div>
 @endsection

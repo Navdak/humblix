@@ -2,6 +2,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Enquiry;
+use App\Models\AdminNotification;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
@@ -65,6 +66,7 @@ class ContactController extends Controller
             'uploaded_files' => $uploads ?: null,
             'status' => 'new',
         ]);
+        AdminNotification::createForEnquiry($enquiry);
 
         return back()
             ->with('success', "Thank you. Your request has been received. Your reference number is {$enquiry->reference_number}. A Humelix representative will contact you shortly.")

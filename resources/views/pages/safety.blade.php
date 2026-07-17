@@ -5,14 +5,18 @@
 @php
     $maintenanceContact = route('contact').'?service='.urlencode('Maintenance');
     $electricalContact = route('contact').'?service='.urlencode('Electrical');
+    $safetyHeroImageUrl = $hero?->imageUrl() ?: asset('images/generated/safety/safety-ppe.jpg');
+    $safetyHeroEyebrow = $hero?->eyebrow ?: 'Safety Centre';
+    $safetyHeroTitle = $hero?->title ?: 'Safety Is Built Into Every Humelix Project';
+    $safetyHeroSubtitle = $hero?->subtitle ?: 'Safe engineering delivery for HVAC, solar, electrical, maintenance, equipment and home appliance projects.';
 @endphp
 
-<section class="safety-hero" style="--safety-hero-image:url('{{ asset('images/generated/safety/safety-ppe.jpg') }}')">
+<section class="safety-hero" style="--safety-hero-image:url('{{ $safetyHeroImageUrl }}')">
     <div class="container safety-hero-grid">
         <div class="safety-hero-copy" data-animate="slide-right">
-            <span class="eyebrow">Safety Centre</span>
-            <h1>Safety Is Built Into Every Humelix Project</h1>
-            <p class="safety-hero-lead">Safe engineering delivery for HVAC, solar, electrical, maintenance, equipment and home appliance projects.</p>
+            <span class="eyebrow">{{ $safetyHeroEyebrow }}</span>
+            <h1>{{ $safetyHeroTitle }}</h1>
+            <p class="safety-hero-lead">{{ $safetyHeroSubtitle }}</p>
             <p>Every Humelix project is planned and executed with strict engineering safety controls, site supervision, risk assessment, PPE compliance and disciplined handover procedures. We do not compromise safety on client sites, and we do not treat safety as an afterthought.</p>
             <div class="service-actions">
                 <a class="btn btn-primary" href="{{ route('contact') }}?service={{ urlencode('HVAC') }}">Request Service</a>

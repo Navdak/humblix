@@ -2,6 +2,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Enquiry;
+use App\Models\AdminNotification;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -37,6 +38,7 @@ class ChatController extends Controller
             'message' => $data['message'] ?? null,
             'status' => 'new',
         ]);
+        AdminNotification::createForEnquiry($enquiry);
 
         return response()->json([
             'message' => "Thank you. Your request has been sent to HUMELIX LIMITED. Your reference number is {$enquiry->reference_number}. A team member will follow up shortly.",

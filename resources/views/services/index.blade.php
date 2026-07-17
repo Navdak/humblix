@@ -4,14 +4,18 @@
 @section('content')
 @php
     $whatsapp = 'https://wa.me/'.preg_replace('/\D+/', '', $globalSettings['whatsapp_number'] ?? '+2349001234567');
+    $servicesHeroImageUrl = $hero?->imageUrl() ?: asset('images/generated/services/service-hvac-installation.jpg');
+    $servicesHeroEyebrow = $hero?->eyebrow ?: 'Humelix Services';
+    $servicesHeroTitle = $hero?->title ?: 'Engineering Service Divisions';
+    $servicesHeroSubtitle = $hero?->subtitle ?: 'Humelix provides HVAC, solar, electrical, maintenance, vendor/equipment and home appliance installation solutions for residential, commercial and industrial environments.';
 @endphp
 
-<section class="service-gateway-hero" style="--service-hero-image:url('{{ asset('images/generated/services/service-hvac-installation.jpg') }}')">
+<section class="service-gateway-hero" style="--service-hero-image:url('{{ $servicesHeroImageUrl }}')">
     <div class="container service-gateway-grid">
         <div class="service-gateway-copy" data-animate="slide-right">
-            <span class="eyebrow">Humelix Services</span>
-            <h1>Engineering Service Divisions</h1>
-            <p>Humelix provides HVAC, solar, electrical, maintenance, vendor/equipment and home appliance installation solutions for residential, commercial and industrial environments.</p>
+            <span class="eyebrow">{{ $servicesHeroEyebrow }}</span>
+            <h1>{{ $servicesHeroTitle }}</h1>
+            <p>{{ $servicesHeroSubtitle }}</p>
             <div class="service-actions">
                 <a class="btn btn-primary" href="{{ route('contact') }}?service={{ urlencode('service request') }}">Request Service</a>
                 <a class="btn btn-white" href="{{ route('contact') }}?service={{ urlencode('site inspection') }}">Book Site Inspection</a>

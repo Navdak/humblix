@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\Models\Branch;
 use App\Models\EquipmentItem;
 use App\Models\JobOpening;
+use App\Models\PageHero;
 use App\Models\Project;
 use App\Models\Review;
 use App\Models\TeamMember;
@@ -68,6 +69,7 @@ class PageController extends Controller
     public function safety()
     {
         return view('pages.safety', [
+            'hero' => PageHero::resolve('safety'),
             'pillars' => UchContent::safetyPillars(),
             'modules' => UchContent::safetyModules(),
             'process' => UchContent::safetyProcess(),

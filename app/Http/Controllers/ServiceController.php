@@ -2,6 +2,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Project;
+use App\Models\PageHero;
 use App\Models\Video;
 use App\Support\UchContent;
 use Illuminate\Support\Arr;
@@ -13,6 +14,7 @@ class ServiceController extends Controller
         return view('services.index', [
             'services' => UchContent::serviceDivisions(),
             'process' => UchContent::serviceProcess(),
+            'hero' => PageHero::resolve('services'),
         ]);
     }
 

@@ -1,9 +1,13 @@
 <?php
 namespace App\Models;
 
+use App\Support\AdminPermissions;
+use App\Support\UchContent;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Schema;
 
 class User extends Authenticatable
 {
@@ -30,17 +34,12 @@ class User extends Authenticatable
         'service_admin' => 'Service Manager',
     ];
 
-    public const ROLE_PERMISSIONS = [
-        'company_owner' => ['dashboard', 'analytics', 'enquiries', 'projects', 'branches', 'equipment', 'videos', 'team', 'jobs', 'articles', 'media', 'reviews'],
-        'content_editor' => ['dashboard', 'articles', 'media', 'videos', 'reviews'],
-        'service_manager' => ['dashboard', 'services', 'enquiries', 'projects', 'equipment', 'videos'],
-        'country_admin' => ['dashboard', 'branches', 'enquiries', 'projects', 'team'],
-        'support_agent' => ['dashboard', 'enquiries', 'reviews'],
-        'safety_officer' => ['dashboard', 'safety', 'videos'],
-    ];
+    public const ROLE_PERMISSIONS = AdminPermissions::DEFAULT_ROLE_PERMISSIONS;
 
     protected $fillable = ['name','email','password','role','phone','region','avatar_path','is_active'];
     protected $hidden = ['password','remember_token'];
+
+    private ?array $resolvedAdminPermissions = null;
 
     protected function casts(): array
     {
@@ -74,13 +73,66 @@ class User extends Authenticatable
 
     public function canManage(string $module): bool
     {
+        $module = AdminPermissions::normalize($module);
+
         if ($this->isSuperAdmin()) {
             return true;
         }
 
+        return in_array($module, $this->adminPermissions(), true);
+    }
+
+    public function adminPermissionOverrides(): HasMany
+    {
+        return $this->hasMany(AdminUserPermission::class);
+    }
+
+    public function adminPermissions(): array
+    {
+        if ($this->resolvedAdminPermissions !== null) {
+            return $this->resolvedAdminPermissions;
+        }
+
         $role = $this->normalizedRole();
 
-        return in_array($module, self::ROLE_PERMISSIONS[$role] ?? [], true);
+        if (! $this->permissionsTablesAreReady()) {
+            return $this->resolvedAdminPermissions = AdminPermissions::defaultForRole($role);
+        }
+
+        $permissions = AdminRolePermission::query()
+            ->where('role', $role)
+            ->pluck('permission')
+            ->map(fn (string $permission) => AdminPermissions::normalize($permission))
+            ->values()
+            ->all();
+
+        $overrides = $this->adminPermissionOverrides()
+            ->get(['permission', 'allowed'])
+            ->mapWithKeys(fn (AdminUserPermission $override) => [
+                AdminPermissions::normalize($override->permission) => (bool) $override->allowed,
+            ]);
+
+        foreach ($overrides as $permission => $allowed) {
+            if ($allowed && ! in_array($permission, $permissions, true)) {
+                $permissions[] = $permission;
+            }
+
+            if (! $allowed) {
+                $permissions = array_values(array_filter(
+                    $permissions,
+                    fn (string $existing) => $existing !== $permission
+                ));
+            }
+        }
+
+        return $this->resolvedAdminPermissions = array_values(array_unique($permissions));
+    }
+
+    public function adminPermissionLabels(): array
+    {
+        return collect($this->adminPermissions())
+            ->mapWithKeys(fn (string $permission) => [$permission => AdminPermissions::label($permission)])
+            ->all();
     }
 
     public function roleLabel(): string
@@ -93,11 +145,26 @@ class User extends Authenticatable
         return trim((string) $this->name) ?: $this->roleLabel();
     }
 
+    public function avatarInitial(): string
+    {
+        return strtoupper(substr($this->displayName() ?: 'A', 0, 1));
+    }
+
+    public function avatarUrl(): ?string
+    {
+        return UchContent::imageUrl($this->avatar_path);
+    }
+
+    public function hasUploadedAvatar(): bool
+    {
+        return filled($this->avatar_path) && ! str_starts_with((string) $this->avatar_path, 'images/');
+    }
+
     public function roleSummary(): string
     {
         return match ($this->normalizedRole()) {
             'super_admin' => 'Full system, developer and recovery access',
-            'company_owner' => 'Business content, operations and visitor analytics',
+            'company_owner' => 'Business content, page heroes, operations and visitor analytics',
             'service_manager' => 'Service enquiries, projects, equipment and videos',
             'country_admin' => 'Regional branches, enquiries, projects and team content',
             'content_editor' => 'Resources, media, videos and reviews',
@@ -110,5 +177,15 @@ class User extends Authenticatable
     public function normalizedRole(): string
     {
         return $this->role === 'service_admin' ? 'service_manager' : (string) $this->role;
+    }
+
+    private function permissionsTablesAreReady(): bool
+    {
+        try {
+            return Schema::hasTable('admin_role_permissions')
+                && Schema::hasTable('admin_user_permissions');
+        } catch (\Throwable) {
+            return false;
+        }
     }
 }

@@ -2,6 +2,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Article;
+use App\Models\PageHero;
 use App\Models\Project;
 use App\Models\Review;
 use App\Models\Video;
@@ -22,6 +23,12 @@ class HomeController extends Controller
             'reviews' => Review::where('is_approved',true)->latest()->take(5)->get(),
             'articles' => Article::published()->latest('published_at')->take(3)->get(),
             'featuredVideos' => Video::published()->featured()->ordered()->take(4)->get(),
+            'hero' => PageHero::resolve('home', [
+                'eyebrow' => 'HUMELIX LIMITED',
+                'title' => config('app.name', 'HUMELIX LIMITED'),
+                'subtitle' => '',
+                'fallback_image_path' => 'images/generated/home/home-hero-engineering.jpg',
+            ]),
         ]);
     }
 }

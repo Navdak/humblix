@@ -74,3 +74,206 @@
         element.textContent = `${greeting} ${icon}, ${name}`;
     });
 })();
+
+(() => {
+    const root = document.querySelector('[data-admin-notifications]');
+    if (!root) return;
+
+    const endpoint = root.dataset.endpoint;
+    const readEndpointTemplate = root.dataset.readEndpointTemplate || '';
+    const readAllEndpoint = root.dataset.readAllEndpoint;
+    const currentModule = root.dataset.currentModule || '';
+    const currentRoute = root.dataset.currentRoute || '';
+    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
+    const toggle = root.querySelector('[data-notification-toggle]');
+    const panel = root.querySelector('[data-notification-panel]');
+    const list = root.querySelector('[data-notification-list]');
+    const countBadge = root.querySelector('[data-notification-count]');
+    const dot = root.querySelector('[data-notification-dot]');
+    const summary = root.querySelector('[data-notification-summary]');
+    const refreshButton = root.querySelector('[data-notification-refresh]');
+    const readAllButton = root.querySelector('[data-notification-read-all]');
+    const toastStack = document.querySelector('[data-admin-toast-stack]');
+    const liveBanner = document.querySelector('[data-live-list-banner]');
+    const liveMessage = document.querySelector('[data-live-list-message]');
+    const liveRefresh = document.querySelector('[data-live-list-refresh]');
+    let lastSeenId = Number(window.localStorage.getItem('humelix:lastNotificationId') || 0);
+    let bootstrapped = false;
+    let pollingTimer;
+    let isFetching = false;
+
+    const escapeHtml = (value) => String(value ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+
+    const intervalMs = () => {
+        if (document.hidden) return 60000;
+        if (!panel?.hidden || currentRoute === 'admin.dashboard') return 10000;
+        return 15000;
+    };
+
+    const schedule = () => {
+        window.clearTimeout(pollingTimer);
+        pollingTimer = window.setTimeout(() => fetchNotifications(), intervalMs());
+    };
+
+    const request = async (url, options = {}) => {
+        const response = await fetch(url, {
+            credentials: 'same-origin',
+            headers: {
+                'Accept': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest',
+                ...(csrfToken ? {'X-CSRF-TOKEN': csrfToken} : {}),
+                ...(options.headers || {}),
+            },
+            ...options,
+        });
+
+        if (!response.ok) throw new Error(`Request failed with ${response.status}`);
+        return response.json();
+    };
+
+    const renderCount = (count) => {
+        const unreadCount = Number(count || 0);
+        if (countBadge) {
+            countBadge.textContent = unreadCount > 9 ? '9+' : String(unreadCount);
+            countBadge.hidden = unreadCount <= 0;
+        }
+        if (dot) dot.hidden = unreadCount <= 0;
+        if (summary) summary.textContent = unreadCount ? `${unreadCount} unread update${unreadCount === 1 ? '' : 's'}` : 'All caught up';
+    };
+
+    const notificationUrl = (notification) => notification.action_url || '#';
+
+    const renderList = (notifications) => {
+        if (!list) return;
+        if (!notifications.length) {
+            list.innerHTML = '<div class="admin-notification-empty">No notifications yet.</div>';
+            return;
+        }
+
+        list.innerHTML = notifications.map((notification) => `
+            <article class="admin-notification-item ${notification.is_unread ? 'is-unread' : ''}" data-notification-id="${notification.id}">
+                <span class="admin-notification-mark"></span>
+                <div>
+                    <strong>${escapeHtml(notification.title)}</strong>
+                    <p>${escapeHtml(notification.message || 'New admin update available.')}</p>
+                    <small>${escapeHtml(notification.human_time || '')}</small>
+                </div>
+                <a href="${escapeHtml(notificationUrl(notification))}" data-notification-open="${notification.id}">Open</a>
+            </article>
+        `).join('');
+    };
+
+    const showToast = (notification) => {
+        if (!toastStack || !notification?.is_unread) return;
+
+        const toast = document.createElement('article');
+        toast.className = 'admin-toast';
+        toast.innerHTML = `
+            <span></span>
+            <div>
+                <strong>${escapeHtml(notification.title)}</strong>
+                <p>${escapeHtml(notification.message || 'New admin update available.')}</p>
+            </div>
+            <button type="button" aria-label="Dismiss notification">×</button>
+        `;
+        toast.querySelector('button')?.addEventListener('click', () => toast.remove());
+        toast.addEventListener('click', (event) => {
+            if (event.target.closest('button')) return;
+            if (notification.action_url) window.location.href = notification.action_url;
+        });
+        toastStack.appendChild(toast);
+        window.setTimeout(() => toast.remove(), 8000);
+    };
+
+    const renderLiveBanner = (data) => {
+        if (!liveBanner || !currentModule) return;
+        const count = Number(data?.list_updates?.[currentModule] || 0);
+        liveBanner.hidden = count <= 0;
+        if (liveMessage && count > 0) {
+            liveMessage.textContent = currentModule === 'enquiries'
+                ? `${count} new enquiry update${count === 1 ? '' : 's'} available.`
+                : `${count} fresh update${count === 1 ? '' : 's'} available.`;
+        }
+    };
+
+    const fetchNotifications = async () => {
+        if (isFetching || !endpoint) return;
+        isFetching = true;
+        try {
+            const data = await request(endpoint);
+            const notifications = Array.isArray(data.notifications) ? data.notifications : [];
+            renderCount(data.unread_count);
+            renderList(notifications);
+            renderLiveBanner(data);
+
+            const latestId = Number(data.latest_id || 0);
+            if (!bootstrapped) {
+                lastSeenId = Math.max(lastSeenId, latestId);
+                bootstrapped = true;
+            } else if (latestId > lastSeenId) {
+                notifications
+                    .filter((notification) => Number(notification.id) > lastSeenId)
+                    .reverse()
+                    .forEach(showToast);
+                lastSeenId = latestId;
+            }
+
+            window.localStorage.setItem('humelix:lastNotificationId', String(lastSeenId));
+        } catch (error) {
+            if (summary) summary.textContent = 'Unable to check updates';
+        } finally {
+            isFetching = false;
+            schedule();
+        }
+    };
+
+    const markRead = async (id) => {
+        if (!id || !readEndpointTemplate) return;
+        await request(readEndpointTemplate.replace('__ID__', id), {method: 'PATCH'});
+    };
+
+    toggle?.addEventListener('click', () => {
+        const isOpen = panel?.hidden;
+        if (panel) panel.hidden = !isOpen;
+        toggle.setAttribute('aria-expanded', String(Boolean(isOpen)));
+        if (isOpen) fetchNotifications();
+    });
+
+    document.addEventListener('click', (event) => {
+        if (!root.contains(event.target)) {
+            if (panel) panel.hidden = true;
+            toggle?.setAttribute('aria-expanded', 'false');
+        }
+    });
+
+    refreshButton?.addEventListener('click', () => fetchNotifications());
+
+    readAllButton?.addEventListener('click', async () => {
+        if (!readAllEndpoint) return;
+        await request(readAllEndpoint, {method: 'PATCH'});
+        fetchNotifications();
+    });
+
+    list?.addEventListener('click', async (event) => {
+        const link = event.target.closest('[data-notification-open]');
+        if (!link) return;
+        event.preventDefault();
+        const id = link.dataset.notificationOpen;
+        await markRead(id);
+        window.location.href = link.href;
+    });
+
+    liveRefresh?.addEventListener('click', () => window.location.reload());
+
+    document.addEventListener('visibilitychange', () => {
+        if (!document.hidden) fetchNotifications();
+        else schedule();
+    });
+
+    fetchNotifications();
+})();

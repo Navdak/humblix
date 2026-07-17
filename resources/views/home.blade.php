@@ -1,6 +1,9 @@
 @extends('layouts.app')
 @section('content')
 @php
+    $homeHeroImageUrl = $hero?->imageUrl() ?: asset('images/generated/home/home-hero-engineering.jpg');
+    $homeHeroTitle = $hero?->title ?: ($globalSettings['hero_headline'] ?? 'Engineering Comfort. Powering Reliability.');
+    $homeHeroSubtitle = $hero?->subtitle ?: ($globalSettings['hero_subtext'] ?? 'HVAC, solar, electrical, maintenance and equipment solutions for residential, commercial and industrial clients worldwide.');
     $fallbackProjects = collect([
         ['title' => 'Industrial Plant — Lagos', 'system' => 'HVAC System Installation', 'image' => 'images/generated/projects/project-industrial-plant-neutral.jpg'],
         ['title' => 'Office Complex — Abuja', 'system' => 'VRF System Installation', 'image' => 'images/generated/projects/project-office-complex-neutral.jpg'],
@@ -21,12 +24,12 @@
 @endphp
 
 <section class="hero">
-    <div class="hero-media" role="img" aria-label="Humelix Limited engineer servicing engineering equipment"></div>
+    <div class="hero-media" role="img" aria-label="Humelix Limited engineer servicing engineering equipment" style="background-image:url('{{ $homeHeroImageUrl }}')"></div>
     <div class="hero-shade"></div>
     <div class="container hero-grid">
         <div class="hero-copy" data-animate="fade-up">
-            <h1>{{ $globalSettings['hero_headline'] ?? 'Engineering Comfort. Powering Reliability.' }}</h1>
-            <p>{{ $globalSettings['hero_subtext'] ?? 'HVAC, solar, electrical, maintenance and equipment solutions for residential, commercial and industrial clients worldwide.' }}</p>
+            <h1>{{ $homeHeroTitle }}</h1>
+            <p>{{ $homeHeroSubtitle }}</p>
             <div class="hero-actions">
                 <a href="{{ route('contact') }}" class="btn btn-primary">Get a Quote</a>
                 <button type="button" class="btn btn-white" data-chat-open>Chat Now</button>
