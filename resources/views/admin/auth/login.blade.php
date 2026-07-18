@@ -15,11 +15,24 @@
         <h1 style="font-size:34px;margin:8px 0 8px;letter-spacing:-.04em">Sign in to dashboard</h1>
         <p class="section-sub" style="margin-bottom:24px">Manage enquiries, projects, team members, reviews, media and homepage content.</p>
         @if($errors->any())<div class="alert alert-error">{{ $errors->first() }}</div>@endif
-        <div class="form-field"><label>Email</label><input name="email" type="email" value="{{ old('email') }}" required autofocus></div>
+        <div class="form-field">
+            <label>Email</label>
+            <div class="auth-input-field">
+                <svg class="auth-input-icon" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M20 21a8 8 0 0 0-16 0"/>
+                    <circle cx="12" cy="7" r="4"/>
+                </svg>
+                <input name="email" type="email" value="{{ old('email') }}" required autofocus autocomplete="email" placeholder="Email address">
+            </div>
+        </div>
         <div class="form-field" style="margin-top:14px">
             <label>Password</label>
-            <div class="password-toggle-field">
-                <input name="password" type="password" required data-password-input>
+            <div class="password-toggle-field auth-input-field">
+                <svg class="auth-input-icon" viewBox="0 0 24 24" aria-hidden="true">
+                    <rect x="4" y="10" width="16" height="10" rx="2"/>
+                    <path d="M8 10V7a4 4 0 0 1 8 0v3"/>
+                </svg>
+                <input name="password" type="password" required autocomplete="current-password" placeholder="Password" data-password-input>
                 <button type="button" class="password-toggle-button" aria-label="Show password" aria-pressed="false" data-password-toggle>
                     <svg class="password-eye-icon" viewBox="0 0 24 24" aria-hidden="true" hidden data-password-eye>
                         <path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z"/>
