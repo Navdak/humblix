@@ -309,8 +309,10 @@ body.video-open { overflow: hidden; }
 .video-modal { position: fixed; z-index: 200; inset: 0; display: grid; place-items: center; padding: 20px; }
 .video-modal-backdrop { position: absolute; inset: 0; background: rgba(3,17,32,.78); backdrop-filter: blur(7px); }
 .video-modal-dialog { position: relative; z-index: 1; width: min(980px, 100%); max-height: calc(100vh - 40px); overflow: auto; border: 1px solid rgba(255,255,255,.12); border-radius: 20px; color: #fff; background: #061a31; box-shadow: var(--shadow-lg); }
+.video-modal-dialog.is-short-video { width: min(460px, 100%); }
 .video-modal-close { position: absolute; z-index: 3; right: 12px; top: 12px; width: 40px; height: 40px; display: grid; place-items: center; border: 1px solid rgba(255,255,255,.2); border-radius: 50%; color: #fff; background: rgba(0,0,0,.35); font-size: 24px; cursor: pointer; }
 .video-player { aspect-ratio: 16 / 9; background: #020b14; }
+.video-player.is-short-video { aspect-ratio: 9 / 16; max-height: min(78vh, 760px); }
 .video-player iframe, .video-player video { width: 100%; height: 100%; display: block; border: 0; }
 .video-modal-copy { padding: 20px 24px 24px; }
 .video-modal-copy h2 { margin: 0 0 7px; font-size: clamp(1.35rem, 1.05rem + 1vw, 2rem); letter-spacing: -.035em; }

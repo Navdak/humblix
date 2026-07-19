@@ -88,9 +88,11 @@
 
     const src = button.dataset.videoSrc;
     const kind = button.dataset.videoKind || 'iframe';
+    const aspect = button.dataset.videoAspect || 'wide';
     const title = button.dataset.videoTitle || 'Humelix video';
     const caption = button.dataset.videoCaption || '';
     const poster = button.dataset.videoPoster || '';
+    const dialog = videoModal.querySelector('.video-modal-dialog');
 
     if (videoTitle) videoTitle.textContent = title;
     if (videoCaption) {
@@ -117,6 +119,8 @@
       videoPlayer.append(iframe);
     }
 
+    dialog?.classList.toggle('is-short-video', aspect === 'short');
+    videoPlayer.classList.toggle('is-short-video', aspect === 'short');
     videoModal.hidden = false;
     body.classList.add('video-open');
     videoModal.querySelector('[data-video-close]')?.focus();

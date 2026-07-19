@@ -143,17 +143,10 @@ class VideoController extends Controller
         $host = strtolower((string) parse_url($url, PHP_URL_HOST));
         $path = (string) parse_url($url, PHP_URL_PATH);
 
-        if (str_contains($host, 'youtube.com')) {
-            parse_str((string) parse_url($url, PHP_URL_QUERY), $query);
-            $id = $query['v'] ?? trim(str_replace('/embed/', '', $path), '/');
+        if (str_contains($host, 'youtube.com') || str_contains($host, 'youtube-nocookie.com') || str_contains($host, 'youtu.be')) {
+            $id = Video::youtubeVideoIdFromUrl($url);
 
-            return preg_match('/^[A-Za-z0-9_-]{6,}$/', $id) ? "https://www.youtube-nocookie.com/embed/{$id}" : null;
-        }
-
-        if (str_contains($host, 'youtu.be')) {
-            $id = trim($path, '/');
-
-            return preg_match('/^[A-Za-z0-9_-]{6,}$/', $id) ? "https://www.youtube-nocookie.com/embed/{$id}" : null;
+            return $id ? "https://www.youtube-nocookie.com/embed/{$id}" : null;
         }
 
         if (str_contains($host, 'vimeo.com')) {

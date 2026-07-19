@@ -136,27 +136,7 @@ class Video extends Model
     public function youtubeVideoId(): ?string
     {
         foreach (array_filter([$this->external_url, $this->embed_url]) as $url) {
-            $host = strtolower((string) parse_url($url, PHP_URL_HOST));
-            $path = trim((string) parse_url($url, PHP_URL_PATH), '/');
-
-            if (str_contains($host, 'youtu.be')) {
-                $id = strtok($path, '/');
-            } elseif (str_contains($host, 'youtube.com') || str_contains($host, 'youtube-nocookie.com')) {
-                parse_str((string) parse_url($url, PHP_URL_QUERY), $query);
-                $id = $query['v'] ?? null;
-
-                if (! $id && str_starts_with($path, 'embed/')) {
-                    $id = substr($path, strlen('embed/'));
-                    $id = strtok($id, '/');
-                }
-
-                if (! $id && str_starts_with($path, 'shorts/')) {
-                    $id = substr($path, strlen('shorts/'));
-                    $id = strtok($id, '/');
-                }
-            } else {
-                $id = null;
-            }
+            $id = self::youtubeVideoIdFromUrl((string) $url);
 
             if (is_string($id) && preg_match('/^[A-Za-z0-9_-]{6,}$/', $id)) {
                 return $id;
@@ -164,6 +144,48 @@ class Video extends Model
         }
 
         return null;
+    }
+
+    public static function youtubeVideoIdFromUrl(string $url): ?string
+    {
+        $host = strtolower((string) parse_url($url, PHP_URL_HOST));
+        $path = trim((string) parse_url($url, PHP_URL_PATH), '/');
+
+        if (str_contains($host, 'youtu.be')) {
+            $id = strtok($path, '/');
+        } elseif (str_contains($host, 'youtube.com') || str_contains($host, 'youtube-nocookie.com')) {
+            parse_str((string) parse_url($url, PHP_URL_QUERY), $query);
+            $id = $query['v'] ?? null;
+
+            if (! $id && str_starts_with($path, 'embed/')) {
+                $id = substr($path, strlen('embed/'));
+                $id = strtok($id, '/');
+            }
+
+            if (! $id && str_starts_with($path, 'shorts/')) {
+                $id = substr($path, strlen('shorts/'));
+                $id = strtok($id, '/');
+            }
+        } else {
+            $id = null;
+        }
+
+        return is_string($id) && preg_match('/^[A-Za-z0-9_-]{6,}$/', $id) ? $id : null;
+    }
+
+    public function isYoutubeShort(): bool
+    {
+        $url = (string) $this->external_url;
+        $host = strtolower((string) parse_url($url, PHP_URL_HOST));
+        $path = trim((string) parse_url($url, PHP_URL_PATH), '/');
+
+        return (str_contains($host, 'youtube.com') || str_contains($host, 'youtube-nocookie.com'))
+            && str_starts_with($path, 'shorts/');
+    }
+
+    public function playbackAspect(): string
+    {
+        return $this->isYoutubeShort() ? 'short' : 'wide';
     }
 
     public function categoryLabel(): string

@@ -13,6 +13,7 @@
         data-video-caption="{{ $video->caption }}"
         data-video-src="{{ $playbackUrl }}"
         data-video-kind="{{ $video->playbackKind() }}"
+        data-video-aspect="{{ $video->playbackAspect() }}"
         data-video-poster="{{ $thumbnailUrl }}"
         aria-label="Play {{ $video->title }}"
     >

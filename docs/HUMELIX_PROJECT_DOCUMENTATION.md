@@ -1,6 +1,6 @@
 # HUMELIX LIMITED Project Documentation
 
-Last updated: 2026-07-17
+Last updated: 2026-07-19
 
 ## Project overview
 
@@ -40,7 +40,7 @@ The admin platform includes:
 - Branch management.
 - Service foundation page.
 - Equipment catalogue management.
-- Video management with local upload and YouTube URL support.
+- Video management with local upload, standard YouTube links, `youtu.be` links and YouTube Shorts URL support.
 - Resources/articles with TinyMCE editor.
 - Media library.
 - Review moderation.
@@ -97,6 +97,19 @@ Uploaded replacement images should replace the active hero image. Old uploaded f
 Admin users can have profile photos uploaded during account creation or edited later.
 
 If no photo exists, the interface falls back to the user’s initial. Uploaded photos are displayed in the admin topbar, sidebar mini profile and user list.
+
+## Video handling
+
+The Video Library supports:
+
+- standard YouTube watch URLs;
+- short `youtu.be` URLs;
+- YouTube Shorts URLs;
+- Vimeo links;
+- direct MP4/WebM links;
+- local MP4/WebM/MOV uploads.
+
+YouTube and YouTube Shorts links are recommended for shared hosting because YouTube handles playback, compression, streaming bandwidth and device quality. Shorts are displayed with a vertical-friendly public player layout.
 
 ## Hybrid live admin notifications
 
