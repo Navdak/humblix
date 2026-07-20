@@ -12,16 +12,25 @@ use Illuminate\Validation\Rule;
 
 class UserController extends Controller
 {
+    private const COMPANY_OWNER_MANAGEABLE_ROLES = [
+        'content_editor',
+        'service_manager',
+        'country_admin',
+        'support_agent',
+        'safety_officer',
+    ];
+
     public function index()
     {
         $this->authorizeUsersModule();
 
         return view('admin.users.index', [
-            'users' => User::latest()->paginate(15),
-            'roles' => User::ROLES,
+            'users' => $this->visibleUsersQuery()->latest()->paginate(15),
+            'roles' => $this->visibleRolesForCurrentUser(),
             'roleLabels' => User::ROLE_LABELS,
             'permissionLabels' => AdminPermissions::MODULES,
             'rolePermissions' => $this->rolePermissionMap(),
+            'canManageRolePermissions' => auth()->user()?->isSuperAdmin() ?? false,
         ]);
     }
 
@@ -31,7 +40,7 @@ class UserController extends Controller
 
         return view('admin.users.create', [
             'user' => new User(),
-            'roles' => User::ROLES,
+            'roles' => $this->assignableRolesForCurrentUser(),
             'roleLabels' => User::ROLE_LABELS,
         ]);
     }
@@ -49,10 +58,11 @@ class UserController extends Controller
     public function edit(User $user)
     {
         $this->authorizeUsersModule();
+        $this->authorizeAccountManagement($user);
 
         return view('admin.users.edit', [
             'user' => $user,
-            'roles' => User::ROLES,
+            'roles' => $this->assignableRolesForCurrentUser(),
             'roleLabels' => User::ROLE_LABELS,
         ]);
     }
@@ -60,6 +70,7 @@ class UserController extends Controller
     public function update(Request $request, User $user): RedirectResponse
     {
         $this->authorizeUsersModule();
+        $this->authorizeAccountManagement($user);
         $data = $this->validated($request, $user);
         if (blank($data['password'] ?? null)) unset($data['password']);
         $this->protectDeveloperAccount($user, $data);
@@ -73,6 +84,7 @@ class UserController extends Controller
     public function destroy(User $user): RedirectResponse
     {
         $this->authorizeUsersModule();
+        $this->authorizeAccountManagement($user);
         abort_if($user->is(auth()->user()), 403, 'You cannot delete your own account.');
         abort_if($user->isProtected(), 403, 'The protected developer recovery account cannot be deleted.');
         abort_if($user->isSuperAdmin() && $this->activeSuperAdminCount() <= 1, 403, 'You cannot delete the last active Super Admin.');
@@ -88,7 +100,7 @@ class UserController extends Controller
             'name' => ['required','string','max:120'],
             'email' => ['required','email','max:160', Rule::unique('users','email')->ignore($user?->id)],
             'password' => [$user?->exists ? 'nullable' : 'required','string','min:8','max:120'],
-            'role' => ['required', Rule::in(User::ROLES)],
+            'role' => ['required', Rule::in($this->assignableRolesForCurrentUser())],
             'phone' => ['nullable','string','max:80'],
             'region' => ['nullable','string','max:120'],
             'is_active' => ['nullable','boolean'],
@@ -100,6 +112,67 @@ class UserController extends Controller
     private function authorizeUsersModule(): void
     {
         abort_unless(auth()->user()?->canManage('users'), 403);
+    }
+
+    private function authorizeAccountManagement(User $user): void
+    {
+        abort_unless($this->currentUserCanManageAccount($user), 403, 'You do not have permission to manage this admin account.');
+    }
+
+    private function currentUserCanManageAccount(User $user): bool
+    {
+        $actor = auth()->user();
+
+        if (! $actor) {
+            return false;
+        }
+
+        if ($actor->isSuperAdmin()) {
+            return true;
+        }
+
+        if (! $actor->hasRole('company_owner')) {
+            return false;
+        }
+
+        if ($user->isProtected() || $user->isSuperAdmin() || $user->hasRole('company_owner')) {
+            return false;
+        }
+
+        return in_array($user->normalizedRole(), self::COMPANY_OWNER_MANAGEABLE_ROLES, true);
+    }
+
+    private function assignableRolesForCurrentUser(): array
+    {
+        $actor = auth()->user();
+
+        if ($actor?->isSuperAdmin()) {
+            return User::ROLES;
+        }
+
+        if ($actor?->hasRole('company_owner')) {
+            return self::COMPANY_OWNER_MANAGEABLE_ROLES;
+        }
+
+        return [];
+    }
+
+    private function visibleRolesForCurrentUser(): array
+    {
+        return auth()->user()?->isSuperAdmin()
+            ? User::ROLES
+            : self::COMPANY_OWNER_MANAGEABLE_ROLES;
+    }
+
+    private function visibleUsersQuery()
+    {
+        $query = User::query();
+
+        if (! auth()->user()?->isSuperAdmin()) {
+            $query->whereIn('role', self::COMPANY_OWNER_MANAGEABLE_ROLES);
+        }
+
+        return $query;
     }
 
     private function preventLastSuperAdminLoss(User $user, array $data): void
@@ -164,7 +237,7 @@ class UserController extends Controller
 
     private function rolePermissionMap(): array
     {
-        return collect(User::ROLES)
+        return collect($this->visibleRolesForCurrentUser())
             ->mapWithKeys(function (string $role): array {
                 if ($role === 'super_admin') {
                     return [$role => array_keys(AdminPermissions::MODULES)];

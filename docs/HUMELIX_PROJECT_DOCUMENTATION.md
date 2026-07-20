@@ -58,14 +58,14 @@ The admin uses role-based permissions backed by database tables.
 Primary roles:
 
 - Technical Super Admin: full system access.
-- Company Owner: broad business/content access without developer-only recovery controls.
+- Company Owner: broad business/content access, page hero editing and normal admin user management without developer-only recovery controls.
 - Content Editor: resources, media, videos and reviews.
 - Service Manager: services, enquiries, projects, equipment and videos.
 - Country Admin: branches, enquiries, projects and team content.
 - Support Agent: client enquiries and review support.
 - Safety Officer: safety content and safety video oversight.
 
-The Technical Super Admin can manage role permissions from the admin area.
+The Technical Super Admin can manage role permissions from the admin area. Company Owner can create, update, deactivate and delete normal admin users only. Company Owner cannot access the role-permission editor, cannot assign protected roles, and cannot view or modify Technical Super Admin, protected developer recovery or other Company Owner accounts.
 
 ## Protected developer account
 

@@ -54,7 +54,15 @@
                 ];
             @endphp
             @foreach($adminNavGroups as $groupLabel => $items)
-                @php $visibleItems = collect($items)->filter(fn ($item) => auth()->user()?->canManage($item[4]) ?? false); @endphp
+                @php
+                    $visibleItems = collect($items)->filter(function ($item) {
+                        if (($item[1] ?? '') === 'admin.roles.index' && ! auth()->user()?->isSuperAdmin()) {
+                            return false;
+                        }
+
+                        return auth()->user()?->canManage($item[4]) ?? false;
+                    });
+                @endphp
                 @continue($visibleItems->isEmpty())
                 <div class="admin-nav-group">
                     <span class="admin-nav-label">{{ $groupLabel }}</span>

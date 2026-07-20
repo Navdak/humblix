@@ -46,6 +46,7 @@ class AdminPermissions
             'reviews',
             'safety',
             'page_heroes',
+            'users',
         ],
         'content_editor' => [
             'dashboard',

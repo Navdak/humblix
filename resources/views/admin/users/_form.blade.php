@@ -27,7 +27,12 @@
     @if($user->exists && $user->isProtected())<input type="hidden" name="is_active" value="1">@endif
 </div>
 <div class="admin-note" style="margin-top:14px">
-    <strong>Role foundation:</strong> Technical Super Admin has full developer and recovery access. Company Owner has business/content access. Sensitive settings, SEO, users and developer credit controls remain Technical Super Admin only.
+    <strong>Role foundation:</strong>
+    @if(auth()->user()?->isSuperAdmin())
+        Technical Super Admin has full developer and recovery access. Company Owner has business/content access and can manage normal admin users. Sensitive settings, SEO, role permissions and developer credit controls remain Technical Super Admin only.
+    @else
+        Company Owner can create and manage normal admin users only. Technical Super Admin, protected developer recovery and Company Owner accounts remain outside this page.
+    @endif
     @if($user->exists && $user->isProtected())<br><strong>Protected account:</strong> This developer recovery account cannot be deleted, deactivated, demoted, reassigned, or edited by another admin.@endif
 </div>
 <button class="btn btn-primary" style="margin-top:20px">Save User</button>
