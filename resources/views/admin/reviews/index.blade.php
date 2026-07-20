@@ -16,10 +16,12 @@
             <div class="form-field"><label>Admin Response</label><textarea name="admin_response" rows="3">{{ old('admin_response',$review->admin_response) }}</textarea></div>
             <div class="admin-actions" style="margin-top:14px"><button class="btn btn-primary">Save</button></div>
         </form>
-        <form method="POST" action="{{ route('admin.reviews.destroy',$review) }}" onsubmit="return confirm('Delete this review?')" style="margin-top:10px">
-            @csrf @method('DELETE')
-            <button class="btn btn-outline" style="color:#b91c1c">Delete</button>
-        </form>
+        @if(auth()->user()?->canDeleteRecords())
+            <form method="POST" action="{{ route('admin.reviews.destroy',$review) }}" onsubmit="return confirm('Delete this review?')" style="margin-top:10px">
+                @csrf @method('DELETE')
+                <button class="btn btn-outline" style="color:#b91c1c">Delete</button>
+            </form>
+        @endif
     </div>
 @empty
     <div class="admin-card">No reviews yet.</div>

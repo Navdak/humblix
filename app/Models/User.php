@@ -61,6 +61,11 @@ class User extends Authenticatable
         return (bool) $this->is_protected;
     }
 
+    public function canDeleteRecords(): bool
+    {
+        return $this->isSuperAdmin() || $this->hasRole('company_owner');
+    }
+
     public function hasRole(string $role): bool
     {
         return $this->normalizedRole() === $role;

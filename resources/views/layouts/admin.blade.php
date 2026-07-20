@@ -7,7 +7,7 @@
     <title>@yield('title', 'Admin') · HUMELIX LIMITED</title>
     <link rel="icon" href="{{ asset('images/brand/humelix-favicon-32.png') }}" sizes="32x32" type="image/png">
     <link rel="apple-touch-icon" href="{{ asset('images/brand/humelix-apple-touch-icon.png') }}">
-    <link rel="stylesheet" href="{{ asset('css/uch.css') }}?v=20260717b">
+    <link rel="stylesheet" href="{{ asset('css/uch.css') }}?v=20260720a">
     @vite('resources/js/app.js')
     @stack('head')
 </head>
@@ -37,6 +37,7 @@
                     'Content' => [
                         ['admin.page-heroes.*','admin.page-heroes.index','page-heroes','Page Heroes','page_heroes'],
                         ['admin.articles.*','admin.articles.index','articles','Resources / Articles','articles'],
+                        ['admin.newsletter.*','admin.newsletter.index','bell','Newsletter','newsletter'],
                         ['admin.media.*','admin.media.index','media','Media Library','media'],
                         ['admin.reviews.*','admin.reviews.index','reviews','Reviews','reviews'],
                         ['admin.safety.*','admin.safety.index','safety','Safety','safety'],

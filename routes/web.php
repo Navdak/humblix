@@ -12,6 +12,7 @@ use App\Http\Controllers\Admin\NotificationController as AdminNotificationContro
 use App\Http\Controllers\Admin\PageHeroController as AdminPageHeroController;
 use App\Http\Controllers\Admin\ProjectController as AdminProjectController;
 use App\Http\Controllers\Admin\ReviewController as AdminReviewController;
+use App\Http\Controllers\Admin\NewsletterSubscriberController as AdminNewsletterSubscriberController;
 use App\Http\Controllers\Admin\RolePermissionController as AdminRolePermissionController;
 use App\Http\Controllers\Admin\SeoSettingsController as AdminSeoSettingsController;
 use App\Http\Controllers\Admin\SettingsController;
@@ -24,6 +25,7 @@ use App\Http\Controllers\ChatController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LegalPageController;
+use App\Http\Controllers\NewsletterController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\SeoController;
@@ -52,6 +54,9 @@ Route::get('/equipment', [PageController::class, 'equipment'])->name('equipment.
 Route::get('/reviews', [PageController::class, 'reviews'])->name('reviews.index');
 Route::get('/resources', [ArticleController::class, 'index'])->name('articles.index');
 Route::get('/resources/{article:slug}', [ArticleController::class, 'show'])->name('articles.show');
+Route::post('/newsletter/subscribe', [NewsletterController::class, 'store'])->middleware('throttle:5,1')->name('newsletter.subscribe');
+Route::get('/newsletter/confirm/{token}', [NewsletterController::class, 'confirm'])->name('newsletter.confirm');
+Route::get('/newsletter/unsubscribe/{token}', [NewsletterController::class, 'unsubscribe'])->name('newsletter.unsubscribe');
 Route::get('/videos', [VideoController::class, 'index'])->name('videos.index');
 Route::get('/sitemap.xml', [SeoController::class, 'sitemap'])->name('seo.sitemap');
 Route::get('/robots.txt', [SeoController::class, 'robots'])->name('seo.robots');
@@ -69,7 +74,7 @@ Route::middleware('guest')->group(function () {
 });
 Route::post('/admin/logout', [AdminAuthController::class, 'logout'])->middleware('auth')->name('admin.logout');
 
-Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(function () {
+Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin', 'admin.delete'])->group(function () {
     Route::get('/', DashboardController::class)->name('dashboard');
     Route::get('/notifications', [AdminNotificationController::class, 'index'])->name('notifications.index');
     Route::patch('/notifications/read-all', [AdminNotificationController::class, 'markAllRead'])->name('notifications.read-all');
@@ -87,6 +92,11 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::get('/safety', [FoundationController::class, 'safety'])->middleware('admin.module:safety')->name('safety.index');
     Route::redirect('/resources', '/admin/articles', 301)->middleware('admin.module:articles')->name('resources.index');
     Route::resource('articles', AdminArticleController::class)->middleware('admin.module:articles')->except(['show']);
+    Route::get('/newsletter', [AdminNewsletterSubscriberController::class, 'index'])->middleware('admin.module:newsletter')->name('newsletter.index');
+    Route::patch('/newsletter/company-website-url', [AdminNewsletterSubscriberController::class, 'updateCompanyWebsiteUrl'])->middleware('admin.module:newsletter')->name('newsletter.company-url');
+    Route::patch('/newsletter/{newsletterSubscriber}/unsubscribe', [AdminNewsletterSubscriberController::class, 'unsubscribe'])->middleware('admin.module:newsletter')->name('newsletter.unsubscribe');
+    Route::patch('/newsletter/{newsletterSubscriber}/resubscribe', [AdminNewsletterSubscriberController::class, 'resubscribe'])->middleware('admin.module:newsletter')->name('newsletter.resubscribe');
+    Route::delete('/newsletter/{newsletterSubscriber}', [AdminNewsletterSubscriberController::class, 'destroy'])->middleware('admin.module:newsletter')->name('newsletter.destroy');
     Route::resource('projects', AdminProjectController::class)->middleware('admin.module:projects')->except(['show']);
     Route::resource('branches', AdminBranchController::class)->middleware('admin.module:branches')->except(['show']);
     Route::resource('jobs', AdminJobOpeningController::class)->middleware('admin.module:jobs')->except(['show']);

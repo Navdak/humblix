@@ -35,7 +35,7 @@
                 @if($canManageListedUser)
                     <a class="btn btn-white" href="{{ route('admin.users.edit',$user) }}">Edit</a>
                 @endif
-                @if($canManageListedUser && !$user->is(auth()->user()) && !$user->isProtected())
+                @if(auth()->user()?->canDeleteRecords() && $canManageListedUser && !$user->is(auth()->user()) && !$user->isProtected())
                     <form method="POST" action="{{ route('admin.users.destroy',$user) }}" onsubmit="return confirm('Delete this user?')">@csrf @method('DELETE')<button class="btn btn-outline" style="color:#b91c1c">Delete</button></form>
                 @endif
             </td>

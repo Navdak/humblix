@@ -17,7 +17,7 @@
             <td data-label="Featured">{{ $video->is_featured ? 'Yes' : 'No' }}</td>
             <td data-label="Related"><small>{{ $video->related_service ?: ($video->project?->title ?: ($video->branch?->name ?: ($video->equipment?->name ?: '—'))) }}</small></td>
             <td data-label="Published">{{ $video->published_at ? $video->published_at->format('M j, Y') : '—' }}</td>
-            <td data-label="Actions" class="admin-actions"><a class="btn btn-white" href="{{ route('admin.videos.edit',$video) }}">Edit</a><form method="POST" action="{{ route('admin.videos.destroy',$video) }}" onsubmit="return confirm('Delete this video?')">@csrf @method('DELETE')<button class="btn btn-outline" style="color:#b91c1c">Delete</button></form></td>
+            <td data-label="Actions" class="admin-actions"><a class="btn btn-white" href="{{ route('admin.videos.edit',$video) }}">Edit</a>@if(auth()->user()?->canDeleteRecords())<form method="POST" action="{{ route('admin.videos.destroy',$video) }}" onsubmit="return confirm('Delete this video?')">@csrf @method('DELETE')<button class="btn btn-outline" style="color:#b91c1c">Delete</button></form>@endif</td>
         </tr>
     @empty
         <tr><td colspan="9">@include('admin.partials.empty',['title'=>'No videos yet','message'=>'Add verified videos or safe external video links when ready.','actionUrl'=>route('admin.videos.create'),'actionLabel'=>'New Video','icon'=>'videos'])</td></tr>

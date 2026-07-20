@@ -1,6 +1,6 @@
 # HUMELIX LIMITED Project Documentation
 
-Last updated: 2026-07-19
+Last updated: 2026-07-20
 
 ## Project overview
 
@@ -110,6 +110,68 @@ The Video Library supports:
 - local MP4/WebM/MOV uploads.
 
 YouTube and YouTube Shorts links are recommended for shared hosting because YouTube handles playback, compression, streaming bandwidth and device quality. Shorts are displayed with a vertical-friendly public player layout.
+
+## Resource/article handling
+
+Resources support category-based organization for HVAC, solar, electrical, maintenance, vendor/equipment, safety, company news and general articles.
+
+Article publishing includes:
+
+- admin category selection during create/edit;
+- public resource filtering by category using `/resources?category=...`;
+- category badges on public article cards and detail pages;
+- sanitized rich text article content;
+- an 8,000-word maximum for web article content, with admin guidance to split longer guides manually or attach a PDF;
+- optional PDF attachments up to 10MB for long guides, manuals, brochures, checklists and downloadable resources;
+- optional article video embeds using YouTube, YouTube Shorts, Vimeo, MP4 or WebM URLs;
+- article video placement controls for after-intro, middle-of-article or end-of-article display;
+- optional article video title and caption fields for clearer public presentation;
+- related resources below each article detail page, prioritizing the same category and falling back to latest resources when needed.
+
+## Newsletter and article email updates
+
+The website includes a newsletter foundation for sending new resource/article updates to visitors who subscribe.
+
+Current behavior:
+
+- public signup appears on the Resources listing and article detail pages;
+- visitors provide an email address and consent before subscribing;
+- subscriptions use single opt-in, so the visitor is subscribed immediately after submitting the form with consent;
+- welcome emails are branded with the HUMELIX LIMITED logo, website link and professional styling;
+- confirmed subscribers receive a branded email when a new article is published;
+- each published article is marked after notification so subscribers are not emailed repeatedly for normal edits;
+- article emails include the article title, category, excerpt, website link, resource CTA and unsubscribe link;
+- admins with newsletter permission can view subscribers, pending confirmations and unsubscribed contacts;
+- admins can mark a subscriber as unsubscribed, restore a subscriber, or delete a subscriber record.
+- newsletter access is a role permission; company owner receives it by default, super admin always has access, and other roles can be granted access later from Role Permissions.
+- newsletter emails use the editable `Company Website URL` setting when present and fall back to `APP_URL` when it is empty.
+
+Current email provider plan:
+
+- Gmail SMTP can be used during preview/testing with an app password stored only in `.env` or hosting environment variables;
+- when the final Namecheap/domain email is ready, update the mail environment variables to use the Namecheap/cPanel mailbox SMTP details;
+- never commit real SMTP passwords or app passwords to GitHub.
+
+Future newsletter improvements:
+
+- queue newsletter sends for very large subscriber lists;
+- add optional campaign history and resend controls;
+- add richer subscriber export/import if marketing workflows require it;
+- integrate a dedicated email marketing provider if the audience grows beyond simple transactional updates.
+
+## Admin delete policy
+
+The admin platform follows a protected delete policy:
+
+- Technical Super Admin / Developer can create, edit, upload, publish and delete records.
+- Company Owner / CEO can create, edit, upload, publish and delete normal business records.
+- Lower admin roles can create, edit, post, upload and publish only where their module permissions allow.
+- Lower admin roles cannot delete website/admin records.
+- Delete buttons are hidden from lower admin roles in admin list pages.
+- Backend middleware blocks direct admin `DELETE` requests from lower admin roles with a 403 response.
+- The protected developer recovery account remains undeletable, even by Company Owner.
+
+This prevents accidental or unauthorized content loss while still allowing operational admins to do daily publishing work.
 
 ## Hybrid live admin notifications
 

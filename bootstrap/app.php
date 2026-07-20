@@ -22,6 +22,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'admin' => \App\Http\Middleware\EnsureUserIsAdmin::class,
             'admin.module' => \App\Http\Middleware\EnsureUserCanManageAdminModule::class,
+            'admin.delete' => \App\Http\Middleware\EnsureUserCanDeleteRecords::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

@@ -21,6 +21,7 @@
                     <textarea name="{{ $key }}" rows="{{ $key === 'founder_snapshot' ? 5 : 3 }}">{{ old($key, $settings[$key] ?? '') }}</textarea>
                 @else
                     <input type="{{ $type }}" name="{{ $key }}" value="{{ old($key, $settings[$key] ?? '') }}">
+                    @if($key === 'company_website_url')<small>Use only the main website URL. Newsletter article links are generated automatically.</small>@endif
                 @endif
             </div>
         @endforeach

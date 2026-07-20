@@ -14,7 +14,7 @@
         @if(str_starts_with($asset->mime_type, 'image/'))<div class="image-frame"><img src="{{ asset('storage/'.$asset->file_path) }}" alt="{{ $asset->alt_text }}"></div>@else<div class="image-frame" style="display:grid;place-items:center;font-weight:900">FILE</div>@endif
         <h3 style="word-break:break-word">{{ $asset->file_name }}</h3>
         <p>{{ $asset->alt_text }}</p>
-        <div class="admin-actions" style="margin-top:12px"><a class="btn btn-white" href="{{ asset('storage/'.$asset->file_path) }}" target="_blank">Open</a><form method="POST" action="{{ route('admin.media.destroy',$asset) }}" onsubmit="return confirm('Delete this media asset?')">@csrf @method('DELETE')<button class="btn btn-outline" style="color:#b91c1c">Delete</button></form></div>
+        <div class="admin-actions" style="margin-top:12px"><a class="btn btn-white" href="{{ asset('storage/'.$asset->file_path) }}" target="_blank">Open</a>@if(auth()->user()?->canDeleteRecords())<form method="POST" action="{{ route('admin.media.destroy',$asset) }}" onsubmit="return confirm('Delete this media asset?')">@csrf @method('DELETE')<button class="btn btn-outline" style="color:#b91c1c">Delete</button></form>@endif</div>
     </div>
 @empty
     <div class="admin-card">No media uploaded yet.</div>

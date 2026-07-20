@@ -17,6 +17,10 @@ class HtmlSanitizer
         'a' => ['href', 'target', 'rel', 'title'],
     ];
 
+    private const BLOCKED_TAGS = [
+        'button', 'embed', 'form', 'iframe', 'input', 'math', 'object', 'script', 'style', 'svg',
+    ];
+
     public static function clean(?string $html): string
     {
         $html = trim((string) $html);
@@ -45,6 +49,15 @@ class HtmlSanitizer
             }
 
             $tag = strtolower($node->nodeName);
+
+            if (in_array($tag, ['html', 'body'], true)) {
+                continue;
+            }
+
+            if (in_array($tag, self::BLOCKED_TAGS, true)) {
+                self::removeNode($node);
+                continue;
+            }
 
             if (! in_array($tag, self::ALLOWED_TAGS, true)) {
                 self::unwrapNode($node);
@@ -111,6 +124,17 @@ class HtmlSanitizer
 
         while ($node->firstChild) {
             $parent->insertBefore($node->firstChild, $node);
+        }
+
+        $parent->removeChild($node);
+    }
+
+    private static function removeNode(DOMNode $node): void
+    {
+        $parent = $node->parentNode;
+
+        if (! $parent) {
+            return;
         }
 
         $parent->removeChild($node);

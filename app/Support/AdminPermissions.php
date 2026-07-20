@@ -17,6 +17,7 @@ class AdminPermissions
         'equipment' => 'Equipment',
         'videos' => 'Videos',
         'articles' => 'Resources / Articles',
+        'newsletter' => 'Newsletter Subscribers',
         'media' => 'Media Library',
         'reviews' => 'Reviews',
         'safety' => 'Safety',
@@ -42,6 +43,7 @@ class AdminPermissions
             'team',
             'jobs',
             'articles',
+            'newsletter',
             'media',
             'reviews',
             'safety',
@@ -51,6 +53,7 @@ class AdminPermissions
         'content_editor' => [
             'dashboard',
             'articles',
+            'newsletter',
             'media',
             'videos',
             'reviews',
@@ -90,6 +93,7 @@ class AdminPermissions
             'seo-settings', 'seo_settings' => 'seo',
             'page-heroes', 'pageheroes' => 'page_heroes',
             'developer-profile', 'developerprofile' => 'developer_profile',
+            'newsletter-subscribers', 'newsletter_subscribers' => 'newsletter',
             default => $permission,
         };
     }

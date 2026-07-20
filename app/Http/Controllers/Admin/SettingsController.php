@@ -3,6 +3,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\SiteSetting;
+use App\Support\HumelixLinks;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -14,6 +15,7 @@ class SettingsController extends Controller
         'hero_subtext' => 'textarea',
         'founder_snapshot' => 'textarea',
         'footer_copyright' => 'text',
+        'company_website_url' => 'url',
         'company_email' => 'email',
         'support_email' => 'email',
         'phone_primary' => 'text',
@@ -56,11 +58,18 @@ class SettingsController extends Controller
 
     public function update(Request $request): RedirectResponse
     {
+        if ($request->filled('company_website_url')) {
+            $request->merge([
+                'company_website_url' => HumelixLinks::normalizeWebsiteUrl((string) $request->input('company_website_url')),
+            ]);
+        }
+
         $data = $request->validate([
             'hero_headline' => ['required','string','max:255'],
             'hero_subtext' => ['required','string','max:500'],
             'founder_snapshot' => ['nullable','string','max:1000'],
             'footer_copyright' => ['nullable','string','max:255'],
+            'company_website_url' => ['nullable','url','max:255'],
             'company_email' => ['nullable','email','max:160'],
             'support_email' => ['nullable','email','max:160'],
             'phone_primary' => ['nullable','string','max:80'],

@@ -12,5 +12,6 @@ class SiteSetting extends Model
     {
         static::query()->updateOrCreate(['key' => $key], ['value' => $value, 'group' => $group, 'type' => $type]);
         Cache::forget('site_settings_public');
+        Cache::forget('humelix_company_website_url');
     }
 }
