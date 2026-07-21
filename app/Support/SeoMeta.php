@@ -3,6 +3,7 @@
 namespace App\Support;
 
 use App\Models\SeoSetting;
+use App\Models\SiteSetting;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
@@ -43,6 +44,7 @@ class SeoMeta
             'robots' => self::robotsValue($setting),
             'structured_data' => array_values(array_filter([
                 self::organizationSchema(),
+                self::localBusinessSchema(),
                 self::websiteSchema(),
                 self::breadcrumbSchema(),
                 $setting?->structured_data_json,
@@ -96,6 +98,13 @@ class SeoMeta
 
     private static function organizationSchema(): array
     {
+        $settings = self::publicSettings();
+        $sameAs = array_values(array_filter([
+            $settings['facebook_url'] ?? null,
+            $settings['twitter_url'] ?? null,
+            $settings['linkedin_url'] ?? null,
+        ]));
+
         return [
             '@context' => 'https://schema.org',
             '@type' => 'Organization',
@@ -103,8 +112,39 @@ class SeoMeta
             'url' => url('/'),
             'logo' => asset('images/brand/humelix-icon-512.png'),
             'image' => asset('images/brand/humelix-og-image.jpg'),
-            'email' => config('mail.from.address'),
+            'email' => $settings['company_email'] ?? config('mail.from.address'),
+            'telephone' => $settings['phone_primary'] ?? null,
+            'sameAs' => $sameAs ?: null,
             'description' => 'Global engineering services for HVAC, solar, electrical, maintenance, equipment supply and home appliance installation.',
+        ];
+    }
+
+    private static function localBusinessSchema(): array
+    {
+        $settings = self::publicSettings();
+
+        return [
+            '@context' => 'https://schema.org',
+            '@type' => ['LocalBusiness', 'ProfessionalService'],
+            'name' => 'HUMELIX LIMITED',
+            'url' => url('/'),
+            'image' => asset('images/brand/humelix-og-image.jpg'),
+            'logo' => asset('images/brand/humelix-icon-512.png'),
+            'email' => $settings['company_email'] ?? config('mail.from.address'),
+            'telephone' => $settings['phone_primary'] ?? null,
+            'areaServed' => [
+                ['@type' => 'Country', 'name' => 'Nigeria'],
+                ['@type' => 'Place', 'name' => 'Global service enquiries'],
+            ],
+            'priceRange' => '$$',
+            'description' => 'HVAC, solar, electrical, maintenance, vendor/equipment and home appliance installation services for residential, commercial and industrial clients.',
+            'makesOffer' => [
+                ['@type' => 'Offer', 'itemOffered' => ['@type' => 'Service', 'name' => 'HVAC installation and maintenance']],
+                ['@type' => 'Offer', 'itemOffered' => ['@type' => 'Service', 'name' => 'Solar installation and maintenance']],
+                ['@type' => 'Offer', 'itemOffered' => ['@type' => 'Service', 'name' => 'Electrical and maintenance services']],
+                ['@type' => 'Offer', 'itemOffered' => ['@type' => 'Service', 'name' => 'Vendor and equipment sourcing']],
+                ['@type' => 'Offer', 'itemOffered' => ['@type' => 'Service', 'name' => 'Home appliance installation']],
+            ],
         ];
     }
 
@@ -116,6 +156,21 @@ class SeoMeta
             'name' => 'HUMELIX LIMITED',
             'url' => url('/'),
         ];
+    }
+
+    private static function publicSettings(): array
+    {
+        if (! Schema::hasTable('site_settings')) {
+            return [];
+        }
+
+        return Cache::remember('site_settings_public', 3600, function () {
+            try {
+                return SiteSetting::query()->pluck('value', 'key')->toArray();
+            } catch (\Throwable) {
+                return [];
+            }
+        });
     }
 
     private static function breadcrumbSchema(): ?array

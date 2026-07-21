@@ -20,6 +20,8 @@
             <input type="email" name="email" value="{{ old('email') }}" placeholder="Email address" autocomplete="email" required>
             <button class="btn btn-primary" type="submit">Subscribe</button>
         </div>
+        <div class="spam-trap" aria-hidden="true"><label>Website <input name="website" tabindex="-1" autocomplete="off"></label></div>
+        <input type="hidden" name="form_started_at" value="{{ time() }}">
         <label class="newsletter-consent">
             <input type="checkbox" name="newsletter_consent" value="1" required>
             <span>I agree to receive HUMELIX LIMITED resource updates. I can unsubscribe anytime.</span>

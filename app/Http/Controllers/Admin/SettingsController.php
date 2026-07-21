@@ -24,6 +24,7 @@ class SettingsController extends Controller
         'facebook_url' => 'url',
         'twitter_url' => 'url',
         'linkedin_url' => 'url',
+        'google_review_url' => 'url',
     ];
 
     private array $developerFields = [
@@ -78,6 +79,7 @@ class SettingsController extends Controller
             'facebook_url' => ['nullable','url','max:255'],
             'twitter_url' => ['nullable','url','max:255'],
             'linkedin_url' => ['nullable','url','max:255'],
+            'google_review_url' => ['nullable','url','max:255'],
         ]);
 
         $developerData = [];

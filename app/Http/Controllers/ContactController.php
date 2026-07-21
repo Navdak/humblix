@@ -3,6 +3,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Enquiry;
 use App\Models\AdminNotification;
+use App\Support\SpamProtection;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
@@ -23,6 +24,8 @@ class ContactController extends Controller
 
     public function store(Request $request): RedirectResponse
     {
+        SpamProtection::validate($request);
+
         if ($request->filled('type_of_work')) {
             $request->merge(['type_of_work' => $this->normaliseTypeOfWork((string) $request->input('type_of_work'))]);
         }

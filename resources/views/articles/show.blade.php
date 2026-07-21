@@ -30,7 +30,7 @@
                 @include('articles.partials.article-video', ['article' => $article])
             @endif
             <div class="service-actions" style="margin-top:28px">
-                <a class="btn btn-primary" href="{{ route('contact') }}?service={{ urlencode('Resource enquiry: '.$article->title) }}">Ask Humelix</a>
+                <a class="btn btn-primary" href="{{ route('contact') }}?service={{ urlencode('Resource enquiry: '.$article->title) }}">Ask About This Resource</a>
                 @if($article->hasPdfAttachment())<a class="btn btn-white" href="{{ $article->pdfUrl() }}" target="_blank" rel="noopener" download>Download PDF</a>@endif
                 <a class="btn btn-white" href="{{ route('articles.index') }}">Back to Resources</a>
             </div>

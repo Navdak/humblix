@@ -3,8 +3,16 @@
 @section('meta_description',$service['excerpt'])
 @section('content')
 @php
-    $contactUrl = route('contact').'?service='.urlencode($service['slug']);
-    $siteInspectionUrl = route('contact').'?service='.urlencode($service['slug'].' site inspection');
+    $ctaMap = [
+        'hvac-installation' => ['type' => 'HVAC', 'primary' => 'Request HVAC Assessment', 'secondary' => 'Book HVAC Site Inspection', 'chat' => 'Speak to HVAC Team'],
+        'solar-installation' => ['type' => 'Solar', 'primary' => 'Request Solar Site Assessment', 'secondary' => 'Plan Solar Installation', 'chat' => 'Speak to Solar Team'],
+        'electrical-maintenance' => ['type' => 'Electrical', 'primary' => 'Request Electrical Inspection', 'secondary' => 'Book Maintenance Visit', 'chat' => 'Speak to Maintenance Team'],
+        'vendor' => ['type' => 'Vendor', 'primary' => 'Request Equipment Quote', 'secondary' => 'Explore Equipment Catalogue', 'chat' => 'Speak to Vendor Team'],
+        'home-appliance-installation' => ['type' => 'Home Appliance', 'primary' => 'Request Home Appliance Installation', 'secondary' => 'Book Installation Visit', 'chat' => 'Speak to Installation Team'],
+    ];
+    $cta = $ctaMap[$service['slug']] ?? ['type' => $service['title'], 'primary' => 'Request Service', 'secondary' => 'Book Site Inspection', 'chat' => 'Chat with Engineer'];
+    $contactUrl = route('contact').'?type_of_work='.urlencode($cta['type']).'&service='.urlencode($service['title']);
+    $siteInspectionUrl = route('contact').'?type_of_work='.urlencode($cta['type']).'&service='.urlencode($cta['secondary']);
     $vendorQuoteUrl = route('contact').'?type_of_work=Vendor&service='.urlencode('Vendor / Equipment Quote');
     $whatsapp = 'https://wa.me/'.preg_replace('/\D+/', '', $globalSettings['whatsapp_number'] ?? '+2349001234567');
 @endphp
@@ -17,13 +25,13 @@
             <h1>{{ $service['title'] }}</h1>
             <p>{{ $service['excerpt'] }}</p>
             <div class="service-actions">
-                <a class="btn btn-primary" href="{{ $service['slug'] === 'vendor' ? $vendorQuoteUrl : $contactUrl }}">{{ $service['slug'] === 'vendor' ? 'Request Equipment Quote' : 'Request Quote' }}</a>
+                <a class="btn btn-primary" href="{{ $service['slug'] === 'vendor' ? $vendorQuoteUrl : $contactUrl }}">{{ $cta['primary'] }}</a>
                 @if($service['slug'] === 'vendor')
-                    <a class="btn btn-white" href="{{ route('equipment.index') }}">Explore Equipment Catalogue</a>
+                    <a class="btn btn-white" href="{{ route('equipment.index') }}">{{ $cta['secondary'] }}</a>
                 @else
-                    <a class="btn btn-white" href="{{ $siteInspectionUrl }}">Book Site Inspection</a>
+                    <a class="btn btn-white" href="{{ $siteInspectionUrl }}">{{ $cta['secondary'] }}</a>
                 @endif
-                <button class="btn btn-outline" type="button" data-chat-open>Chat with Engineer</button>
+                <button class="btn btn-outline" type="button" data-chat-open>{{ $cta['chat'] }}</button>
                 <a class="btn btn-whatsapp" href="{{ $whatsapp }}" target="_blank" rel="noopener">WhatsApp Us</a>
             </div>
         </div>
@@ -79,6 +87,16 @@
             </div>
 
             <div class="service-block" data-animate="fade-up">
+                <span class="eyebrow">Delivery Confidence</span>
+                <h2>Practical checks before, during and after the work.</h2>
+                <div class="grid grid-3 service-trust-grid">
+                    <div><strong>Site assessment</strong><p>We review location, building type, system demand and practical access before recommending the next step.</p></div>
+                    <div><strong>Safety-led delivery</strong><p>Work is planned around isolation, PPE, clean access, client-site protection and controlled handover.</p></div>
+                    <div><strong>Aftercare pathway</strong><p>Clients receive practical guidance for use, maintenance needs and follow-up support after completion.</p></div>
+                </div>
+            </div>
+
+            <div class="service-block" data-animate="fade-up">
                 <span class="eyebrow">Suitable For</span>
                 <h2>Clients and environments we can support.</h2>
                 <div class="client-chip-grid">
@@ -106,11 +124,11 @@
             <div class="service-sticky-card">
                 <h2>Request this service</h2>
                 <p>Share your location, building type and timeline. Humelix will recommend the right next step.</p>
-                <a class="btn btn-primary btn-block" href="{{ $service['slug'] === 'vendor' ? $vendorQuoteUrl : $contactUrl }}">{{ $service['slug'] === 'vendor' ? 'Request Equipment Quote' : 'Request Quote' }}</a>
+                <a class="btn btn-primary btn-block" href="{{ $service['slug'] === 'vendor' ? $vendorQuoteUrl : $contactUrl }}">{{ $cta['primary'] }}</a>
                 @if($service['slug'] === 'vendor')
-                    <a class="btn btn-white btn-block" href="{{ route('equipment.index') }}">Explore Equipment Catalogue</a>
+                    <a class="btn btn-white btn-block" href="{{ route('equipment.index') }}">{{ $cta['secondary'] }}</a>
                 @endif
-                <button class="btn btn-outline btn-block" type="button" data-chat-open>Chat with Engineer</button>
+                <button class="btn btn-outline btn-block" type="button" data-chat-open>{{ $cta['chat'] }}</button>
                 <hr>
                 <h3>Other divisions</h3>
                 @foreach($services as $item)
@@ -170,13 +188,13 @@
             </div>
             <div class="contact-band-actions">
                 @if($service['slug'] === 'vendor')
-                    <a class="btn btn-white" href="{{ route('equipment.index') }}">Explore Equipment Catalogue</a>
+                    <a class="btn btn-white" href="{{ route('equipment.index') }}">{{ $cta['secondary'] }}</a>
                     <a class="btn btn-ghost-light" href="{{ $vendorQuoteUrl }}">Request Equipment Quote</a>
                 @else
-                    <a class="btn btn-white" href="{{ $contactUrl }}">Request Quote</a>
+                    <a class="btn btn-white" href="{{ $contactUrl }}">{{ $cta['primary'] }}</a>
                 @endif
                 <a class="btn btn-whatsapp" href="{{ $whatsapp }}" target="_blank" rel="noopener">WhatsApp Us</a>
-                <button class="btn btn-ghost-light" type="button" data-chat-open>Chat with Engineer</button>
+                <button class="btn btn-ghost-light" type="button" data-chat-open>{{ $cta['chat'] }}</button>
             </div>
         </div>
     </div>

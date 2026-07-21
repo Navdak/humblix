@@ -1,6 +1,6 @@
 # HUMELIX LIMITED Project Documentation
 
-Last updated: 2026-07-20
+Last updated: 2026-07-21
 
 ## Project overview
 
@@ -44,7 +44,7 @@ The admin platform includes:
 - Resources/articles with TinyMCE editor.
 - Media library.
 - Review moderation.
-- Safety content foundation.
+- Safety Topics management.
 - Team and careers management.
 - Page hero editing.
 - Site settings.
@@ -91,6 +91,68 @@ Each page hero supports:
 - fallback to generated image if no uploaded image exists.
 
 Uploaded replacement images should replace the active hero image. Old uploaded files should be cleaned up during replacement to avoid storage bloat.
+
+## Safety Topics
+
+Safety Framework content is admin-managed instead of being only static page copy.
+
+The Safety module supports:
+
+- add, edit and delete Safety Framework topics;
+- title, slug, category, short description, summary checklist points and full read-more content;
+- draft/published status and sort order;
+- topic image upload and replacement;
+- generated safety image fallback when no uploaded image exists;
+- optional safety video URL using YouTube, YouTube Shorts, Vimeo, MP4 or WebM;
+- video placement on the public safety read-more page: after intro, middle of content, or end of content;
+- CTA label and CTA URL per topic.
+
+The public `/safety` page lists published safety topics. The public `/safety/{slug}` page shows the topic image, full content, summary points, optional video, and CTA.
+
+Delete behavior follows the production admin rule: Technical Super Admin and Company Owner can delete records; lower admins with Safety access can add/edit but cannot delete.
+
+## Conversion and project case-study layer
+
+Phase B focuses on turning interested visitors into clearer service enquiries without overbuilding a CTA management system.
+
+Current behavior:
+
+- broad pages such as Home, About, Team, Contact, Footer and the main navigation keep formal/general CTAs such as Request Service, Get a Quote, Contact HUMELIX and WhatsApp Us;
+- specific service pages use targeted CTAs:
+  - HVAC: Request HVAC Assessment;
+  - Solar: Request Solar Site Assessment;
+  - Electrical/Maintenance: Request Electrical Inspection or Book Maintenance Visit;
+  - Vendor / Equipment: Request Equipment Quote;
+  - Home Appliance: Request Home Appliance Installation;
+- project detail pages use Request Similar Project CTAs that prefill the enquiry pathway where possible;
+- article detail pages use Ask About This Resource for resource-related enquiries.
+
+Project detail pages are structured as professional case studies using existing editable project fields:
+
+- client challenge;
+- solution delivered;
+- result/outcome;
+- equipment/materials used;
+- safety approach/controls;
+- duration, sector, client type, location and service division;
+- related videos where linked from the Video Library.
+
+Admin project create/edit forms explain these fields so admins can publish stronger case-study content without changing code.
+
+## Future Maintenance / Aftercare page
+
+Maintenance / Aftercare is intentionally documented as a future build, not part of the current Phase B implementation.
+
+Planned future scope:
+
+- public Maintenance / Aftercare page;
+- editable Page Hero support;
+- admin-editable maintenance/aftercare content;
+- preventive maintenance plan sections;
+- maintenance checklist/download support;
+- maintenance-specific CTA flow such as Book Maintenance Visit, Request Aftercare Support and Emergency Support.
+
+This should be built as a designed page with controlled editable fields, not a free-form page builder, so the design remains consistent.
 
 ## Admin profile photos
 
@@ -232,8 +294,33 @@ Current SEO foundation includes:
 - robots.txt;
 - favicon and brand icon assets;
 - Open Graph image support.
+- Organization, LocalBusiness/ProfessionalService, WebSite and Breadcrumb structured data.
+- Article structured data for public resource detail pages.
+- VideoObject structured data when an article includes an optional embedded video.
+- Review-page structured data for approved public reviews.
 
 The current OG asset can be replaced when the client supplies a final approved social sharing image.
+
+## Review flow
+
+The public Reviews page supports two trust paths:
+
+- an editable Google review CTA powered by the `Google Review URL` setting;
+- a website review submission form.
+
+Website-submitted reviews are not published immediately. They are stored as pending reviews and must be approved by permitted admins before appearing publicly. Review admins can approve/unapprove reviews and add a public admin response. Delete remains protected by the admin delete policy, so only Technical Super Admin / Developer and Company Owner / CEO can delete review records.
+
+When a new website review is submitted, admins with review permission receive an admin notification.
+
+## Public spam protection
+
+Public forms currently use layered basic protection:
+
+- Laravel rate limiting on contact, chat, newsletter and review submission routes;
+- a hidden honeypot field on public forms;
+- a minimum form-completion timing check to stop instant bot submissions.
+
+This is intentionally lightweight for shared hosting. If spam increases later, add Cloudflare Turnstile or another CAPTCHA-style provider.
 
 ## Maintenance rule
 

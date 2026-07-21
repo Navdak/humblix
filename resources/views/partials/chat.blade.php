@@ -20,7 +20,9 @@
                 <div class="form-field full"><label for="chat-service">Service Needed</label><input id="chat-service" name="service_needed" required data-chat-service></div>
                 <div class="form-field full"><label for="chat-building">Building Type</label><input id="chat-building" name="building_type" placeholder="Home, office, factory..."></div>
                 <div class="form-field full"><label for="chat-message">Project details</label><textarea id="chat-message" name="message" rows="3"></textarea></div>
+                <div class="spam-trap" aria-hidden="true"><label>Website <input name="website" tabindex="-1" autocomplete="off"></label></div>
             </div>
+            <input type="hidden" name="form_started_at" value="{{ time() }}">
             <input type="hidden" name="urgency" value="This week"><button class="btn btn-primary btn-block" type="submit">Request Service</button>
         </form>
     </div>

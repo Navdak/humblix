@@ -83,6 +83,26 @@ class AdminNotification extends Model
         ]);
     }
 
+    public static function createForReview(Review $review): void
+    {
+        if (! self::notificationsTableIsReady()) {
+            return;
+        }
+
+        self::create([
+            'type' => 'new_review',
+            'title' => 'New review awaiting approval',
+            'message' => trim($review->client_name.' submitted a '.$review->rating.'-star review.'),
+            'permission' => 'reviews',
+            'action_url' => route('admin.reviews.index', [], false),
+            'data' => [
+                'module' => 'reviews',
+                'review_id' => $review->id,
+                'rating' => $review->rating,
+            ],
+        ]);
+    }
+
     private static function notificationsTableIsReady(): bool
     {
         try {

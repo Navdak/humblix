@@ -91,7 +91,7 @@
         <div class="safety-module-grid">
             @foreach($modules as $module)
                 <article class="safety-module-card" id="{{ $module['slug'] }}" data-animate="fade-up" data-delay="{{ ($loop->index % 4) * 55 }}">
-                    <div class="image-frame safety-module-image"><img loading="lazy" src="{{ asset($module['image'] ?? \App\Support\UchContent::safetyImage($module['title'])) }}" alt="{{ $module['title'] }}"></div>
+                    <div class="image-frame safety-module-image"><img loading="lazy" src="{{ $module['image_url'] ?? \App\Support\UchContent::imageUrl($module['image'] ?? null, \App\Support\UchContent::safetyImage($module['title'])) }}" alt="{{ $module['title'] }}"></div>
                     <div class="safety-module-top">
                         <span>{{ str_pad((string) $loop->iteration, 2, '0', STR_PAD_LEFT) }}</span>
                         <a href="{{ route('safety.topic', $module['slug']) }}">Read More</a>

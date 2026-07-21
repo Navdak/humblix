@@ -3,6 +3,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Enquiry;
 use App\Models\AdminNotification;
+use App\Support\SpamProtection;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -10,6 +11,8 @@ class ChatController extends Controller
 {
     public function __invoke(Request $request): JsonResponse
     {
+        SpamProtection::validate($request, 2);
+
         $service = $this->normaliseService((string) $request->input('service_needed'));
 
         $data = $request->validate([

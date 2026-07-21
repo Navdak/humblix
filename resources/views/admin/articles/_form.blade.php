@@ -59,9 +59,10 @@
     </div>
     <div class="form-field full">
         <label>Content</label>
-        <textarea id="content" name="content" rows="16" required>{{ old('content',$article->content) }}</textarea>
+        <textarea id="content" name="content" rows="16" aria-describedby="article-content-help article-content-error">{{ old('content',$article->content) }}</textarea>
+        <div id="article-content-error" class="admin-inline-error" hidden data-article-content-error>Article content is required before saving.</div>
         <small>
-            Recommended: 1,500–3,000 words. Maximum: {{ number_format(\App\Models\Article::MAX_WORD_COUNT) }} words.
+            <span id="article-content-help">Recommended: 1,500–3,000 words. Maximum: {{ number_format(\App\Models\Article::MAX_WORD_COUNT) }} words.</span>
             For longer guides, split manually into multiple focused articles or attach a PDF.
             <strong><span data-article-word-count>0</span> words</strong>
         </small>
@@ -76,7 +77,7 @@
         </template>
     </div>
 </div>
-<button class="btn btn-primary" style="margin-top:20px">Save Article</button>
+<button class="btn btn-primary" type="submit" style="margin-top:20px">Save Article</button>
 @push('head')
 <script src="https://cdn.tiny.cloud/1/{{ config('tinymce.api_key', 'no-api-key') }}/tinymce/8/tinymce.min.js" referrerpolicy="origin"></script>
 @endpush
@@ -97,6 +98,18 @@ function updateArticleWordCount() {
     target.textContent = count.toLocaleString();
     target.style.color = count > {{ \App\Models\Article::MAX_WORD_COUNT }} ? '#b91c1c' : '';
 }
+function syncArticleEditorContent() {
+    const editor = window.tinymce?.get('content');
+    if (editor) editor.save();
+}
+function setArticleContentError(message = '') {
+    const error = document.querySelector('[data-article-content-error]');
+    const textarea = document.querySelector('#content');
+    if (!error || !textarea) return;
+    error.textContent = message || 'Article content is required before saving.';
+    error.hidden = !message;
+    textarea.setAttribute('aria-invalid', message ? 'true' : 'false');
+}
 if (window.tinymce) {
     tinymce.init({
         selector:'#content',
@@ -107,12 +120,34 @@ if (window.tinymce) {
         paste_as_text:false,
         promotion:false,
         setup(editor) {
-            editor.on('init keyup change input SetContent', updateArticleWordCount);
+            editor.on('init keyup change input SetContent', () => {
+                syncArticleEditorContent();
+                updateArticleWordCount();
+                if (articleWordCountFromHtml(editor.getContent()) > 0) setArticleContentError('');
+            });
         }
     });
 }
 document.querySelector('#content')?.addEventListener('input', updateArticleWordCount);
 document.addEventListener('DOMContentLoaded', updateArticleWordCount);
+document.querySelector('#content')?.closest('form')?.addEventListener('submit', (event) => {
+    syncArticleEditorContent();
+    const textarea = document.querySelector('#content');
+    const count = articleWordCountFromHtml(textarea?.value || '');
+    if (count < 1) {
+        event.preventDefault();
+        setArticleContentError('Article content is required before saving.');
+        const editor = window.tinymce?.get('content');
+        if (editor) {
+            editor.focus();
+            editor.getContainer()?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        } else {
+            textarea?.focus();
+        }
+    } else {
+        setArticleContentError('');
+    }
+});
 setTimeout(updateArticleWordCount, 800);
 </script>
 @endpush

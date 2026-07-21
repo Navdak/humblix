@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Mail\NewsletterWelcomeMail;
 use App\Models\NewsletterSubscriber;
+use App\Support\SpamProtection;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -15,6 +16,8 @@ class NewsletterController extends Controller
 {
     public function store(Request $request): RedirectResponse
     {
+        SpamProtection::validate($request);
+
         $data = $request->validate([
             'name' => ['nullable', 'string', 'max:120'],
             'email' => ['required', 'email:rfc', 'max:190'],

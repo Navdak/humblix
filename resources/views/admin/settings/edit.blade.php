@@ -22,6 +22,7 @@
                 @else
                     <input type="{{ $type }}" name="{{ $key }}" value="{{ old($key, $settings[$key] ?? '') }}">
                     @if($key === 'company_website_url')<small>Use only the main website URL. Newsletter article links are generated automatically.</small>@endif
+                    @if($key === 'google_review_url')<small>Paste the final Google Business Profile review link. It powers the public “Review on Google” CTA.</small>@endif
                 @endif
             </div>
         @endforeach

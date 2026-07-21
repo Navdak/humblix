@@ -113,6 +113,8 @@
                     <input id="uploaded_files" type="file" name="uploaded_files[]" accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp" multiple>
                     <small class="field-help">Optional. Up to 5 images, 5MB each. JPG, PNG and WebP only.</small>
                 </div>
+                <div class="spam-trap" aria-hidden="true"><label>Website <input name="website" tabindex="-1" autocomplete="off"></label></div>
+                <input type="hidden" name="form_started_at" value="{{ time() }}">
                 <div class="form-field full">
                     <button class="btn btn-primary" type="submit">Submit Request</button>
                 </div>

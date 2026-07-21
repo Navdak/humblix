@@ -8,10 +8,12 @@ use App\Models\EquipmentItem;
 use App\Models\JobOpening;
 use App\Models\Project;
 use App\Models\Review;
+use App\Models\SafetyTopic;
 use App\Models\Video;
 use App\Support\UchContent;
 use Illuminate\Http\Response;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Schema;
 
 class SeoController extends Controller
 {
@@ -36,8 +38,15 @@ class SeoController extends Controller
             $add('/industries/'.$industry['slug'], null, '0.7');
         }
 
-        foreach (UchContent::safetyModules() as $topic) {
-            $add('/safety/'.$topic['slug'], null, '0.6');
+        $safetyTopics = Schema::hasTable('safety_topics')
+            ? SafetyTopic::published()->latest('updated_at')->get(['slug', 'updated_at'])
+            : collect();
+        if ($safetyTopics->isNotEmpty()) {
+            $safetyTopics->each(fn (SafetyTopic $topic) => $add('/safety/'.$topic->slug, $topic->updated_at, '0.6'));
+        } else {
+            foreach (UchContent::safetyModules() as $topic) {
+                $add('/safety/'.$topic['slug'], null, '0.6');
+            }
         }
 
         Project::where('status', 'published')->latest('updated_at')->get(['slug', 'updated_at'])->each(fn (Project $project) => $add('/projects/'.$project->slug, $project->updated_at, '0.7'));
