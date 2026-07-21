@@ -66,8 +66,14 @@
                     <input id="phone_whatsapp" name="phone_whatsapp" autocomplete="tel" required placeholder="+234..." value="{{ old('phone_whatsapp') }}">
                 </div>
                 <div class="form-field full">
-                    <label for="project_location">Project Location *</label>
-                    <input id="project_location" name="project_location" required placeholder="Exact project address or nearest landmark" value="{{ old('project_location') }}">
+                    <label for="project_location">Project Area / City *</label>
+                    <input id="project_location" name="project_location" required placeholder="Area, city, estate, community or project region" value="{{ old('project_location') }}">
+                    <small class="field-help">Provide the general project location. We will confirm exact access details before dispatch.</small>
+                </div>
+                <div class="form-field full">
+                    <label for="site_address">Project Address / Site Location</label>
+                    <input id="site_address" name="site_address" placeholder="Street, estate, building name, landmark or access direction" value="{{ old('site_address') }}">
+                    <small class="field-help">Optional. You may provide a general landmark now; HUMELIX will confirm the exact site address before an engineer visits.</small>
                 </div>
                 <div class="form-field">
                     <label for="type_of_work">Type of Work *</label>

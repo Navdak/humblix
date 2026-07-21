@@ -36,6 +36,7 @@ The admin platform includes:
 
 - Dashboard KPIs and charts.
 - Enquiry management.
+- Internal engineer directory and enquiry assignment.
 - Project management.
 - Branch management.
 - Service foundation page.
@@ -67,6 +68,13 @@ Primary roles:
 
 The Technical Super Admin can manage role permissions from the admin area. Company Owner can create, update, deactivate and delete normal admin users only. Company Owner cannot access the role-permission editor, cannot assign protected roles, and cannot view or modify Technical Super Admin, protected developer recovery or other Company Owner accounts.
 
+Role permissions also include:
+
+- Engineers: manage the internal engineer/personnel directory.
+- Assign Engineers: assign an engineer to a lead enquiry.
+
+These permissions can be granted to lower admin roles by the Technical Super Admin where operationally necessary. Delete behavior remains protected: only Technical Super Admin and Company Owner can delete records.
+
 ## Protected developer account
 
 The developer account is protected for production safety:
@@ -91,6 +99,57 @@ Each page hero supports:
 - fallback to generated image if no uploaded image exists.
 
 Uploaded replacement images should replace the active hero image. Old uploaded files should be cleaned up during replacement to avoid storage bloat.
+
+## Internal engineers and lead assignment
+
+The Engineers admin module is an internal operations directory, separate from the public Team Members module.
+
+Engineer records support:
+
+- name;
+- role/title;
+- field of work;
+- phone;
+- WhatsApp;
+- email;
+- region/location;
+- availability status;
+- optional photo;
+- optional linked admin user;
+- internal notes;
+- sort order.
+
+Engineers do not appear on the public Team page unless a separate Team Member record is created and marked visible. This keeps the company free to store full field personnel records internally without exposing every engineer publicly.
+
+Enquiry assignment behavior:
+
+- enquiry detail pages use an engineer dropdown instead of a free-text assignment field;
+- the enquiry list shows the assigned engineer where available;
+- old text-only assignment data remains as legacy display fallback;
+- public enquiries collect a general project area/city and can optionally include a project address, landmark or access note;
+- admin enquiry details include a Confirmed Site Address field so admins can add/correct the address after contacting the client;
+- engineer assignment emails use the Confirmed Site Address first, then fall back to the submitted site address/project location;
+- admins with Assign Engineers permission can assign/reassign leads;
+- admins without Assign Engineers permission can still view assignment details but cannot change them;
+- when assigning, the admin can choose whether to email the engineer immediately;
+- if email alert is unchecked, the company can contact the engineer manually by phone/WhatsApp.
+- engineers are instructed not to visit the client site until HUMELIX Operations confirms schedule, exact location, client readiness and safety/material requirements.
+
+Engineer assignment contact details:
+
+- editable from the Engineers admin page by Technical Super Admin and Company Owner;
+- stored separately from public website contact details;
+- supports operations/team name, phone, WhatsApp, email and instruction note;
+- shown in engineer assignment emails so field personnel know who to contact before any site visit.
+
+Future engineer workflow improvements:
+
+- WhatsApp assignment alerts;
+- SMS assignment alerts;
+- engineer workload dashboard;
+- assignment history/activity log;
+- technician portal or mobile view for “my assigned jobs”;
+- push notifications when the hosting stack supports it safely.
 
 ## Safety Topics
 

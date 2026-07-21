@@ -7,7 +7,16 @@
     <title>@yield('title', 'Admin') · HUMELIX LIMITED</title>
     <link rel="icon" href="{{ asset('images/brand/humelix-favicon-32.png') }}" sizes="32x32" type="image/png">
     <link rel="apple-touch-icon" href="{{ asset('images/brand/humelix-apple-touch-icon.png') }}">
-    <link rel="stylesheet" href="{{ asset('css/uch.css') }}?v=20260720a">
+    <script>
+        (function () {
+            try {
+                if (window.localStorage.getItem('humelix_admin_theme') === 'dark') {
+                    document.documentElement.classList.add('admin-theme-dark-root');
+                }
+            } catch (error) {}
+        })();
+    </script>
+    <link rel="stylesheet" href="{{ asset('css/uch.css') }}?v=20260721b">
     @vite('resources/js/app.js')
     @stack('head')
 </head>
@@ -26,6 +35,7 @@
                     ],
                     'Operations' => [
                         ['admin.enquiries.*','admin.enquiries.index','enquiries','Enquiries','enquiries'],
+                        ['admin.engineers.*','admin.engineers.index','team','Engineers','engineers'],
                         ['admin.projects.*','admin.projects.index','projects','Projects','projects'],
                         ['admin.branches.*','admin.branches.index','branches','Branches','branches'],
                     ],
@@ -115,6 +125,10 @@
                         </div>
                     </section>
                 </div>
+                <button type="button" class="admin-icon-button admin-theme-toggle" aria-label="Switch admin theme" aria-pressed="false" data-admin-theme-toggle>
+                    <span class="theme-icon theme-icon-moon"><x-admin-icon name="moon"/></span>
+                    <span class="theme-icon theme-icon-sun"><x-admin-icon name="sun"/></span>
+                </button>
                 <div class="admin-top-user">@include('admin.partials.avatar',['user'=>auth()->user()])<span><strong>{{ auth()->user()?->displayName() ?? 'Admin User' }}</strong><small>{{ auth()->user()?->roleLabel() ?? 'Administrator' }}</small></span></div>
                 <a class="btn btn-outline admin-view-site" href="{{ route('home') }}" target="_blank" rel="noopener" aria-label="View website"><x-admin-icon name="external"/><span class="admin-view-site-label">View Website</span></a>
             </div>

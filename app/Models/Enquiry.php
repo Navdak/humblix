@@ -2,6 +2,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
 
 class Enquiry extends Model
@@ -17,6 +18,8 @@ class Enquiry extends Model
         'email',
         'location',
         'project_location',
+        'site_address',
+        'confirmed_site_address',
         'building_type',
         'service_needed',
         'type_of_work',
@@ -26,6 +29,7 @@ class Enquiry extends Model
         'attachment_path',
         'uploaded_files',
         'assigned_to',
+        'assigned_engineer_id',
         'status',
         'notes',
         'reviewed_at',
@@ -36,6 +40,11 @@ class Enquiry extends Model
     public const TYPE_OF_WORK_OPTIONS = ['HVAC','Solar','Electrical','Maintenance','Vendor','Home Appliance'];
     public const BUILDING_TYPE_OPTIONS = ['Home','Office','Factory','Estate','Hospital','Hotel','School','Warehouse','Retail Store','Data Centre','Government','Religious Centre','Other'];
     public const PREFERRED_CONTACT_OPTIONS = ['Email','Phone','WhatsApp'];
+
+    public function assignedEngineer(): BelongsTo
+    {
+        return $this->belongsTo(Engineer::class, 'assigned_engineer_id');
+    }
 
     protected function casts(): array
     {
@@ -93,9 +102,28 @@ class Enquiry extends Model
         return $this->project_location ?: $this->location;
     }
 
+    public function getDisplaySiteAddressAttribute(): ?string
+    {
+        return $this->confirmed_site_address ?: $this->site_address ?: $this->display_location;
+    }
+
     public function getDisplayTypeOfWorkAttribute(): string
     {
         return $this->type_of_work ?: $this->service_needed;
+    }
+
+    public function siteAddressForEngineer(): string
+    {
+        return $this->display_site_address ?: 'Contact HUMELIX Operations to confirm the exact site address.';
+    }
+
+    public function assignedEngineerLabel(): string
+    {
+        if ($this->assignedEngineer) {
+            return $this->assignedEngineer->assignmentLabel();
+        }
+
+        return $this->assigned_to ?: '—';
     }
 
     public function markWorkflowTimestamps(string $status): void

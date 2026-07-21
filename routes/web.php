@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\BranchController as AdminBranchController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\EquipmentController as AdminEquipmentController;
 use App\Http\Controllers\Admin\EnquiryController as AdminEnquiryController;
+use App\Http\Controllers\Admin\EngineerController as AdminEngineerController;
 use App\Http\Controllers\Admin\FoundationController;
 use App\Http\Controllers\Admin\JobOpeningController as AdminJobOpeningController;
 use App\Http\Controllers\Admin\MediaController;
@@ -101,6 +102,8 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin', 'admin.dele
     Route::patch('/newsletter/{newsletterSubscriber}/resubscribe', [AdminNewsletterSubscriberController::class, 'resubscribe'])->middleware('admin.module:newsletter')->name('newsletter.resubscribe');
     Route::delete('/newsletter/{newsletterSubscriber}', [AdminNewsletterSubscriberController::class, 'destroy'])->middleware('admin.module:newsletter')->name('newsletter.destroy');
     Route::resource('projects', AdminProjectController::class)->middleware('admin.module:projects')->except(['show']);
+    Route::patch('/engineers/assignment-contact', [AdminEngineerController::class, 'updateAssignmentContact'])->middleware('admin.module:engineers')->name('engineers.assignment-contact');
+    Route::resource('engineers', AdminEngineerController::class)->middleware('admin.module:engineers')->except(['show']);
     Route::resource('branches', AdminBranchController::class)->middleware('admin.module:branches')->except(['show']);
     Route::resource('jobs', AdminJobOpeningController::class)->middleware('admin.module:jobs')->except(['show']);
     Route::resource('equipment', AdminEquipmentController::class)->middleware('admin.module:equipment')->except(['show']);

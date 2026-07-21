@@ -1,4 +1,29 @@
 (() => {
+    const themeKey = 'humelix_admin_theme';
+    const themeToggle = document.querySelector('[data-admin-theme-toggle]');
+    const root = document.documentElement;
+
+    const isDark = () => root.classList.contains('admin-theme-dark-root');
+    const setTheme = (theme) => {
+        const dark = theme === 'dark';
+        root.classList.toggle('admin-theme-dark-root', dark);
+
+        try {
+            window.localStorage.setItem(themeKey, dark ? 'dark' : 'light');
+        } catch (error) {}
+
+        if (themeToggle) {
+            themeToggle.setAttribute('aria-pressed', String(dark));
+            themeToggle.setAttribute('aria-label', dark ? 'Switch to light mode' : 'Switch to dark mode');
+            themeToggle.title = dark ? 'Switch to light mode' : 'Switch to dark mode';
+        }
+    };
+
+    if (themeToggle) {
+        setTheme(isDark() ? 'dark' : 'light');
+        themeToggle.addEventListener('click', () => setTheme(isDark() ? 'light' : 'dark'));
+    }
+
     const body = document.body;
     const sidebar = document.querySelector('[data-admin-sidebar]');
     const overlay = document.querySelector('[data-admin-overlay]');
