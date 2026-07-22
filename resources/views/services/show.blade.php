@@ -18,6 +18,7 @@
 @endphp
 
 <section class="service-detail-hero tone-{{ $service['accent'] }}">
+    <img class="service-detail-hero-media" src="{{ asset($service['image']) }}" alt="" width="1920" height="900" loading="eager" fetchpriority="high" decoding="sync" aria-hidden="true">
     <div class="container service-detail-hero-grid">
         <div data-animate="slide-right">
             <a class="back-link" href="{{ route('services.index') }}">← All services</a>
@@ -36,7 +37,7 @@
             </div>
         </div>
         <aside class="service-detail-summary" data-animate="slide-left">
-            <div class="image-frame service-detail-image"><img loading="lazy" src="{{ asset($service['image']) }}" alt="{{ $service['title'] }}"></div>
+            <div class="image-frame service-detail-image"><img loading="eager" fetchpriority="high" decoding="sync" width="960" height="540" src="{{ asset($service['image']) }}" alt="{{ $service['title'] }}"></div>
             <span class="division-code">{{ $service['code'] }}</span>
             <h2>Division overview</h2>
             <p>{{ $service['overview'] }}</p>
@@ -160,7 +161,7 @@
         <div class="grid grid-3">
             @forelse($relatedProjects as $project)
                 <a class="project-card" href="{{ route('projects.show', $project) }}" data-animate="fade-up" data-delay="{{ ($loop->index % 3) * 70 }}">
-                    <div class="image-frame"><img loading="lazy" src="{{ \App\Support\UchContent::imageUrl($project->image_path, \App\Support\UchContent::projectImage($project->title)) }}" alt="{{ $project->title }}"></div>
+                    <div class="image-frame"><img loading="lazy" decoding="async" width="800" height="500" src="{{ \App\Support\UchContent::imageUrl($project->image_path, \App\Support\UchContent::projectImage($project->title)) }}" alt="{{ $project->title }}"></div>
                     <div class="project-body">
                         <h3>{{ $project->title }}</h3>
                         <p>{{ $project->location }}</p>

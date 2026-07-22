@@ -115,6 +115,8 @@ Set these values on Namecheap before caching config:
 - `MAIL_PASSWORD=...`
 - `MAIL_FROM_ADDRESS=...`
 - `MAIL_FROM_NAME="HUMELIX LIMITED"`
+- `QUEUE_CONNECTION=database` if the cPanel queue cron is configured
+- `QUEUE_CONNECTION=sync` only as a temporary fallback if no queue worker/cron is running yet
 - `SESSION_DOMAIN=.your-live-domain.com` if needed
 - `SESSION_SECURE_COOKIE=true` after SSL is active
 - `HUMELIX_SUPER_ADMIN_EMAIL=...`
@@ -142,6 +144,122 @@ npm run build
 ```
 
 On shared hosting, it is usually cleaner to build assets locally or during a controlled deployment, then upload or commit the built `public/build` files.
+
+## Production database guidance
+
+Use MySQL on Namecheap production, not SQLite.
+
+Recommended cPanel steps:
+
+1. Open cPanel -> `MySQL Databases`.
+2. Create a database for the website.
+3. Create a database user with a strong password.
+4. Add the user to the database with the required privileges.
+5. Put those values into `.env`:
+   - `DB_CONNECTION=mysql`
+   - `DB_HOST=localhost` unless Namecheap provides another host
+   - `DB_PORT=3306`
+   - `DB_DATABASE=...`
+   - `DB_USERNAME=...`
+   - `DB_PASSWORD=...`
+6. Run `php artisan migrate --force`.
+7. Import existing production data if we are moving from another database.
+
+## Image/media preparation before upload
+
+The website does not auto-convert uploaded images because the client will prepare images manually.
+
+Before uploading through admin:
+
+- Hero/page banner images: about 1920x900 or 1920x1080, ideally under 500KB-900KB.
+- Project/article/equipment card images: about 1200x750 or 1000x625, ideally under 300KB-600KB.
+- Team/profile images: about 900x1125 or 800x1000, ideally under 250KB-500KB.
+- Gallery images: about 1200px wide unless extra detail is required.
+- Prefer JPG/WebP for photos.
+- Use PNG mainly for transparent logos/graphics.
+- Do not upload raw phone/camera images directly; resize and compress them first.
+- Keep public videos on YouTube where possible. Use local video upload only for small, necessary files.
+
+## Production cache and hosting performance
+
+After the final `.env` is correct and migrations are complete, run:
+
+```bash
+php artisan optimize:clear
+php artisan config:cache
+php artisan route:cache
+php artisan view:cache
+```
+
+Namecheap/cPanel performance notes:
+
+- Enable HTTPS before setting `SESSION_SECURE_COOKIE=true`.
+- Use MySQL for production data.
+- Keep uploaded images compressed before upload.
+- Prefer YouTube embeds for videos.
+- If LiteSpeed Cache or cPanel-level caching is available on the selected Namecheap server, enable it carefully after launch testing.
+- Do not cache admin pages, login pages, forms, newsletter submission, review submission, or any POST/action route.
+- Re-test contact forms, admin login, newsletter, reviews, uploads and notifications after enabling any hosting-level cache.
+
+## Queue setup for newsletter article emails
+
+The website queues new-article newsletter emails so publishing an article does not have to send every subscriber email inside the browser request.
+
+Recommended Namecheap shared-hosting setup:
+
+1. Set `QUEUE_CONNECTION=database` in the production `.env`.
+2. Run `php artisan migrate --force` so the `jobs` and `failed_jobs` tables exist.
+3. Add a cPanel cron job that runs every 5 minutes and drains the queue safely.
+
+Namecheap shared-hosting note:
+
+- Namecheap shared servers allow cron jobs, but cron intervals below 5 minutes are not allowed on shared servers.
+- Do not use `* * * * *` on Stellar Plus shared hosting.
+- Use `*/5 * * * *` for the Laravel queue worker.
+
+How to create the cron job in Namecheap cPanel:
+
+1. Log in to Namecheap.
+2. Open the hosting package.
+3. Open cPanel.
+4. Go to `Advanced` -> `Cron Jobs`.
+5. Set the cron email field only if you want cron output emails during testing.
+6. Under `Add New Cron Job`, choose `Once Per Five Minutes` or manually set:
+   - Minute: `*/5`
+   - Hour: `*`
+   - Day: `*`
+   - Month: `*`
+   - Weekday: `*`
+7. Paste the Laravel queue worker command in the `Command` field.
+8. Click `Add New Cron Job`.
+9. After testing, make sure the command output is redirected to a log file or `/dev/null` so cron emails do not fill the mailbox.
+
+Example cron command, adjust the project path and PHP binary to match the cPanel account:
+
+```bash
+cd /home/CPANEL_USER/humelix && /usr/local/bin/php artisan queue:work --stop-when-empty --queue=default --tries=3 --max-time=240 >> storage/logs/queue.log 2>&1
+```
+
+Notes:
+
+- If the PHP binary differs, use the cPanel Terminal `which php` result or the MultiPHP path provided by Namecheap.
+- `--stop-when-empty` is shared-hosting friendly because the process exits after it clears current jobs.
+- `--max-time=240` keeps the worker below the 5-minute cron interval so overlapping queue workers are less likely.
+- If this cron is not configured yet, keep `QUEUE_CONNECTION=sync` temporarily so emails still send, but article publishing can be slower when subscriber volume grows.
+- On a future VPS, replace the cron-drained queue with Supervisor or a proper long-running worker.
+
+## Email image URLs
+
+Email templates use absolute public image URLs for the HUMELIX logo and article images. This is required because email clients cannot reliably load relative paths such as `/images/...` or local URLs such as `127.0.0.1`.
+
+Production requirements:
+
+- Set `APP_URL` to the final HTTPS domain, for example `https://humelix.com`.
+- In admin settings, keep the company website URL set to the same public domain.
+- Keep email logo assets inside `public/images/brand/`.
+- Ensure uploaded article images are publicly reachable through `public/storage/...`.
+- If email images do not show during localhost or ngrok testing, re-test after the site is on the stable public domain.
+- Some email apps still block images by default; the emails keep HUMELIX LIMITED text as a fallback.
 
 ## If SSH/cPanel Terminal is unavailable
 
@@ -191,6 +309,6 @@ Also test:
 
 - Start on Namecheap Stellar Plus if budget is the priority.
 - Move to Stellar Business for stronger shared-hosting performance, AutoBackup, and better production safety.
-- Move to VPS later if the site needs queues, long-running workers, WebSockets, heavier video handling, or stronger server control.
+- Move to VPS later if the site needs long-running workers, WebSockets, heavier video handling, or stronger server control.
 - Keep local video uploads limited; prefer YouTube links for video content.
 - Add proper image optimization and thumbnails to protect shared-hosting storage and speed.

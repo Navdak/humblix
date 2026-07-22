@@ -2,13 +2,18 @@
 @section('title',$article->title.' — HUMELIX LIMITED')
 @section('meta_description',$article->excerpt)
 @section('content')
-@include('components.page-hero',['eyebrow'=>'Resource','title'=>$article->title,'subtitle'=>$article->excerpt])
+@include('components.page-hero',[
+    'eyebrow'=>'Resource',
+    'title'=>$article->title,
+    'subtitle'=>$article->excerpt,
+    'image'=>$article->featured_image_path ?: 'images/generated/safety/safety-toolbox-talks.jpg',
+])
 @php([$contentBeforeVideo, $contentAfterVideo] = $article->sanitizedContentSegmentsForVideo())
 <section class="section">
-    <div class="container grid grid-2" style="grid-template-columns:minmax(0,1fr) minmax(260px,330px);align-items:start">
+    <div class="container grid grid-2 article-detail-layout">
         <article class="card prose" data-animate="fade-up">
             <div class="image-frame" style="margin-bottom:24px">
-                <img src="{{ \App\Support\UchContent::imageUrl($article->featured_image_path, 'images/generated/safety/safety-toolbox-talks.jpg') }}" alt="{{ $article->title }}">
+                <img loading="lazy" decoding="async" width="960" height="600" src="{{ \App\Support\UchContent::imageUrl($article->featured_image_path, 'images/generated/safety/safety-toolbox-talks.jpg') }}" alt="{{ $article->title }}">
             </div>
             <span class="badge">{{ $article->categoryLabel() }}</span>
             @if($article->hasPdfAttachment())
@@ -66,7 +71,7 @@
         <div class="grid grid-3">
             @foreach($relatedArticles as $related)
                 <a class="project-card" href="{{ route('articles.show', $related) }}" data-animate="fade-up" data-delay="{{ ($loop->index % 3) * 70 }}">
-                    <div class="image-frame"><img loading="lazy" src="{{ \App\Support\UchContent::imageUrl($related->featured_image_path, 'images/generated/safety/safety-toolbox-talks.jpg') }}" alt="{{ $related->title }}"></div>
+                    <div class="image-frame"><img loading="lazy" decoding="async" width="800" height="500" src="{{ \App\Support\UchContent::imageUrl($related->featured_image_path, 'images/generated/safety/safety-toolbox-talks.jpg') }}" alt="{{ $related->title }}"></div>
                     <div class="project-body">
                         <span class="badge">{{ $related->categoryLabel() }}</span>
                         <h3 style="margin-top:12px">{{ $related->title }}</h3>

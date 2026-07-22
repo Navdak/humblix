@@ -1,6 +1,6 @@
 @csrf
 @if($article->exists) @method('PUT') @endif
-<div class="form-grid" x-data="articleLinks({ initial: @js(old('links', $article->exists ? $article->relatedLinks->map(fn($link) => ['link_text' => $link->link_text, 'url' => $link->url])->values()->toArray() : [])) })">
+<div class="form-grid">
     <div class="form-field"><label>Title</label><input name="title" value="{{ old('title',$article->title) }}" required></div>
     <div class="form-field"><label>Slug</label><input name="slug" value="{{ old('slug',$article->slug) }}" placeholder="auto-generated if empty"></div>
     <div class="form-field">
@@ -67,15 +67,6 @@
             <strong><span data-article-word-count>0</span> words</strong>
         </small>
     </div>
-    <div class="form-field full">
-        <div class="admin-actions" style="justify-content:space-between"><label>Related Links</label><button class="btn btn-white" type="button" @click="add">Add Link</button></div>
-        <template x-for="(link, index) in links" :key="index">
-            <div class="grid grid-2" style="margin-top:10px">
-                <input :name="`links[${index}][link_text]`" x-model="link.link_text" placeholder="Link text">
-                <div class="admin-actions"><input :name="`links[${index}][url]`" x-model="link.url" placeholder="https://example.com"><button class="btn btn-outline" type="button" @click="remove(index)">Remove</button></div>
-            </div>
-        </template>
-    </div>
 </div>
 <button class="btn btn-primary" type="submit" style="margin-top:20px">Save Article</button>
 @push('head')
@@ -83,7 +74,6 @@
 @endpush
 @push('scripts')
 <script>
-function articleLinks({initial}) { return { links: initial.length ? initial : [], add(){ this.links.push({link_text:'', url:''}) }, remove(i){ this.links.splice(i,1) } } }
 function articleWordCountFromHtml(html) {
     const text = (html || '').replace(/<[^>]*>/g, ' ').replace(/&nbsp;/gi, ' ').trim();
     if (!text) return 0;

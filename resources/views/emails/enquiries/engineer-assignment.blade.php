@@ -1,7 +1,7 @@
 @php
     $settings = \App\Models\SiteSetting::pluck('value', 'key')->toArray();
     $homeUrl = \App\Support\HumelixLinks::websiteUrl();
-    $logoUrl = asset('images/brand/humelix-logo-mark.png');
+    $logoUrl = \App\Support\HumelixLinks::assetUrl('images/brand/humelix-logo-mark.png');
     $operationsName = $settings['assignment_contact_name'] ?? 'HUMELIX Operations Team';
     $operationsPhone = $settings['assignment_contact_phone'] ?? ($settings['phone_primary'] ?? null);
     $operationsWhatsapp = $settings['assignment_contact_whatsapp'] ?? ($settings['whatsapp_number'] ?? null);

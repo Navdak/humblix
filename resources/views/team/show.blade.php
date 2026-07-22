@@ -33,7 +33,7 @@
         <aside class="service-sidebar" data-animate="slide-left">
             <div class="service-sticky-card">
                 <div class="image-frame" style="aspect-ratio:4/5;margin-bottom:20px">
-                    <img src="{{ \App\Support\UchContent::imageUrl($member->photo_path, \App\Support\UchContent::teamImage($member->role)) }}" alt="{{ $member->name }}">
+                    <img loading="lazy" decoding="async" width="800" height="1000" src="{{ \App\Support\UchContent::imageUrl($member->photo_path, \App\Support\UchContent::teamImage($member->role)) }}" alt="{{ $member->name }}">
                 </div>
                 <h2>{{ $member->name }}</h2>
                 <p>{{ $member->role ?: 'Humelix Team' }}</p>
@@ -60,7 +60,7 @@
             @foreach($relatedMembers as $related)
                 <a class="project-card" href="{{ route('team.show', $related) }}" data-animate="fade-up">
                     <div class="image-frame" style="aspect-ratio:4/5">
-                        <img loading="lazy" src="{{ \App\Support\UchContent::imageUrl($related->photo_path, \App\Support\UchContent::teamImage($related->role)) }}" alt="{{ $related->name }}">
+                        <img loading="lazy" decoding="async" width="800" height="1000" src="{{ \App\Support\UchContent::imageUrl($related->photo_path, \App\Support\UchContent::teamImage($related->role)) }}" alt="{{ $related->name }}">
                     </div>
                     <div class="project-body">
                         <h3>{{ $related->name }}</h3>

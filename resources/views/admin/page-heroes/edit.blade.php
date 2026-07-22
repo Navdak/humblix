@@ -39,7 +39,7 @@
             <label>Hero Image</label>
             @if($hero->imageUrl())
                 <div class="image-frame" style="max-width:360px;aspect-ratio:16/9;margin-bottom:12px">
-                    <img src="{{ $hero->imageUrl() }}" alt="{{ $hero->label }} current hero image">
+                    <img loading="lazy" decoding="async" width="960" height="410" src="{{ $hero->imageUrl() }}" alt="{{ $hero->label }} current hero image">
                 </div>
             @endif
             <input type="file" name="image" accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp">

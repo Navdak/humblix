@@ -15,7 +15,7 @@
         <div class="phase6-category-grid">
             @foreach($categories as $category)
                 <a class="phase6-category-card" href="{{ route('contact') }}?type_of_work=Vendor&service={{ urlencode('Equipment: '.$category) }}" data-animate="fade-up" data-delay="{{ ($loop->index % 4) * 45 }}">
-                    <div class="image-frame phase6-category-image"><img loading="lazy" src="{{ asset($categoryImages[$category] ?? \App\Support\UchContent::equipmentImage($category)) }}" alt="{{ $category }}"></div>
+                    <div class="image-frame phase6-category-image"><img loading="lazy" decoding="async" width="800" height="450" src="{{ asset($categoryImages[$category] ?? \App\Support\UchContent::equipmentImage($category)) }}" alt="{{ $category }}"></div>
                     <span class="phase6-code">{{ str_pad((string) $loop->iteration, 2, '0', STR_PAD_LEFT) }}</span>
                     <strong>{{ $category }}</strong>
                     <small>Request specification, availability and sourcing support.</small>
@@ -33,7 +33,7 @@
         <div class="grid grid-3">
             @forelse($items as $item)
                 <article class="project-card" data-animate="fade-up" data-delay="{{ ($loop->index % 3) * 60 }}">
-                    <div class="image-frame"><img loading="lazy" src="{{ \App\Support\UchContent::imageUrl($item->image_path, \App\Support\UchContent::equipmentImage($item->category)) }}" alt="{{ $item->name }}"></div>
+                    <div class="image-frame"><img loading="lazy" decoding="async" width="800" height="500" src="{{ \App\Support\UchContent::imageUrl($item->image_path, \App\Support\UchContent::equipmentImage($item->category)) }}" alt="{{ $item->name }}"></div>
                     <div class="project-body">
                         <span class="badge">{{ str_replace('_',' ', $item->availability_status) }}</span>
                         <h3 style="margin-top:12px">{{ $item->name }}</h3>

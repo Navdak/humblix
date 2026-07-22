@@ -249,6 +249,8 @@ Article publishing includes:
 - optional article video title and caption fields for clearer public presentation;
 - related resources below each article detail page, prioritizing the same category and falling back to latest resources when needed.
 
+Manual article related-link entry is intentionally hidden from the admin form for now. The backend relationship is left intact so existing data is not broken, but the visible "Add Link" admin control was removed because automatic related resources already cover the current public need and the manual link UI should be rebuilt later as a clearer "Supporting Links / CTA Links" feature.
+
 ## Newsletter and article email updates
 
 The website includes a newsletter foundation for sending new resource/article updates to visitors who subscribe.
@@ -260,6 +262,7 @@ Current behavior:
 - subscriptions use single opt-in, so the visitor is subscribed immediately after submitting the form with consent;
 - welcome emails are branded with the HUMELIX LIMITED logo, website link and professional styling;
 - confirmed subscribers receive a branded email when a new article is published;
+- new-article subscriber emails are dispatched after the response as queued jobs so article publishing is not held hostage by many SMTP sends;
 - each published article is marked after notification so subscribers are not emailed repeatedly for normal edits;
 - article emails include the article title, category, excerpt, website link, resource CTA and unsubscribe link;
 - admins with newsletter permission can view subscribers, pending confirmations and unsubscribed contacts;
@@ -273,9 +276,16 @@ Current email provider plan:
 - when the final Namecheap/domain email is ready, update the mail environment variables to use the Namecheap/cPanel mailbox SMTP details;
 - never commit real SMTP passwords or app passwords to GitHub.
 
+Queue behavior:
+
+- local/preview environments may keep `QUEUE_CONNECTION=sync` if no worker is running;
+- production should use `QUEUE_CONNECTION=database` after the queue tables are migrated;
+- on Namecheap shared hosting, process database queue jobs with a cPanel cron command that runs `php artisan queue:work --stop-when-empty`;
+- if the queue worker/cron is not configured, queued newsletter jobs will sit in the `jobs` table until the worker runs.
+
 Future newsletter improvements:
 
-- queue newsletter sends for very large subscriber lists;
+- add queue failure monitoring and retry controls if newsletter volume grows;
 - add optional campaign history and resend controls;
 - add richer subscriber export/import if marketing workflows require it;
 - integrate a dedicated email marketing provider if the audience grows beyond simple transactional updates.
@@ -339,9 +349,31 @@ Future Namecheap hosting:
 - import migrated production database;
 - configure `.env` with Namecheap database credentials;
 - run Laravel migrations;
+- use the database queue for bulk newsletter emails if a cPanel cron worker is configured;
 - run storage link or equivalent public storage setup;
 - confirm file uploads and public asset paths;
 - configure final domain, SSL and production cache.
+
+## Image and media performance policy
+
+Current safe performance polish:
+
+- hero images are treated as first-screen assets and should stay eager/high priority;
+- normal card, list, gallery, team, article, project, equipment and secondary images should lazy-load;
+- image containers use stable aspect ratios where practical to reduce layout jumping while images load;
+- generated public images are currently lightweight enough for preview use, with the largest generated-image audit under 1MB;
+- automatic image conversion is intentionally not enabled because the client prefers to prepare image files manually before upload;
+- videos should normally be hosted on YouTube and embedded by URL rather than uploaded as large local files.
+
+Client-side image preparation rules:
+
+- Hero/page banner images: prepare around 1920x900 or 1920x1080, ideally under 500KB-900KB.
+- Project/article/equipment card images: prepare around 1200x750 or 1000x625, ideally under 300KB-600KB.
+- Team/profile images: prepare around 900x1125 or 800x1000, ideally under 250KB-500KB.
+- Gallery images: prepare around 1200px wide unless the image needs extra detail.
+- Use JPG/WebP for photos and PNG only when transparency or sharp graphics are required.
+- Avoid uploading raw phone/camera photos directly; resize/compress them first.
+- Keep local video uploads limited and prefer YouTube links for public videos.
 
 ## SEO readiness
 

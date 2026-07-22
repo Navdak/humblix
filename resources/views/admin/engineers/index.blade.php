@@ -66,7 +66,7 @@
                 <tr>
                     <td data-label="Engineer">
                         <div class="admin-person-cell">
-                            <img src="{{ $engineer->photoUrl() }}" alt="{{ $engineer->name }}">
+                            <img loading="lazy" decoding="async" width="48" height="48" src="{{ $engineer->photoUrl() }}" alt="{{ $engineer->name }}">
                             <span><strong>{{ $engineer->name }}</strong><br><span class="meta">{{ $engineer->title ?: 'Field personnel' }}</span></span>
                         </div>
                     </td>

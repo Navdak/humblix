@@ -18,7 +18,7 @@
         <div class="grid grid-3">
             @forelse($projects as $project)
                 <a class="project-card" href="{{ route('projects.show',$project) }}" data-animate="fade-up" data-delay="{{ ($loop->index % 3) * 70 }}">
-                    <div class="image-frame"><img loading="lazy" src="{{ \App\Support\UchContent::imageUrl($project->image_path, \App\Support\UchContent::projectImage($project->title)) }}" alt="{{ $project->title }}"></div>
+                    <div class="image-frame"><img loading="lazy" decoding="async" width="800" height="500" src="{{ \App\Support\UchContent::imageUrl($project->image_path, \App\Support\UchContent::projectImage($project->title)) }}" alt="{{ $project->title }}"></div>
                     <div class="project-body">
                         <span class="badge">{{ $project->service_division ?: $project->system_type }}</span>
                         <h3 style="margin-top:12px">{{ $project->title }}</h3>

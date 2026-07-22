@@ -24,7 +24,9 @@
 @endphp
 
 <section class="hero">
-    <div class="hero-media" role="img" aria-label="Humelix Limited engineer servicing engineering equipment" style="background-image:url('{{ $homeHeroImageUrl }}')"></div>
+    <div class="hero-media" role="img" aria-label="Humelix Limited engineer servicing engineering equipment">
+        <img src="{{ $homeHeroImageUrl }}" alt="" width="1920" height="1080" loading="eager" fetchpriority="high" decoding="sync" aria-hidden="true">
+    </div>
     <div class="hero-shade"></div>
     <div class="container hero-grid">
         <div class="hero-copy" data-animate="fade-up">
@@ -83,10 +85,10 @@
         <div class="section-head section-head-row" data-animate="fade-up"><div><span class="eyebrow">Featured Projects</span><h2 class="section-title">Field work that earns confidence.</h2></div><a href="{{ route('projects.index') }}" class="btn btn-outline">View All Projects</a></div>
         <div class="grid project-grid">
             @forelse($projects as $project)
-                <a class="project-card" href="{{ route('projects.show',$project) }}" data-animate="fade-up" data-delay="{{ $loop->index * 70 }}"><div class="image-frame"><img src="{{ \App\Support\UchContent::imageUrl($project->image_path, $projectFallbackImages[$loop->index % count($projectFallbackImages)]) }}" alt="{{ $project->title }}"></div><div class="project-body"><h3>{{ $project->title }}</h3><p>{{ $project->location }}</p><span>{{ $project->system_type }}</span></div></a>
+                <a class="project-card" href="{{ route('projects.show',$project) }}" data-animate="fade-up" data-delay="{{ $loop->index * 70 }}"><div class="image-frame"><img loading="lazy" decoding="async" width="800" height="500" src="{{ \App\Support\UchContent::imageUrl($project->image_path, $projectFallbackImages[$loop->index % count($projectFallbackImages)]) }}" alt="{{ $project->title }}"></div><div class="project-body"><h3>{{ $project->title }}</h3><p>{{ $project->location }}</p><span>{{ $project->system_type }}</span></div></a>
             @empty
                 @foreach($fallbackProjects as $project)
-                    <a class="project-card" href="{{ route('projects.index') }}" data-animate="fade-up" data-delay="{{ $loop->index * 70 }}"><div class="image-frame"><img src="{{ asset($project['image']) }}" alt="{{ $project['title'] }}"></div><div class="project-body"><h3>{{ $project['title'] }}</h3><span>{{ $project['system'] }}</span></div></a>
+                    <a class="project-card" href="{{ route('projects.index') }}" data-animate="fade-up" data-delay="{{ $loop->index * 70 }}"><div class="image-frame"><img loading="lazy" decoding="async" width="800" height="500" src="{{ asset($project['image']) }}" alt="{{ $project['title'] }}"></div><div class="project-body"><h3>{{ $project['title'] }}</h3><span>{{ $project['system'] }}</span></div></a>
                 @endforeach
             @endforelse
         </div>
@@ -124,7 +126,7 @@
 <section class="section founder-section">
     <div class="container founder-block">
         <div class="founder-copy" data-animate="slide-right"><span class="eyebrow">Founder’s Message</span><h2 class="section-title">Engineering leadership grounded in the field.</h2><p>{{ $globalSettings['founder_snapshot'] ?? 'At HUMELIX LIMITED, our mission is simple: deliver safe, precise and reliable engineering solutions that improve comfort, power reliability and operational performance.' }}</p><div class="founder-signature"><strong>UGOCHUKWU HUMBLE CHIEMELA</strong><span>Founder & Lead Engineer</span></div><a href="{{ route('founder') }}" class="btn btn-primary">Read Founder Profile</a></div>
-        <div class="founder-visual" data-animate="slide-left"><img src="{{ asset('images/generated/careers/careers-engineers-inspecting-systems.jpg') }}" alt="UGOCHUKWU HUMBLE CHIEMELA, Founder and Lead Engineer"></div>
+        <div class="founder-visual" data-animate="slide-left"><img loading="lazy" decoding="async" width="900" height="1125" src="{{ asset('images/generated/careers/careers-engineers-inspecting-systems.jpg') }}" alt="UGOCHUKWU HUMBLE CHIEMELA, Founder and Lead Engineer"></div>
     </div>
 </section>
 

@@ -23,7 +23,7 @@
 <section class="section">
     <div class="container project-case-hero">
         <div class="image-frame project-case-image" data-animate="slide-right">
-            <img src="{{ \App\Support\UchContent::imageUrl($project->image_path, \App\Support\UchContent::projectImage($project->title)) }}" alt="{{ $project->title }}">
+            <img loading="lazy" decoding="async" width="1100" height="688" src="{{ \App\Support\UchContent::imageUrl($project->image_path, \App\Support\UchContent::projectImage($project->title)) }}" alt="{{ $project->title }}">
         </div>
         <aside class="card phase6-project-summary project-case-summary" data-animate="slide-left">
             <span class="eyebrow">Project Overview</span>
@@ -93,7 +93,7 @@
         @endif
         @if(is_array($project->gallery) && count($project->gallery))
             <div class="section-head section-head-row" style="margin-top:56px"><div><span class="eyebrow">Gallery</span><h2 class="section-title">Project media</h2></div></div>
-            <div class="grid grid-3">@foreach($project->gallery as $image)<div class="image-frame" style="border-radius:14px"><img loading="lazy" src="{{ asset('storage/'.$image) }}" alt="{{ $project->title }} gallery image {{ $loop->iteration }}"></div>@endforeach</div>
+            <div class="grid grid-3">@foreach($project->gallery as $image)<div class="image-frame" style="border-radius:14px"><img loading="lazy" decoding="async" width="800" height="500" src="{{ asset('storage/'.$image) }}" alt="{{ $project->title }} gallery image {{ $loop->iteration }}"></div>@endforeach</div>
         @endif
     </div>
 </section>

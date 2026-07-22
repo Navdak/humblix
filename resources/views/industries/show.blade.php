@@ -26,7 +26,7 @@
         </div>
         <div class="grid grid-3">
             @forelse($projects as $project)
-                <a class="project-card" href="{{ route('projects.show',$project) }}"><div class="image-frame"><img src="{{ \App\Support\UchContent::imageUrl($project->image_path, \App\Support\UchContent::projectImage($project->title)) }}" alt="{{ $project->title }}"></div><div class="project-body"><h3>{{ $project->title }}</h3><p>{{ $project->country ? $project->country.' · ' : '' }}{{ $project->location }}</p><span>{{ $project->service_division ?: $project->system_type }}</span></div></a>
+                <a class="project-card" href="{{ route('projects.show',$project) }}"><div class="image-frame"><img loading="lazy" decoding="async" width="800" height="500" src="{{ \App\Support\UchContent::imageUrl($project->image_path, \App\Support\UchContent::projectImage($project->title)) }}" alt="{{ $project->title }}"></div><div class="project-body"><h3>{{ $project->title }}</h3><p>{{ $project->country ? $project->country.' · ' : '' }}{{ $project->location }}</p><span>{{ $project->service_division ?: $project->system_type }}</span></div></a>
             @empty
                 <div class="empty-state"><h3>No published case studies for this industry yet.</h3><p class="section-sub">Contact Humelix for relevant experience and technical capability.</p></div>
             @endforelse

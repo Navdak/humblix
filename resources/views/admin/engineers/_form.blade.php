@@ -64,7 +64,7 @@
         <label>Photo</label>
         @if($engineer->exists)
             <div class="admin-profile-preview" style="margin-bottom:12px">
-                <img src="{{ $engineer->photoUrl() }}" alt="{{ $engineer->name }}" style="width:78px;height:78px;border-radius:22px;object-fit:cover;border:1px solid var(--line);">
+                <img loading="lazy" decoding="async" width="78" height="78" src="{{ $engineer->photoUrl() }}" alt="{{ $engineer->name }}" style="width:78px;height:78px;border-radius:22px;object-fit:cover;border:1px solid var(--line);">
                 <div>
                     <strong>Current engineer image</strong>
                     <small>Upload a new image to replace it.</small>

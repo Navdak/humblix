@@ -30,7 +30,7 @@
         <div class="grid grid-3">
             @forelse($articles as $article)
                 <a class="project-card" href="{{ route('articles.show',$article) }}" data-animate="fade-up" data-delay="{{ ($loop->index % 3) * 70 }}">
-                    <div class="image-frame"><img loading="lazy" src="{{ \App\Support\UchContent::imageUrl($article->featured_image_path, 'images/generated/safety/safety-toolbox-talks.jpg') }}" alt="{{ $article->title }}"></div>
+                    <div class="image-frame"><img loading="lazy" decoding="async" width="800" height="500" src="{{ \App\Support\UchContent::imageUrl($article->featured_image_path, 'images/generated/safety/safety-toolbox-talks.jpg') }}" alt="{{ $article->title }}"></div>
                     <div class="project-body">
                         <span class="badge">{{ $article->categoryLabel() }}</span>
                         <h3 style="margin-top:12px">{{ $article->title }}</h3>

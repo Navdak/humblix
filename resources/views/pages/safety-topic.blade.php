@@ -6,7 +6,8 @@
     $topicImageUrl = $topicRecord?->imageUrl() ?? ($topic['image_url'] ?? \App\Support\UchContent::imageUrl($topic['image'] ?? null, \App\Support\UchContent::safetyImage($topic['title'])));
     [$contentBeforeVideo, $contentAfterVideo] = $topicRecord?->sanitizedContentSegmentsForVideo() ?? ['', ''];
 @endphp
-<section class="safety-topic-hero" style="--safety-hero-image:url('{{ $topicImageUrl }}')">
+<section class="safety-topic-hero">
+    <img class="safety-topic-hero-media" src="{{ $topicImageUrl }}" alt="" width="1920" height="820" loading="eager" fetchpriority="high" decoding="sync" aria-hidden="true">
     <div class="container">
         <a class="back-link" href="{{ route('safety') }}">← Back to Safety Centre</a>
         <span class="eyebrow">Safety Topic</span>
@@ -19,7 +20,7 @@
     <div class="container safety-topic-layout">
         <article class="safety-topic-card prose" data-animate="fade-up">
             <div class="image-frame" style="margin-bottom:24px">
-                <img src="{{ $topicImageUrl }}" alt="{{ $topic['title'] }}">
+                <img loading="lazy" decoding="async" width="960" height="600" src="{{ $topicImageUrl }}" alt="{{ $topic['title'] }}">
             </div>
             <span class="safety-seal">SAFE</span>
             <h2>What this means on site</h2>

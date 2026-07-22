@@ -10,7 +10,8 @@
     $servicesHeroSubtitle = $hero?->subtitle ?: 'Humelix provides HVAC, solar, electrical, maintenance, vendor/equipment and home appliance installation solutions for residential, commercial and industrial environments.';
 @endphp
 
-<section class="service-gateway-hero" style="--service-hero-image:url('{{ $servicesHeroImageUrl }}')">
+<section class="service-gateway-hero">
+    <img class="service-gateway-hero-media" src="{{ $servicesHeroImageUrl }}" alt="" width="1920" height="900" loading="eager" fetchpriority="high" decoding="sync" aria-hidden="true">
     <div class="container service-gateway-grid">
         <div class="service-gateway-copy" data-animate="slide-right">
             <span class="eyebrow">{{ $servicesHeroEyebrow }}</span>
@@ -44,7 +45,7 @@
         <div class="division-grid">
             @foreach($services as $service)
                 <article class="division-card tone-{{ $service['accent'] }}" data-animate="fade-up" data-delay="{{ ($loop->index % 3) * 70 }}">
-                    <div class="image-frame division-card-image"><img loading="eager" src="{{ asset($service['image']) }}" alt="{{ $service['title'] }}"></div>
+                    <div class="image-frame division-card-image"><img loading="lazy" decoding="async" width="960" height="420" src="{{ asset($service['image']) }}" alt="{{ $service['title'] }}"></div>
                     <div class="division-card-top">
                         <span class="division-code">{{ $service['code'] }}</span>
                         <span class="division-label">{{ $service['label'] }}</span>

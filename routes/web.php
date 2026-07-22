@@ -82,6 +82,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin', 'admin.dele
     Route::get('/', DashboardController::class)->name('dashboard');
     Route::get('/notifications', [AdminNotificationController::class, 'index'])->name('notifications.index');
     Route::patch('/notifications/read-all', [AdminNotificationController::class, 'markAllRead'])->name('notifications.read-all');
+    Route::patch('/notifications/modules/{module}/read', [AdminNotificationController::class, 'markModuleRead'])->name('notifications.module-read');
     Route::patch('/notifications/{notification}/read', [AdminNotificationController::class, 'markRead'])->name('notifications.read');
     Route::middleware('admin.module:settings')->group(function () {
         Route::get('/settings', [SettingsController::class, 'edit'])->name('settings.edit');

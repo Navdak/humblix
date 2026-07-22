@@ -14,11 +14,24 @@ class NotificationController extends Controller
     {
         $user = $request->user();
 
-        $notifications = AdminNotification::query()
-            ->visibleTo($user)
+        $visibleQuery = AdminNotification::query()
+            ->visibleTo($user);
+
+        $unreadNotifications = (clone $visibleQuery)
+            ->unreadFor($user)
             ->latest()
             ->limit(10)
             ->get();
+
+        $recentNotifications = (clone $visibleQuery)
+            ->latest()
+            ->limit(10)
+            ->get();
+
+        $notifications = $unreadNotifications
+            ->concat($recentNotifications->reject(fn (AdminNotification $notification) => $unreadNotifications->contains('id', $notification->id)))
+            ->take(15)
+            ->values();
 
         $readIds = AdminNotificationRead::query()
             ->where('user_id', $user->id)
@@ -32,9 +45,11 @@ class NotificationController extends Controller
 
         $unreadCount = (clone $unreadQuery)->count();
 
+        $latestId = (int) ((clone $visibleQuery)->max('id') ?? 0);
+
         return response()->json([
             'unread_count' => $unreadCount,
-            'latest_id' => (int) ($notifications->max('id') ?? 0),
+            'latest_id' => $latestId,
             'notifications' => $notifications->map(fn (AdminNotification $notification) => [
                 'id' => $notification->id,
                 'type' => $notification->type,
@@ -66,6 +81,34 @@ class NotificationController extends Controller
         return response()->json(['ok' => true]);
     }
 
+    public function markModuleRead(Request $request, string $module): JsonResponse
+    {
+        $user = $request->user();
+        $now = now();
+        $types = $this->notificationTypesForModule($module);
+
+        abort_unless($types !== [], 404);
+
+        $notificationIds = AdminNotification::query()
+            ->visibleTo($user)
+            ->unreadFor($user)
+            ->whereIn('type', $types)
+            ->latest()
+            ->limit(100)
+            ->pluck('id');
+
+        $notificationIds->each(fn (int $notificationId) => AdminNotificationRead::updateOrCreate(
+            ['admin_notification_id' => $notificationId, 'user_id' => $user->id],
+            ['read_at' => $now],
+        ));
+
+        return response()->json([
+            'ok' => true,
+            'module' => $module,
+            'read_count' => $notificationIds->count(),
+        ]);
+    }
+
     public function markAllRead(Request $request): JsonResponse
     {
         $user = $request->user();
@@ -83,5 +126,14 @@ class NotificationController extends Controller
             ));
 
         return response()->json(['ok' => true]);
+    }
+
+    private function notificationTypesForModule(string $module): array
+    {
+        return match ($module) {
+            'enquiries' => ['new_enquiry'],
+            'reviews' => ['new_review'],
+            default => [],
+        };
     }
 }

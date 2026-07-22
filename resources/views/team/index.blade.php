@@ -19,7 +19,7 @@
             @forelse($members as $member)
                 <article class="project-card" data-animate="fade-up" data-delay="{{ ($loop->index % 4) * 60 }}">
                     <div class="image-frame" style="aspect-ratio:4/5">
-                        <img loading="lazy" src="{{ \App\Support\UchContent::imageUrl($member->photo_path, \App\Support\UchContent::teamImage($member->role)) }}" alt="{{ $member->name }}">
+                        <img loading="lazy" decoding="async" width="800" height="1000" src="{{ \App\Support\UchContent::imageUrl($member->photo_path, \App\Support\UchContent::teamImage($member->role)) }}" alt="{{ $member->name }}">
                     </div>
                     <div class="project-body">
                         <h3>{{ $member->name }}</h3>
@@ -82,7 +82,7 @@
         <article class="technical-partner-card">
             <div class="technical-partner-main">
                 <div class="technical-partner-photo">
-                    <img loading="lazy" src="{{ \App\Support\UchContent::imageUrl($technicalPartnerImage, 'images/generated/careers/careers-office-admin-culture.jpg') }}" alt="{{ $technicalPartnerName ?: $technicalPartnerBrand }}">
+                    <img loading="lazy" decoding="async" width="800" height="1000" src="{{ \App\Support\UchContent::imageUrl($technicalPartnerImage, 'images/generated/careers/careers-office-admin-culture.jpg') }}" alt="{{ $technicalPartnerName ?: $technicalPartnerBrand }}">
                     <span>Technical Partner</span>
                 </div>
                 <div class="technical-partner-copy">

@@ -51,4 +51,13 @@ class HumelixLinks
     {
         return self::websiteUrl().'/'.ltrim($path, '/');
     }
+
+    public static function assetUrl(string $path): string
+    {
+        if (str_starts_with($path, 'http://') || str_starts_with($path, 'https://')) {
+            return $path;
+        }
+
+        return self::url($path);
+    }
 }

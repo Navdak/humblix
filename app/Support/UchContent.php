@@ -15,6 +15,26 @@ class UchContent
         return $fallback ? asset($fallback) : null;
     }
 
+    /** Resolve a bundled public image or uploaded storage image as an absolute URL for email clients. */
+    public static function emailImageUrl(?string $path, ?string $fallback = null): ?string
+    {
+        $path = trim((string) ($path ?: $fallback));
+
+        if ($path === '') {
+            return null;
+        }
+
+        if (str_starts_with($path, 'http://') || str_starts_with($path, 'https://')) {
+            return $path;
+        }
+
+        if (str_starts_with($path, 'images/') || str_starts_with($path, 'storage/')) {
+            return HumelixLinks::assetUrl($path);
+        }
+
+        return HumelixLinks::assetUrl('storage/'.$path);
+    }
+
     public static function projectImage(?string $title): string
     {
         $title = strtolower((string) $title);

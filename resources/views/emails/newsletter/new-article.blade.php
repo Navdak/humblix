@@ -3,8 +3,8 @@
     $resourcesUrl = \App\Support\HumelixLinks::url('/resources');
     $homeUrl = \App\Support\HumelixLinks::websiteUrl();
     $unsubscribeUrl = \App\Support\HumelixLinks::url('/newsletter/unsubscribe/'.$subscriber->unsubscribe_token);
-    $logoUrl = asset('images/brand/humelix-logo-mark.png');
-    $imageUrl = \App\Support\UchContent::imageUrl($article->featured_image_path, 'images/generated/safety/safety-toolbox-talks.jpg');
+    $logoUrl = \App\Support\HumelixLinks::assetUrl('images/brand/humelix-logo-mark.png');
+    $imageUrl = \App\Support\UchContent::emailImageUrl($article->featured_image_path, 'images/generated/safety/safety-toolbox-talks.jpg');
 @endphp
 <!doctype html>
 <html lang="en">

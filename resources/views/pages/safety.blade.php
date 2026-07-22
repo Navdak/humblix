@@ -11,7 +11,8 @@
     $safetyHeroSubtitle = $hero?->subtitle ?: 'Safe engineering delivery for HVAC, solar, electrical, maintenance, equipment and home appliance projects.';
 @endphp
 
-<section class="safety-hero" style="--safety-hero-image:url('{{ $safetyHeroImageUrl }}')">
+<section class="safety-hero">
+    <img class="safety-hero-media" src="{{ $safetyHeroImageUrl }}" alt="" width="1920" height="900" loading="eager" fetchpriority="high" decoding="sync" aria-hidden="true">
     <div class="container safety-hero-grid">
         <div class="safety-hero-copy" data-animate="slide-right">
             <span class="eyebrow">{{ $safetyHeroEyebrow }}</span>
@@ -91,7 +92,7 @@
         <div class="safety-module-grid">
             @foreach($modules as $module)
                 <article class="safety-module-card" id="{{ $module['slug'] }}" data-animate="fade-up" data-delay="{{ ($loop->index % 4) * 55 }}">
-                    <div class="image-frame safety-module-image"><img loading="lazy" src="{{ $module['image_url'] ?? \App\Support\UchContent::imageUrl($module['image'] ?? null, \App\Support\UchContent::safetyImage($module['title'])) }}" alt="{{ $module['title'] }}"></div>
+                    <div class="image-frame safety-module-image"><img loading="lazy" decoding="async" width="960" height="480" src="{{ $module['image_url'] ?? \App\Support\UchContent::imageUrl($module['image'] ?? null, \App\Support\UchContent::safetyImage($module['title'])) }}" alt="{{ $module['title'] }}"></div>
                     <div class="safety-module-top">
                         <span>{{ str_pad((string) $loop->iteration, 2, '0', STR_PAD_LEFT) }}</span>
                         <a href="{{ route('safety.topic', $module['slug']) }}">Read More</a>

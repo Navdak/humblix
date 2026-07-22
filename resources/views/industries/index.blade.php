@@ -12,7 +12,7 @@
         <div class="phase6-card-grid">
             @foreach($industries as $industry)
                 <article class="phase6-card" data-animate="fade-up" data-delay="{{ ($loop->index % 4) * 50 }}">
-                    <div class="image-frame phase6-card-image"><img loading="lazy" src="{{ asset($industry['image']) }}" alt="{{ $industry['title'] }}"></div>
+                    <div class="image-frame phase6-card-image"><img loading="lazy" decoding="async" width="960" height="420" src="{{ asset($industry['image']) }}" alt="{{ $industry['title'] }}"></div>
                     <span class="phase6-code">{{ str_pad((string) $loop->iteration, 2, '0', STR_PAD_LEFT) }}</span>
                     <h3>{{ $industry['title'] }}</h3>
                     <p>{{ $industry['description'] }}</p>

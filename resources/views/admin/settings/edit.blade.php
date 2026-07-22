@@ -63,7 +63,7 @@
                 <input type="hidden" name="technical_partner_image_path" value="{{ $technicalPartnerImagePath }}">
                 @if($technicalPartnerImagePath)
                     <div class="image-frame" style="max-width:180px;aspect-ratio:4/5;margin-bottom:10px">
-                        <img src="{{ \App\Support\UchContent::imageUrl($technicalPartnerImagePath, 'images/generated/careers/careers-office-admin-culture.jpg') }}" alt="Current technical partner image">
+                        <img loading="lazy" decoding="async" width="320" height="400" src="{{ \App\Support\UchContent::imageUrl($technicalPartnerImagePath, 'images/generated/careers/careers-office-admin-culture.jpg') }}" alt="Current technical partner image">
                     </div>
                 @endif
                 <input type="file" name="technical_partner_image" accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp">

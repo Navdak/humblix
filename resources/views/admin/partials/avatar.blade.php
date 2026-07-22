@@ -8,7 +8,7 @@
 
 <span class="admin-avatar admin-avatar-{{ $size }} {{ $avatarUrl ? 'has-image' : '' }}" aria-label="{{ $avatarName }}">
     @if($avatarUrl)
-        <img src="{{ $avatarUrl }}" alt="{{ $avatarName }}">
+        <img loading="lazy" decoding="async" width="48" height="48" src="{{ $avatarUrl }}" alt="{{ $avatarName }}">
     @else
         {{ $avatarUser?->avatarInitial() ?? 'A' }}
     @endif

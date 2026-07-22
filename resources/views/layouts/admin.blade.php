@@ -16,7 +16,7 @@
             } catch (error) {}
         })();
     </script>
-    <link rel="stylesheet" href="{{ asset('css/uch.css') }}?v=20260721b">
+    <link rel="stylesheet" href="{{ asset('css/uch.css') }}?v=20260722a">
     @vite('resources/js/app.js')
     @stack('head')
 </head>
@@ -24,7 +24,7 @@
 <div class="admin-shell">
     <aside class="admin-sidebar" data-admin-sidebar aria-label="Admin navigation">
         <div class="admin-sidebar-head">
-            <a href="{{ route('admin.dashboard') }}" class="admin-brand" aria-label="HUMELIX LIMITED Admin home"><span class="brand-mark" aria-hidden="true"><img src="{{ asset('images/brand/humelix-logo-mark.png') }}" alt=""></span><span><strong>HUMELIX</strong><small>LIMITED</small></span></a>
+            <a href="{{ route('admin.dashboard') }}" class="admin-brand" aria-label="HUMELIX LIMITED Admin home"><span class="brand-mark" aria-hidden="true"><img src="{{ asset('images/brand/humelix-logo-mark.png') }}" alt="" width="84" height="84" decoding="async"></span><span><strong>HUMELIX</strong><small>LIMITED</small></span></a>
             <button type="button" class="admin-sidebar-close" aria-label="Close navigation" data-admin-menu-toggle><span>×</span></button>
         </div>
         <nav class="admin-nav">
@@ -101,6 +101,7 @@
                     data-admin-notifications
                     data-endpoint="{{ route('admin.notifications.index') }}"
                     data-read-endpoint-template="{{ url('/admin/notifications/__ID__/read') }}"
+                    data-read-module-endpoint-template="{{ url('/admin/notifications/modules/__MODULE__/read') }}"
                     data-read-all-endpoint="{{ route('admin.notifications.read-all') }}"
                     data-current-module="{{ request()->routeIs('admin.enquiries.index') ? 'enquiries' : '' }}"
                     data-current-route="{{ Route::currentRouteName() }}">

@@ -9,7 +9,7 @@
     <table class="admin-table"><thead><tr><th>Thumb</th><th>Video</th><th>Category</th><th>Type</th><th>Status</th><th>Featured</th><th>Related</th><th>Published</th><th></th></tr></thead><tbody>
     @forelse($videos as $video)
         <tr>
-            <td data-label="Thumbnail">@if($video->thumbnailUrl())<img src="{{ $video->thumbnailUrl() }}" alt="{{ $video->title }}" class="admin-thumb">@else<span class="badge">No thumb</span>@endif</td>
+            <td data-label="Thumbnail">@if($video->thumbnailUrl())<img loading="lazy" decoding="async" width="160" height="90" src="{{ $video->thumbnailUrl() }}" alt="{{ $video->title }}" class="admin-thumb">@else<span class="badge">No thumb</span>@endif</td>
             <td data-label="Title"><strong>{{ $video->title }}</strong><small>{{ $video->caption ?: 'No caption' }}</small></td>
             <td data-label="Category">{{ $video->category ?: '—' }}</td>
             <td data-label="Type">{{ ucfirst($video->video_type) }}</td>

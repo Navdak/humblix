@@ -2,19 +2,16 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Mail\NewArticlePublishedMail;
+use App\Jobs\SendNewArticlePublishedEmail;
 use App\Models\Article;
 use App\Models\NewsletterSubscriber;
 use App\Models\Video;
 use App\Support\HtmlSanitizer;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
-use Throwable;
 
 class ArticleController extends Controller
 {
@@ -184,19 +181,13 @@ class ArticleController extends Controller
             return;
         }
 
+        $articleId = (int) $article->id;
+
         NewsletterSubscriber::subscribed()
             ->orderBy('id')
-            ->chunkById(50, function ($subscribers) use ($article): void {
+            ->chunkById(100, function ($subscribers) use ($articleId): void {
                 foreach ($subscribers as $subscriber) {
-                    try {
-                        Mail::to($subscriber->email)->send(new NewArticlePublishedMail($article, $subscriber));
-                    } catch (Throwable $exception) {
-                        Log::warning('Newsletter article email failed.', [
-                            'article_id' => $article->id,
-                            'subscriber_id' => $subscriber->id,
-                            'message' => $exception->getMessage(),
-                        ]);
-                    }
+                    SendNewArticlePublishedEmail::dispatch($articleId, (int) $subscriber->id)->afterResponse();
                 }
             });
 

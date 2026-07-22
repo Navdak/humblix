@@ -106,6 +106,7 @@
 
     const endpoint = root.dataset.endpoint;
     const readEndpointTemplate = root.dataset.readEndpointTemplate || '';
+    const readModuleEndpointTemplate = root.dataset.readModuleEndpointTemplate || '';
     const readAllEndpoint = root.dataset.readAllEndpoint;
     const currentModule = root.dataset.currentModule || '';
     const currentRoute = root.dataset.currentRoute || '';
@@ -262,6 +263,11 @@
         await request(readEndpointTemplate.replace('__ID__', id), {method: 'PATCH'});
     };
 
+    const markModuleRead = async (module) => {
+        if (!module || !readModuleEndpointTemplate) return;
+        await request(readModuleEndpointTemplate.replace('__MODULE__', encodeURIComponent(module)), {method: 'PATCH'});
+    };
+
     toggle?.addEventListener('click', () => {
         const isOpen = panel?.hidden;
         if (panel) panel.hidden = !isOpen;
@@ -293,7 +299,16 @@
         window.location.href = link.href;
     });
 
-    liveRefresh?.addEventListener('click', () => window.location.reload());
+    liveRefresh?.addEventListener('click', async () => {
+        liveRefresh.disabled = true;
+        try {
+            await markModuleRead(currentModule);
+        } catch (error) {
+            // Reload anyway so the admin still sees the newest records.
+        } finally {
+            window.location.reload();
+        }
+    });
 
     document.addEventListener('visibilitychange', () => {
         if (!document.hidden) fetchNotifications();

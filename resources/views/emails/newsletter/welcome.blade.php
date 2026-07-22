@@ -2,7 +2,7 @@
     $websiteUrl = \App\Support\HumelixLinks::websiteUrl();
     $resourcesUrl = \App\Support\HumelixLinks::url('/resources');
     $unsubscribeUrl = \App\Support\HumelixLinks::url('/newsletter/unsubscribe/'.$subscriber->unsubscribe_token);
-    $logoUrl = asset('images/brand/humelix-logo-mark.png');
+    $logoUrl = \App\Support\HumelixLinks::assetUrl('images/brand/humelix-logo-mark.png');
 @endphp
 <!doctype html>
 <html lang="en">

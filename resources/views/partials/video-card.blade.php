@@ -17,7 +17,7 @@
         data-video-poster="{{ $thumbnailUrl }}"
         aria-label="Play {{ $video->title }}"
     >
-        <img loading="lazy" src="{{ $thumbnailUrl }}" alt="{{ $video->title }} thumbnail">
+        <img loading="lazy" decoding="async" width="800" height="450" src="{{ $thumbnailUrl }}" alt="{{ $video->title }} thumbnail">
         <span class="video-play" aria-hidden="true">▶</span>
     </button>
     <div class="video-card-body">
