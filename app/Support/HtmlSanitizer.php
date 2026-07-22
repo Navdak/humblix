@@ -23,7 +23,7 @@ class HtmlSanitizer
 
     public static function clean(?string $html): string
     {
-        $html = trim((string) $html);
+        $html = self::repairMojibake(trim((string) $html));
 
         if ($html === '') {
             return '';
@@ -36,8 +36,8 @@ class HtmlSanitizer
         $document = new DOMDocument('1.0', 'UTF-8');
         libxml_use_internal_errors(true);
         $document->loadHTML(
-            '<!doctype html><html><body>'.$html.'</body></html>',
-            LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD
+            '<!doctype html><html><head><meta charset="UTF-8"></head><body>'.$html.'</body></html>',
+            LIBXML_HTML_NODEFDTD
         );
         libxml_clear_errors();
 
@@ -76,7 +76,27 @@ class HtmlSanitizer
             }
         }
 
-        return trim($output);
+        return trim(self::repairMojibake($output));
+    }
+
+    private static function repairMojibake(string $value): string
+    {
+        return strtr($value, [
+            "\u{00E2}\u{20AC}\u{201D}" => "\u{2014}",
+            "\u{00E2}\u{20AC}\u{201C}" => "\u{2013}",
+            "\u{00E2}\u{20AC}\u{02DC}" => "\u{2018}",
+            "\u{00E2}\u{20AC}\u{2122}" => "\u{2019}",
+            "\u{00E2}\u{20AC}\u{0153}" => "\u{201C}",
+            "\u{00E2}\u{20AC}\u{009D}" => "\u{201D}",
+            "\u{00E2}\u{20AC}\u{00A6}" => "\u{2026}",
+            "\u{00E2}\u{20AC}\u{00A2}" => "\u{2022}",
+            "\u{00C2}\u{00A9}" => "\u{00A9}",
+            "\u{00C2}\u{00AE}" => "\u{00AE}",
+            "\u{00C2}\u{00B0}" => "\u{00B0}",
+            "\u{00C2}\u{00B7}" => "\u{00B7}",
+            "\u{00C2}\u{00A0}" => " ",
+            "\u{00C2}" => "",
+        ]);
     }
 
     private static function cleanAttributes(DOMElement $node, string $tag): void

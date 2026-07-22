@@ -9,15 +9,7 @@
 ])
 <section class="section" style="padding-bottom:0">
     <div class="container">
-        <div class="empty-state">
-            <h2>Looking for field videos?</h2>
-            <p class="section-sub">The Humelix Video Library houses project, product, safety and service demonstration videos.</p>
-            <a class="btn btn-primary" href="{{ route('videos.index') }}" style="margin-top:18px">Open Video Library</a>
-        </div>
-        <div style="margin-top:28px">
-            @include('partials.newsletter-signup')
-        </div>
-        <div class="service-actions" style="justify-content:center;gap:10px;flex-wrap:wrap;margin-top:28px">
+        <div class="service-actions resource-filter-actions" style="justify-content:center;gap:10px;flex-wrap:wrap">
             <a class="btn {{ $activeCategory ? 'btn-white' : 'btn-primary' }}" href="{{ route('articles.index') }}">All Resources</a>
             @foreach($categories as $value => $label)
                 <a class="btn {{ $activeCategory === $value ? 'btn-primary' : 'btn-white' }}" href="{{ route('articles.index', ['category' => $value]) }}">{{ $label }}</a>
@@ -52,6 +44,18 @@
             @endforelse
         </div>
         <div style="margin-top:28px">{{ $articles->links() }}</div>
+    </div>
+</section>
+<section class="section" style="padding-top:0">
+    <div class="container">
+        <div>
+            @include('partials.newsletter-signup')
+        </div>
+        <div class="empty-state" style="margin-top:28px">
+            <h2>Looking for field videos?</h2>
+            <p class="section-sub">The Humelix Video Library houses project, product, safety and service demonstration videos.</p>
+            <a class="btn btn-primary" href="{{ route('videos.index') }}" style="margin-top:18px">Open Video Library</a>
+        </div>
     </div>
 </section>
 @include('partials.public-cta')

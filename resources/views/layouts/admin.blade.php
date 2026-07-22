@@ -144,7 +144,21 @@
                 <button type="button" class="btn btn-primary" data-live-list-refresh>Update list</button>
             </div>
             @if(session('success'))<div class="alert alert-success">{{ session('success') }}</div>@endif
-            @if($errors->any())<div class="alert alert-error"><strong>Fix these fields:</strong><ul>@foreach($errors->all() as $error)<li>{{ $error }}</li>@endforeach</ul></div>@endif
+            @if($errors->any())
+                <div class="alert alert-error">
+                    <strong>Fix these fields:</strong>
+                    <ul>
+                        @foreach($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+                @if($errors->has('featured_image') || $errors->has('pdf_attachment'))
+                    <p class="meta" style="margin-top:-10px;margin-bottom:16px">
+                        Upload limits: featured image max 4MB; PDF max 10MB. If both files fail together, the hosting PHP upload/post limit may be lower than the form limit.
+                    </p>
+                @endif
+            @endif
             @yield('content')
         </main>
     </div>

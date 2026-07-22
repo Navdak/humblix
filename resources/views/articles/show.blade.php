@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title',$article->title.' — HUMELIX LIMITED')
+@section('title',$article->title.' - HUMELIX LIMITED')
 @section('meta_description',$article->excerpt)
 @section('content')
 @include('components.page-hero',[

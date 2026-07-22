@@ -354,6 +354,38 @@ Future Namecheap hosting:
 - confirm file uploads and public asset paths;
 - configure final domain, SSL and production cache.
 
+## Future API architecture plan
+
+The current HUMELIX website is intentionally built as a Laravel Blade application because it is simple, SEO-friendly, easier to maintain, and better suited for Namecheap shared hosting at the current stage.
+
+When HUMELIX grows larger, the project can move gradually toward an API-based architecture without rebuilding everything at once.
+
+Possible future structure:
+
+- public website: `https://humelix.com`;
+- API backend: `https://api.humelix.com` or `https://humelix.com/api`;
+- admin panel: current Laravel admin first, with a possible separate admin frontend later;
+- future mobile/engineer/customer apps consuming the same API.
+
+Example future environment variable:
+
+```env
+HUMELIX_API_URL=https://api.humelix.com
+```
+
+Future API use cases:
+
+- mobile app for customers or engineers;
+- engineer assignment/status updates;
+- customer portal;
+- external CRM integrations;
+- WhatsApp/SMS automation;
+- Google Reviews or analytics integrations;
+- public article, project, service and equipment endpoints;
+- separate frontend applications using the same Laravel backend.
+
+Important note: moving to an API does not automatically make the website faster. It becomes faster and more scalable only when paired with good database design, caching, queues, CDN/static asset strategy, and stronger hosting such as VPS/cloud hosting. The recommended path is to keep the current Laravel website stable, then add API endpoints gradually when a real feature needs them.
+
 ## Image and media performance policy
 
 Current safe performance polish:

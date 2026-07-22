@@ -32,7 +32,7 @@ are environment/runtime files. On Namecheap, Laravel should regenerate the neede
 
 ## Recommended code deployment methods
 
-### Option 1: SSH + Git pull — preferred if available
+### Option 1: SSH + Git pull - preferred if available
 
 This is the cleanest workflow.
 
@@ -56,13 +56,13 @@ Use cPanel Git Version Control if SSH workflow is not smooth.
 Typical flow:
 
 1. Clone the GitHub repository in cPanel.
-2. Use “Update from Remote” when new commits are pushed.
-3. Use “Deploy HEAD Commit” where available.
+2. Use "Update from Remote" when new commits are pushed.
+3. Use "Deploy HEAD Commit" where available.
 4. Run Composer/Laravel commands from cPanel Terminal.
 
 If needed, add a `.cpanel.yml` deployment file later after we confirm the exact folder structure on Namecheap.
 
-### Option 3: Production zip upload — fallback
+### Option 3: Production zip upload - fallback
 
 Use this only if Git deployment is not available.
 
@@ -74,7 +74,7 @@ Use this only if Git deployment is not available.
 
 This is okay for the first upload, but it is not ideal for ongoing updates.
 
-### Option 4: SFTP/FTP upload — last resort
+### Option 4: SFTP/FTP upload - last resort
 
 Use SFTP if possible, not plain FTP.
 
@@ -84,7 +84,7 @@ This can work for small changes, but it is easier to miss files or overwrite the
 
 1. Confirm the Namecheap hosting plan supports the required PHP version for the current Laravel version.
 2. Pull or deploy the latest GitHub code into the hosting account.
-3. Point the web root to Laravel’s `public` directory.
+3. Point the web root to Laravel's `public` directory.
 4. Create the production database in cPanel.
 5. Import or migrate the database.
 6. Configure the production `.env`.
@@ -165,6 +165,25 @@ Recommended cPanel steps:
 6. Run `php artisan migrate --force`.
 7. Import existing production data if we are moving from another database.
 
+## Upload limits
+
+The application validation currently allows:
+
+- Article featured image: 4MB maximum.
+- Article PDF attachment: 10MB maximum.
+
+The hosting PHP settings must be equal to or higher than those limits. Recommended production PHP values:
+
+- `upload_max_filesize=15M`
+- `post_max_size=25M`
+- `memory_limit=512M`
+- `max_execution_time=120`
+- `max_input_time=120`
+
+`post_max_size` must be larger than one file because it covers the full request: image + PDF + article text + all other form fields.
+
+On Render, these limits are configured in `docker/php-upload.ini`. On Namecheap, set the same values in cPanel/MultiPHP INI Editor before testing uploads.
+
 ## Image/media preparation before upload
 
 The website does not auto-convert uploaded images because the client will prepare images manually.
@@ -179,6 +198,12 @@ Before uploading through admin:
 - Use PNG mainly for transparent logos/graphics.
 - Do not upload raw phone/camera images directly; resize and compress them first.
 - Keep public videos on YouTube where possible. Use local video upload only for small, necessary files.
+
+## Text encoding/content paste guidance
+
+The website uses UTF-8. When admins paste content from Word, Google Docs, AI tools or websites, smart punctuation can sometimes arrive with bad encoding from the source. The article sanitizer now preserves UTF-8 and repairs common mojibake such as broken em dashes, curly apostrophes, copyright symbols and related pasted-text artifacts.
+
+Before final publishing, preview long articles and correct any remaining odd copied characters manually.
 
 ## Production cache and hosting performance
 
@@ -310,5 +335,6 @@ Also test:
 - Start on Namecheap Stellar Plus if budget is the priority.
 - Move to Stellar Business for stronger shared-hosting performance, AutoBackup, and better production safety.
 - Move to VPS later if the site needs long-running workers, WebSockets, heavier video handling, or stronger server control.
+- Move gradually toward a Laravel API architecture later if HUMELIX needs mobile apps, engineer apps, customer portals, external integrations or a separate frontend. The current Blade website should remain the stable base until those needs are real.
 - Keep local video uploads limited; prefer YouTube links for video content.
 - Add proper image optimization and thumbnails to protect shared-hosting storage and speed.

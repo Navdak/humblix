@@ -32,6 +32,7 @@ RUN npm run build \
     && chmod -R ug+rwx storage bootstrap/cache database
 
 COPY docker/apache.conf /etc/apache2/sites-available/000-default.conf
+COPY docker/php-upload.ini /usr/local/etc/php/conf.d/humelix-upload.ini
 COPY docker/render-start.sh /usr/local/bin/render-start.sh
 
 RUN chmod +x /usr/local/bin/render-start.sh

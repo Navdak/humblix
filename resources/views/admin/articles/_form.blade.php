@@ -13,12 +13,16 @@
         <small>Used for public resource filtering and related article suggestions.</small>
     </div>
     <div class="form-field full"><label>SEO Excerpt <span class="meta">max 160 chars</span></label><textarea name="excerpt" rows="3" maxlength="160" required>{{ old('excerpt',$article->excerpt) }}</textarea></div>
-    <div class="form-field"><label>Featured Image</label><input type="file" name="featured_image" accept="image/*"></div>
+    <div class="form-field">
+        <label>Featured Image <span class="meta">JPG, PNG or WebP, max 4MB</span></label>
+        <input type="file" name="featured_image" accept="image/*">
+        <small>Upload a prepared web image. For best performance, keep article images around 1000-1200px wide.</small>
+    </div>
     <div class="form-field"><label>Status</label><select name="status"><option value="draft" @selected(old('status',$article->status ?: 'draft')==='draft')>Draft</option><option value="published" @selected(old('status',$article->status ?: 'draft')==='published')>Published</option></select></div>
     <div class="form-field full">
         <label>PDF Attachment <span class="meta">optional, max 10MB</span></label>
         <input type="file" name="pdf_attachment" accept="application/pdf,.pdf">
-        <small>Use PDFs for long guides, manuals, checklists, brochures, or downloadable resources. Keep the web article readable and attach the full guide when needed.</small>
+        <small>Use PDFs for long guides, manuals, checklists, brochures, or downloadable resources. Keep the file under 10MB. On production, PHP upload limits must allow the combined image + PDF request.</small>
         @if($article->exists && $article->hasPdfAttachment())
             <div class="admin-note" style="margin-top:10px">
                 <strong>Current PDF:</strong> <a href="{{ $article->pdfUrl() }}" target="_blank" rel="noopener">View uploaded PDF</a>
@@ -62,7 +66,7 @@
         <textarea id="content" name="content" rows="16" aria-describedby="article-content-help article-content-error">{{ old('content',$article->content) }}</textarea>
         <div id="article-content-error" class="admin-inline-error" hidden data-article-content-error>Article content is required before saving.</div>
         <small>
-            <span id="article-content-help">Recommended: 1,500–3,000 words. Maximum: {{ number_format(\App\Models\Article::MAX_WORD_COUNT) }} words.</span>
+            <span id="article-content-help">Recommended: 1,500-3,000 words. Maximum: {{ number_format(\App\Models\Article::MAX_WORD_COUNT) }} words.</span>
             For longer guides, split manually into multiple focused articles or attach a PDF.
             <strong><span data-article-word-count>0</span> words</strong>
         </small>
