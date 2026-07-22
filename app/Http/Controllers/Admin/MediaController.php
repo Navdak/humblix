@@ -2,6 +2,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Article;
 use App\Models\MediaAsset;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -9,7 +10,19 @@ use Illuminate\Support\Facades\Storage;
 
 class MediaController extends Controller
 {
-    public function index() { return view('admin.media.index', ['assets' => MediaAsset::latest()->paginate(24)]); }
+    public function index()
+    {
+        $assets = MediaAsset::latest()->paginate(24);
+
+        $assets->getCollection()->transform(function (MediaAsset $asset) {
+            $asset->setAttribute('article_usage_count', $this->articleUsageCount($asset));
+            $asset->setAttribute('file_exists', Storage::disk('public')->exists($asset->file_path));
+
+            return $asset;
+        });
+
+        return view('admin.media.index', ['assets' => $assets]);
+    }
 
     public function store(Request $request): RedirectResponse
     {
@@ -22,8 +35,21 @@ class MediaController extends Controller
 
     public function destroy(MediaAsset $mediaAsset): RedirectResponse
     {
+        if ($this->articleUsageCount($mediaAsset) > 0) {
+            return back()->withErrors([
+                'media' => 'This media file is still used inside an article. Remove it from the article content before deleting it from the Media Library.',
+            ]);
+        }
+
         Storage::disk('public')->delete($mediaAsset->file_path);
         $mediaAsset->delete();
         return back()->with('success','Media deleted.');
+    }
+
+    private function articleUsageCount(MediaAsset $asset): int
+    {
+        return Article::query()
+            ->where('content', 'like', '%'.$asset->file_path.'%')
+            ->count();
     }
 }

@@ -28,7 +28,7 @@ class ArticleController extends Controller
     public function show(Article $article)
     {
         abort_if($article->status !== 'published', 404);
-        $seoImage = UchContent::imageUrl($article->featured_image_path);
+        $seoImage = UchContent::imageUrl($article->featured_image_path, 'images/generated/safety/safety-toolbox-talks.jpg');
         $articleSchema = [
             '@context' => 'https://schema.org',
             '@type' => 'Article',

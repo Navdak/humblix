@@ -90,12 +90,12 @@ class Article extends Model
 
     public function hasPdfAttachment(): bool
     {
-        return filled($this->pdf_path);
+        return filled($this->pdf_path) && Storage::disk('public')->exists($this->pdf_path);
     }
 
     public function pdfUrl(): ?string
     {
-        return $this->hasPdfAttachment() ? Storage::disk('public')->url($this->pdf_path) : null;
+        return $this->hasPdfAttachment() ? asset('storage/'.$this->pdf_path) : null;
     }
 
     public function hasArticleVideo(): bool

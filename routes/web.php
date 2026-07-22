@@ -96,6 +96,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin', 'admin.dele
     Route::get('/services', [FoundationController::class, 'services'])->middleware('admin.module:services')->name('services.index');
     Route::resource('safety', AdminSafetyTopicController::class)->middleware('admin.module:safety')->except(['show']);
     Route::redirect('/resources', '/admin/articles', 301)->middleware('admin.module:articles')->name('resources.index');
+    Route::post('/articles/inline-image', [AdminArticleController::class, 'uploadInlineImage'])->middleware('admin.module:articles')->name('articles.inline-image');
     Route::resource('articles', AdminArticleController::class)->middleware('admin.module:articles')->except(['show']);
     Route::get('/newsletter', [AdminNewsletterSubscriberController::class, 'index'])->middleware('admin.module:newsletter')->name('newsletter.index');
     Route::patch('/newsletter/company-website-url', [AdminNewsletterSubscriberController::class, 'updateCompanyWebsiteUrl'])->middleware('admin.module:newsletter')->name('newsletter.company-url');

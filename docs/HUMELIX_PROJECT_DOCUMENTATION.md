@@ -1,6 +1,6 @@
 # HUMELIX LIMITED Project Documentation
 
-Last updated: 2026-07-21
+Last updated: 2026-07-22
 
 ## Project overview
 
@@ -242,6 +242,11 @@ Article publishing includes:
 - public resource filtering by category using `/resources?category=...`;
 - category badges on public article cards and detail pages;
 - sanitized rich text article content;
+- inline article image uploads from the TinyMCE editor, stored under `storage/app/public/article-inline-images`;
+- inline images render in the public read-more article exactly where the admin inserted them;
+- inline article images are saved into the Media Library so Technical Super Admin / Company Owner can review and clean them up safely;
+- Media Library shows whether an uploaded file is currently used inside article content and blocks deletion while it is still in use;
+- Media Library provides a **Copy URL** helper for uploaded files. To reuse an inline article image, copy the public URL, open the article editor, click the TinyMCE image button, paste the URL into the image source field, then save the article;
 - an 8,000-word maximum for web article content, with admin guidance to split longer guides manually or attach a PDF;
 - optional PDF attachments up to 10MB for long guides, manuals, brochures, checklists and downloadable resources;
 - optional article video embeds using YouTube, YouTube Shorts, Vimeo, MP4 or WebM URLs;

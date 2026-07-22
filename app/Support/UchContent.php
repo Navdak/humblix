@@ -1,18 +1,60 @@
 <?php
 namespace App\Support;
 
+use Illuminate\Support\Facades\Storage;
+
 class UchContent
 {
     /** Resolve a bundled public image or an admin-uploaded storage image. */
     public static function imageUrl(?string $path, ?string $fallback = null): ?string
     {
-        if ($path) {
-            return str_starts_with($path, 'images/')
-                ? asset($path)
-                : asset('storage/'.$path);
+        $path = trim((string) $path);
+        $fallback = trim((string) $fallback);
+
+        if ($path !== '') {
+            if (str_starts_with($path, 'http://') || str_starts_with($path, 'https://')) {
+                return $path;
+            }
+
+            if (str_starts_with($path, 'images/')) {
+                return is_file(public_path($path)) ? asset($path) : self::fallbackImageUrl($fallback);
+            }
+
+            if (str_starts_with($path, 'storage/')) {
+                $storagePath = substr($path, strlen('storage/'));
+
+                return Storage::disk('public')->exists($storagePath) ? asset($path) : self::fallbackImageUrl($fallback);
+            }
+
+            return Storage::disk('public')->exists($path)
+                ? asset('storage/'.$path)
+                : self::fallbackImageUrl($fallback);
         }
 
-        return $fallback ? asset($fallback) : null;
+        return self::fallbackImageUrl($fallback);
+    }
+
+    private static function fallbackImageUrl(?string $fallback): ?string
+    {
+        $fallback = trim((string) $fallback);
+
+        if ($fallback === '') {
+            return null;
+        }
+
+        if (str_starts_with($fallback, 'http://') || str_starts_with($fallback, 'https://')) {
+            return $fallback;
+        }
+
+        if (str_starts_with($fallback, 'images/')) {
+            return asset($fallback);
+        }
+
+        if (str_starts_with($fallback, 'storage/')) {
+            return asset($fallback);
+        }
+
+        return asset('storage/'.$fallback);
     }
 
     /** Resolve a bundled public image or uploaded storage image as an absolute URL for email clients. */

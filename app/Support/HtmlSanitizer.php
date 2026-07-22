@@ -10,11 +10,12 @@ use DOMXPath;
 class HtmlSanitizer
 {
     private const ALLOWED_TAGS = [
-        'a', 'blockquote', 'br', 'code', 'em', 'h2', 'h3', 'h4', 'hr', 'li', 'ol', 'p', 'strong', 'ul',
+        'a', 'blockquote', 'br', 'code', 'em', 'h2', 'h3', 'h4', 'hr', 'img', 'li', 'ol', 'p', 'strong', 'ul',
     ];
 
     private const ALLOWED_ATTRIBUTES = [
         'a' => ['href', 'target', 'rel', 'title'],
+        'img' => ['src', 'alt', 'title', 'width', 'height', 'loading', 'decoding', 'class'],
     ];
 
     private const BLOCKED_TAGS = [
@@ -30,7 +31,7 @@ class HtmlSanitizer
         }
 
         if (! class_exists(DOMDocument::class)) {
-            return strip_tags($html, '<a><blockquote><br><code><em><h2><h3><h4><hr><li><ol><p><strong><ul>');
+            return strip_tags($html, '<a><blockquote><br><code><em><h2><h3><h4><hr><img><li><ol><p><strong><ul>');
         }
 
         $document = new DOMDocument('1.0', 'UTF-8');
@@ -116,10 +117,28 @@ class HtmlSanitizer
             if ($name === 'href' && ! self::safeUrl($value)) {
                 $node->removeAttributeNode($attribute);
             }
+
+            if ($tag === 'img' && $name === 'src' && ! self::safeImageUrl($value)) {
+                $node->removeAttributeNode($attribute);
+            }
         }
 
         if ($tag === 'a') {
             $node->setAttribute('rel', 'noopener noreferrer');
+        }
+
+        if ($tag === 'img') {
+            if (! $node->hasAttribute('src')) {
+                self::removeNode($node);
+                return;
+            }
+
+            if (! $node->hasAttribute('alt')) {
+                $node->setAttribute('alt', '');
+            }
+
+            $node->setAttribute('loading', 'lazy');
+            $node->setAttribute('decoding', 'async');
         }
     }
 
@@ -132,6 +151,17 @@ class HtmlSanitizer
         $scheme = parse_url($url, PHP_URL_SCHEME);
 
         return in_array(strtolower((string) $scheme), ['http', 'https', 'mailto', 'tel'], true);
+    }
+
+    private static function safeImageUrl(string $url): bool
+    {
+        if (str_starts_with($url, '/')) {
+            return true;
+        }
+
+        $scheme = parse_url($url, PHP_URL_SCHEME);
+
+        return in_array(strtolower((string) $scheme), ['http', 'https'], true);
     }
 
     private static function unwrapNode(DOMNode $node): void

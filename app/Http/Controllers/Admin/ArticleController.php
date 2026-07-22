@@ -4,10 +4,12 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Jobs\SendNewArticlePublishedEmail;
 use App\Models\Article;
+use App\Models\MediaAsset;
 use App\Models\NewsletterSubscriber;
 use App\Models\Video;
 use App\Support\HtmlSanitizer;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -29,7 +31,7 @@ class ArticleController extends Controller
     public function edit(Article $article) { return view('admin.articles.edit', ['article'=>$article->load('relatedLinks'), 'categories' => Article::CATEGORIES, 'videoPlacements' => Article::VIDEO_PLACEMENTS]); }
     public function update(Request $request, Article $article): RedirectResponse
     {
-        $data = $this->validated($request);
+        $data = $this->validated($request, $article);
         $this->updatePdfIfRequested($request, $article, $data);
         $article->update($data);
         $this->syncLinks($request, $article);
@@ -43,7 +45,30 @@ class ArticleController extends Controller
         return redirect()->route('admin.articles.index')->with('success','Article deleted.');
     }
 
-    private function validated(Request $request): array
+    public function uploadInlineImage(Request $request): JsonResponse
+    {
+        $request->validate([
+            'file' => ['required', 'image', 'mimes:jpg,jpeg,png,webp', 'max:4096'],
+        ]);
+
+        $file = $request->file('file');
+        $path = $file->store('article-inline-images', 'public');
+
+        MediaAsset::create([
+            'file_name' => $file->getClientOriginalName(),
+            'file_path' => $path,
+            'mime_type' => $file->getMimeType(),
+            'size_bytes' => $file->getSize(),
+            'alt_text' => pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME),
+            'uploaded_by' => auth()->id(),
+        ]);
+
+        return response()->json([
+            'location' => asset('storage/'.$path),
+        ]);
+    }
+
+    private function validated(Request $request, ?Article $article = null): array
     {
         $data = $request->validate([
             'title'=>['required','string','max:180'], 'slug'=>['nullable','string','max:220'], 'excerpt'=>['required','string','max:160'],
@@ -69,10 +94,25 @@ class ArticleController extends Controller
 
         $data['content'] = HtmlSanitizer::clean($data['content']);
         $data['slug'] = $data['slug'] ? Str::slug($data['slug']) : Str::slug($data['title']);
+        $this->ensureUniqueSlug($data['slug'], $article);
         $data['author_id'] = auth()->id();
         if ($request->hasFile('featured_image')) $data['featured_image_path'] = $request->file('featured_image')->store('articles','public');
         unset($data['featured_image'], $data['pdf_attachment'], $data['remove_pdf']);
         return $data;
+    }
+
+    private function ensureUniqueSlug(string $slug, ?Article $article = null): void
+    {
+        $exists = Article::query()
+            ->where('slug', $slug)
+            ->when($article?->exists, fn ($query) => $query->whereKeyNot($article->getKey()))
+            ->exists();
+
+        if ($exists) {
+            throw ValidationException::withMessages([
+                'slug' => 'This article slug is already in use. Change the slug or use a more specific article title before uploading files.',
+            ]);
+        }
     }
 
     private function normalizeArticleVideoData(array &$data): void

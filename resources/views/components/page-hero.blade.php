@@ -4,7 +4,8 @@
     $heroTitle = $pageHero?->title ?: ($title ?? '');
     $heroSubtitle = $pageHero?->subtitle ?: ($subtitle ?? '');
     $heroImage = $image ?? $pageHero?->imagePath() ?? \App\Support\UchContent::pageHeroImage(request()->route()?->getName(), $heroTitle);
-    $heroImageUrl = \App\Support\UchContent::imageUrl($heroImage);
+    $heroImageFallback = $imageFallback ?? $pageHero?->fallback_image_path ?? \App\Support\UchContent::pageHeroImage(request()->route()?->getName(), $heroTitle);
+    $heroImageUrl = \App\Support\UchContent::imageUrl($heroImage, $heroImageFallback);
 @endphp
 <section class="page-hero">
     @if($heroImageUrl)
