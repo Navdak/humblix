@@ -106,7 +106,7 @@ class ArticleController extends Controller
         $youtubeId = Video::youtubeVideoIdFromUrl($url);
 
         if ($youtubeId) {
-            return "https://www.youtube.com/embed/{$youtubeId}";
+            return "https://www.youtube-nocookie.com/embed/{$youtubeId}";
         }
 
         $host = strtolower((string) parse_url($url, PHP_URL_HOST));
