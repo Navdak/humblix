@@ -1,6 +1,6 @@
 # HUMELIX LIMITED Project Documentation
 
-Last updated: 2026-07-22
+Last updated: 2026-07-23
 
 ## Project overview
 
@@ -150,6 +150,134 @@ Future engineer workflow improvements:
 - assignment history/activity log;
 - technician portal or mobile view for “my assigned jobs”;
 - push notifications when the hosting stack supports it safely.
+
+## Planned Client Job Portal and job conversation system
+
+Status: planned, not yet implemented.
+
+The next major operations feature should turn a confirmed enquiry into a private client job portal. The goal is to let HUMELIX, the client and internal admins document job communication while work is ongoing, without building heavy real-time chat that may stress Namecheap shared hosting.
+
+Recommended name in the UI:
+
+- Client Job Portal;
+- Job Conversations;
+- Client Jobs.
+
+Recommended first implementation scope:
+
+- admin activates a job portal from a confirmed enquiry;
+- the system generates a long, random, secure client portal token;
+- admin can copy, email, regenerate or disable the client portal link;
+- client opens `/client/jobs/{secure-token}` or an equivalent private route;
+- client can view only that specific job, never the admin dashboard or other client jobs;
+- admin can view all job conversations from a dedicated inbox-style page;
+- each job conversation stores messages in the database with sender type, sender name, timestamp and read/unread state;
+- admin and client can send messages without reloading the whole page after submit;
+- conversation history remains documented for audit/dispute/reference purposes;
+- job status can be updated from admin, for example: Confirmed, Engineer Assigned, Site Visit Scheduled, In Progress, Awaiting Client, Completed, Closed;
+- internal notes should remain separate from client-visible messages.
+
+Recommended database structure:
+
+- keep `enquiries` as the original lead/request record;
+- add a `client_jobs` or `jobs` table linked to `enquiries.id`;
+- add a `job_messages` table linked to the job record;
+- later add `job_attachments` if HUMELIX wants clients/admins to exchange PDFs, photos or documents;
+- later add `job_activity_logs` for status changes, portal-link regeneration and important admin actions.
+
+Recommended job fields:
+
+- enquiry ID;
+- job reference;
+- client name, email and phone copied from the enquiry;
+- service/type of work;
+- assigned engineer ID;
+- status;
+- secure portal token;
+- portal enabled/disabled flag;
+- last client message timestamp;
+- last admin message timestamp;
+- unread counts;
+- created/updated timestamps.
+
+Recommended message fields:
+
+- job ID;
+- sender type: client, admin, engineer or system;
+- sender user ID where applicable;
+- sender display name;
+- message body;
+- visibility: client-visible or internal-only;
+- read/unread state;
+- timestamps.
+
+Shared-hosting safe update behavior:
+
+- do not use WebSockets in the first version;
+- use normal database-backed messages;
+- use a manual refresh button as a reliable fallback;
+- optionally use lightweight polling similar to the admin notification system;
+- poll about every 15 seconds normally;
+- poll about every 10 seconds when the active conversation is open;
+- pause or slow polling when the browser tab is hidden;
+- after a message is sent, immediately refresh that conversation thread only, not the whole page.
+
+Notification behavior:
+
+- when the client sends a new message, permitted admins should see an admin notification/unread count;
+- when admin sends a message, client can receive an email with a link back to the private job portal;
+- email should not expose sensitive internal notes;
+- WhatsApp/SMS alerts should remain future builds unless a provider is added.
+
+Permissions:
+
+- Technical Super Admin / Developer has full access to all job portals, conversations, tokens and settings;
+- Company Owner / CEO can manage job conversations, statuses, engineer assignment and client communication;
+- lower admins can only access job conversations if their role permission allows it;
+- delete/archive controls should remain restricted to Technical Super Admin and Company Owner;
+- assigned engineers do not automatically need admin access in the first version;
+- future engineer portal access can be added separately.
+
+Security rules:
+
+- portal tokens must be long, random and not guessable;
+- never expose sequential job IDs as the only access control;
+- allow admins to regenerate a token if a link is shared with the wrong person;
+- allow admins to disable the portal when a job is closed;
+- consider optional client email/phone verification later for higher sensitivity jobs.
+
+## Planned private job financial documentation
+
+Status: planned, not yet implemented.
+
+After HUMELIX agrees a price with the client, permitted admins should be able to save the agreed commercial details inside admin. This should not appear on the public website or public enquiry form.
+
+Recommended first implementation scope:
+
+- add a private Commercial Agreement section to admin enquiry/job details;
+- save agreed amount;
+- save currency, defaulting to NGN unless changed;
+- save payment status, for example Pending, Part Paid, Paid, Cancelled;
+- save agreement note;
+- save date agreed;
+- keep this information admin-only in the first version.
+
+Visibility rules:
+
+- do not show agreed amount on the public enquiry form;
+- do not show agreed amount on public service/resource pages;
+- do not show agreed amount in the first client job portal version unless HUMELIX intentionally approves client-visible quotes later;
+- restrict view/edit to Technical Super Admin, Company Owner and roles explicitly granted finance/commercial permission.
+
+Future finance module path:
+
+- revenue dashboard;
+- job value reports;
+- invoice generation;
+- receipt tracking;
+- payment reminders;
+- export to Excel/PDF;
+- client-visible quote/invoice portal, only when HUMELIX is ready for that workflow.
 
 ## Safety Topics
 
@@ -401,6 +529,23 @@ Current safe performance polish:
 - generated public images are currently lightweight enough for preview use, with the largest generated-image audit under 1MB;
 - automatic image conversion is intentionally not enabled because the client prefers to prepare image files manually before upload;
 - videos should normally be hosted on YouTube and embedded by URL rather than uploaded as large local files.
+
+## Page speed and navigation performance plan
+
+The current Laravel Blade website can remain fast if the production environment is configured well. React/Next.js is documented as a future build option, but it is not required just to reduce normal page-to-page delay.
+
+Current/future performance actions:
+
+- use Laravel production caches after deployment: `config:cache`, `route:cache`, `view:cache`, and `event:cache` where supported;
+- use MySQL in production instead of local SQLite;
+- keep uploaded public images compressed before upload;
+- keep hero images eager/high-priority because they are first-screen assets;
+- lazy-load non-hero images such as cards, galleries, team images, article images, project images and equipment images;
+- keep public pages free from unnecessary third-party scripts;
+- avoid sending heavy emails synchronously inside browser requests;
+- browser/server cache rules for static CSS, JS, font and image assets are included in `public/.htaccess`;
+- light public navigation link prefetching is included in `public/js/uch.js` so common same-site routes such as Services, Projects, Resources and Contact feel faster after hover/touch;
+- consider Cloudflare/CDN later for better global static asset delivery, caching and security.
 
 Client-side image preparation rules:
 

@@ -185,6 +185,46 @@
   window.addEventListener('scroll', onScroll, { passive: true });
   backToTop?.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
 
+  const prefetchedLinks = new Set();
+  const maxPrefetchLinks = 10;
+  const ignoredPrefetchExtensions = /\.(?:pdf|zip|rar|7z|docx?|xlsx?|pptx?|jpg|jpeg|png|gif|webp|avif|svg|mp4|mov|webm)$/i;
+
+  const canPrefetch = (link) => {
+    if (!link || prefetchedLinks.size >= maxPrefetchLinks) return false;
+    if (link.dataset.noPrefetch !== undefined || link.target === '_blank') return false;
+
+    const href = link.getAttribute('href') || '';
+    if (!href || href.startsWith('#') || href.startsWith('mailto:') || href.startsWith('tel:') || href.startsWith('javascript:')) return false;
+
+    try {
+      const url = new URL(href, window.location.href);
+      if (url.origin !== window.location.origin) return false;
+      if (url.pathname === window.location.pathname) return false;
+      if (url.pathname.startsWith('/admin') || url.pathname.startsWith('/logout')) return false;
+      if (ignoredPrefetchExtensions.test(url.pathname)) return false;
+      return !prefetchedLinks.has(url.href);
+    } catch (_) {
+      return false;
+    }
+  };
+
+  const prefetchLink = (link) => {
+    if (!canPrefetch(link)) return;
+    const url = new URL(link.getAttribute('href'), window.location.href);
+    prefetchedLinks.add(url.href);
+
+    const resourceHint = document.createElement('link');
+    resourceHint.rel = 'prefetch';
+    resourceHint.href = url.href;
+    resourceHint.as = 'document';
+    document.head.append(resourceHint);
+  };
+
+  document.querySelectorAll('a[href]').forEach((link) => {
+    link.addEventListener('pointerenter', () => prefetchLink(link), { once: true });
+    link.addEventListener('touchstart', () => prefetchLink(link), { once: true, passive: true });
+  });
+
   const animated = document.querySelectorAll('[data-animate]');
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (reduceMotion || !('IntersectionObserver' in window)) {

@@ -78,6 +78,6 @@
 <button class="back-to-top" type="button" aria-label="Back to top" data-back-to-top hidden>
     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 14 6-6 6 6M12 8v10"/></svg>
 </button>
-<script src="{{ asset('js/uch.js') }}?v=20260716b" defer></script>
+<script src="{{ asset('js/uch.js') }}?v=20260723a" defer></script>
 </body>
 </html>

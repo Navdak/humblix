@@ -222,6 +222,11 @@ Namecheap/cPanel performance notes:
 - Use MySQL for production data.
 - Keep uploaded images compressed before upload.
 - Prefer YouTube embeds for videos.
+- Keep public page navigation fast by using Laravel production caches: `config:cache`, `route:cache`, `view:cache`, and `event:cache` where supported.
+- Browser caching and gzip compression rules for static assets are included in `public/.htaccess`; keep them when uploading to Namecheap.
+- Keep hero images eager/high-priority, but lazy-load normal card, gallery, team, project, article and equipment images.
+- Light public-page link prefetching is included in `public/js/uch.js` so major same-site routes feel faster after hover/touch. It intentionally skips admin, logout, files, phone, email and external links.
+- Consider Cloudflare/CDN later for global static asset delivery and extra caching/security.
 - If LiteSpeed Cache or cPanel-level caching is available on the selected Namecheap server, enable it carefully after launch testing.
 - Do not cache admin pages, login pages, forms, newsletter submission, review submission, or any POST/action route.
 - Re-test contact forms, admin login, newsletter, reviews, uploads and notifications after enabling any hosting-level cache.
@@ -285,6 +290,25 @@ Production requirements:
 - Ensure uploaded article images are publicly reachable through `public/storage/...`.
 - If email images do not show during localhost or ngrok testing, re-test after the site is on the stable public domain.
 - Some email apps still block images by default; the emails keep HUMELIX LIMITED text as a fallback.
+
+## Future Client Job Portal on shared hosting
+
+The planned Client Job Portal / Job Conversations feature should be built in a shared-hosting safe way while HUMELIX is on Namecheap Stellar Plus or Stellar Business.
+
+Recommended hosting-safe rules:
+
+- store job conversations in MySQL using normal database tables;
+- use secure random portal tokens for client links, never predictable job IDs as the only access control;
+- keep client portal pages lightweight;
+- use manual refresh and optional lightweight polling instead of WebSockets in the first version;
+- if polling is added, use the same conservative style as admin notifications:
+  - about 15 seconds normally;
+  - about 10 seconds only when an active conversation is open;
+  - pause or slow polling when the browser tab is hidden;
+- send client/admin message emails through the configured mail queue where possible;
+- keep WhatsApp, SMS, SSE, WebSockets, mobile app and full API-based real-time communication as future upgrades for VPS/cloud hosting.
+
+The private agreed job amount feature should also remain admin-only in the first version. It should be stored as job/enquiry commercial documentation, not shown on public pages or the client portal until HUMELIX intentionally approves client-visible quotes/invoices.
 
 ## If SSH/cPanel Terminal is unavailable
 
