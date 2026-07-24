@@ -99,29 +99,29 @@
     </form>
 </div>
 
-<div class="grid grid-2" style="margin-top:22px">
-    <section class="admin-card job-conversation-card">
-        <div class="admin-list-intro">
-            <strong>Conversation Thread</strong>
-            <span>Client-visible messages and internal notes are saved here.</span>
-        </div>
-        <div class="job-message-thread" data-job-thread data-messages-endpoint="{{ route('admin.client-jobs.messages.index', $clientJob) }}" data-last-message-id="{{ $lastMessageId }}">
-            @forelse($clientJob->messages as $message)
-                <article class="job-message job-message-{{ $message->sender_type }} {{ $message->visibility === 'internal' ? 'is-internal' : '' }}" data-message-id="{{ $message->id }}">
-                    <div><strong>{{ $message->senderLabel() }}</strong><small>{{ $message->visibility === 'internal' ? 'Internal note - ' : '' }}{{ $message->created_at->diffForHumans() }}</small></div>
-                    <p>{{ $message->body }}</p>
-                    @include('client-jobs._message-attachments', ['message' => $message, 'clientJob' => $clientJob, 'context' => 'admin'])
-                </article>
-            @empty
-                <div class="admin-empty"><span><x-admin-icon name="chat"/></span><strong>No messages yet</strong><p>Send the first client-visible update or add an internal note.</p></div>
-            @endforelse
-        </div>
-    </section>
+<section class="admin-card job-conversation-card" style="margin-top:22px">
+    <div class="admin-list-intro">
+        <strong>Conversation Thread</strong>
+        <span>Client-visible messages and internal notes are saved here.</span>
+    </div>
+    <div class="job-message-thread" data-job-thread data-messages-endpoint="{{ route('admin.client-jobs.messages.index', $clientJob) }}" data-last-message-id="{{ $lastMessageId }}">
+        @forelse($clientJob->messages as $message)
+            <article class="job-message job-message-{{ $message->sender_type }} {{ $message->visibility === 'internal' ? 'is-internal' : '' }}" data-message-id="{{ $message->id }}">
+                <div><strong>{{ $message->senderLabel() }}</strong><small>{{ $message->visibility === 'internal' ? 'Internal note - ' : '' }}{{ $message->created_at->diffForHumans() }}</small></div>
+                <p>{{ $message->body }}</p>
+                @include('client-jobs._message-attachments', ['message' => $message, 'clientJob' => $clientJob, 'context' => 'admin'])
+            </article>
+        @empty
+            <div class="admin-empty"><span><x-admin-icon name="chat"/></span><strong>No messages yet</strong><p>Send the first client-visible update or add an internal note.</p></div>
+        @endforelse
+    </div>
+</section>
 
-    <form class="admin-card" method="POST" action="{{ route('admin.client-jobs.messages.store', $clientJob) }}" enctype="multipart/form-data" data-job-message-form>
-        @csrf
-        <h2>Send Message / Note</h2>
-        <div class="alert" data-job-message-status hidden></div>
+<form class="admin-card" method="POST" action="{{ route('admin.client-jobs.messages.store', $clientJob) }}" enctype="multipart/form-data" data-job-message-form style="margin-top:22px">
+    @csrf
+    <h2>Send Message / Note</h2>
+    <div class="alert" data-job-message-status hidden></div>
+    <div class="form-grid">
         <div class="form-field">
             <label>Visibility</label>
             <select name="visibility">
@@ -130,25 +130,25 @@
             </select>
             <small>Internal notes are not shown in the client portal or email.</small>
         </div>
-        <div class="form-field" style="margin-top:14px">
-            <label>Message</label>
-            <textarea name="body" rows="7" placeholder="Write a clear job update, question, or internal note.">{{ old('body') }}</textarea>
-            <small>You can send a message, attach files, or do both.</small>
-        </div>
-        <div class="form-field" style="margin-top:14px">
+        <div class="form-field">
             <label>Optional Attachments</label>
             <input type="file" name="attachments[]" multiple accept=".jpg,.jpeg,.png,.webp,.pdf,.doc,.docx">
             <small>Max 3 files, 10MB each. Images and PDF/Word documents only. Do not upload videos here.</small>
         </div>
-        @if($enquiry?->email)
-            <label class="admin-note" style="display:flex;align-items:flex-start;gap:10px;margin-top:14px">
-                <input type="checkbox" name="send_client_email" value="1" style="width:auto;margin-top:4px">
-                <span><strong>Email client about this message</strong><br><small>The email includes the private portal link. Use only for client-visible messages.</small></span>
-            </label>
-        @endif
-        <button class="btn btn-primary" style="margin-top:18px" data-job-message-submit>Save Message</button>
-    </form>
-</div>
+        <div class="form-field full">
+            <label>Message</label>
+            <textarea name="body" rows="6" placeholder="Write a clear job update, question, or internal note.">{{ old('body') }}</textarea>
+            <small>You can send a message, attach files, or do both.</small>
+        </div>
+    </div>
+    @if($enquiry?->email)
+        <label class="admin-note" style="display:flex;align-items:flex-start;gap:10px;margin-top:14px">
+            <input type="checkbox" name="send_client_email" value="1" style="width:auto;margin-top:4px">
+            <span><strong>Email client about this message</strong><br><small>The email includes the private portal link. Use only for client-visible messages.</small></span>
+        </label>
+    @endif
+    <button class="btn btn-primary" style="margin-top:18px" data-job-message-submit>Save Message</button>
+</form>
 @endsection
 
 @push('scripts')

@@ -6,6 +6,7 @@ use App\Mail\NewsletterWelcomeMail;
 use App\Models\NewsletterSubscriber;
 use App\Support\SpamProtection;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
@@ -14,7 +15,7 @@ use Throwable;
 
 class NewsletterController extends Controller
 {
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request): RedirectResponse|JsonResponse
     {
         SpamProtection::validate($request);
 
@@ -29,6 +30,13 @@ class NewsletterController extends Controller
         $subscriber = NewsletterSubscriber::firstOrNew(['email' => strtolower($data['email'])]);
 
         if ($subscriber->exists && $subscriber->isSubscribed()) {
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'message' => 'You are already subscribed to HUMELIX LIMITED resource updates.',
+                    'reset' => false,
+                ]);
+            }
+
             return back()->with('success', 'You are already subscribed to HUMELIX LIMITED resource updates.');
         }
 
@@ -50,7 +58,21 @@ class NewsletterController extends Controller
                 'message' => $exception->getMessage(),
             ]);
 
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'message' => 'You are subscribed to HUMELIX LIMITED resource updates. The welcome email may be delayed.',
+                    'reset' => true,
+                ]);
+            }
+
             return back()->with('success', 'You are subscribed to HUMELIX LIMITED resource updates. The welcome email may be delayed.');
+        }
+
+        if ($request->expectsJson()) {
+            return response()->json([
+                'message' => 'You are subscribed to HUMELIX LIMITED resource updates.',
+                'reset' => true,
+            ]);
         }
 
         return back()->with('success', 'You are subscribed to HUMELIX LIMITED resource updates.');

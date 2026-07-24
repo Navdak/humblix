@@ -11,6 +11,7 @@ The platform is designed as both a polished public company website and a private
 - Sticky responsive navigation, mobile menu, floating chat CTA and back-to-top control.
 - Editable page hero content/images through admin-managed page heroes.
 - Generated/client-ready imagery with admin upload fallbacks for future real media.
+- Public contact, newsletter and review forms submit without full page refresh when JavaScript is available, while retaining normal form-submit fallback.
 - Service divisions aligned with the Humelix blueprint:
   - Humelix HVAC Installation
   - Humelix Solar Installation
@@ -34,7 +35,7 @@ The platform is designed as both a polished public company website and a private
 - Safety framework CRUD with optional YouTube video support.
 - Articles/resources with categories, filtering, related articles, PDF attachment support and optional article video.
 - TinyMCE article editor support, including inline media guidance and media-library "copy URL" workflow.
-- Newsletter subscription and subscriber management.
+- Newsletter subscription and subscriber management, with no-refresh public signup fallback.
 - Reviews/testimonials.
 - Media library.
 - Page heroes.

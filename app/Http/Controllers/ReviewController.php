@@ -6,11 +6,12 @@ use App\Models\AdminNotification;
 use App\Models\Review;
 use App\Support\SpamProtection;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class ReviewController extends Controller
 {
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request): RedirectResponse|JsonResponse
     {
         SpamProtection::validate($request, 4);
 
@@ -35,6 +36,13 @@ class ReviewController extends Controller
         ]);
 
         AdminNotification::createForReview($review);
+
+        if ($request->expectsJson()) {
+            return response()->json([
+                'message' => 'Thank you for your feedback. Your review has been submitted for moderation.',
+                'reset' => true,
+            ]);
+        }
 
         return back()->with('success', 'Thank you for your feedback. Your review has been submitted for moderation.');
     }

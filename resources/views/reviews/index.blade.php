@@ -63,13 +63,14 @@
 
 <section id="submit-review" class="section" style="padding-top:0">
     <div class="container">
-        <form class="card review-submit-form" method="POST" action="{{ route('reviews.store') }}" data-animate="fade-up">
+        <form class="card review-submit-form" method="POST" action="{{ route('reviews.store') }}" data-animate="fade-up" data-ajax-form>
             @csrf
             <div class="section-head left" style="margin-bottom:22px">
                 <span class="eyebrow">Website Review</span>
                 <h2 class="section-title">Submit feedback for approval.</h2>
                 <p class="section-sub">Your review will be checked by permitted HUMELIX admins before it appears on this page.</p>
             </div>
+            <div class="alert" hidden data-ajax-status></div>
             <div class="form-grid">
                 <div class="form-field"><label for="client_name">Name *</label><input id="client_name" name="client_name" value="{{ old('client_name') }}" required></div>
                 <div class="form-field"><label for="client_role">Role</label><input id="client_role" name="client_role" value="{{ old('client_role') }}" placeholder="Facility Manager, Homeowner..."></div>

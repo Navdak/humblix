@@ -26,6 +26,7 @@ The public website includes:
 - Industries, projects, safety, team, branches, careers, equipment, resources/articles, videos and legal pages.
 - Contact/enquiry form with project details, preferred contact method and upload support.
 - Chat assistant enquiry flow.
+- Contact, newsletter signup and public review forms submit without a full page refresh when JavaScript is available, while preserving normal form submission as a fallback.
 - Sticky public navigation and back-to-top behavior.
 - Generated image assets used across the site until final client photography is supplied.
 - SEO metadata, sitemap and robots support.

@@ -5,6 +5,7 @@ use App\Models\Enquiry;
 use App\Models\AdminNotification;
 use App\Support\SpamProtection;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 
@@ -22,7 +23,7 @@ class ContactController extends Controller
         ]);
     }
 
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request): RedirectResponse|JsonResponse
     {
         SpamProtection::validate($request);
 
@@ -73,8 +74,18 @@ class ContactController extends Controller
         ]);
         AdminNotification::createForEnquiry($enquiry);
 
+        $message = "Thank you. Your request has been received. Your reference number is {$enquiry->reference_number}. A Humelix representative will contact you shortly.";
+
+        if ($request->expectsJson()) {
+            return response()->json([
+                'message' => $message,
+                'reference_number' => $enquiry->reference_number,
+                'reset' => true,
+            ]);
+        }
+
         return back()
-            ->with('success', "Thank you. Your request has been received. Your reference number is {$enquiry->reference_number}. A Humelix representative will contact you shortly.")
+            ->with('success', $message)
             ->with('reference_number', $enquiry->reference_number);
     }
 

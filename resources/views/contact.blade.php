@@ -39,7 +39,9 @@
                 </div>
             @endif
 
-            <form method="POST" action="{{ route('contact.store') }}" enctype="multipart/form-data" class="form-grid enquiry-form">
+            <div class="alert" hidden data-ajax-status></div>
+
+            <form method="POST" action="{{ route('contact.store') }}" enctype="multipart/form-data" class="form-grid enquiry-form" data-ajax-form data-ajax-status-target="[data-ajax-status]">
                 @csrf
                 <div class="form-field">
                     <label for="full_name">Full Name *</label>

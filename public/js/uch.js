@@ -173,6 +173,98 @@
     }
   });
 
+  const setAjaxFormStatus = (status, message, isError = false) => {
+    if (!status) return;
+    status.textContent = message;
+    status.classList.remove('alert-success', 'alert-error', 'is-error');
+    status.classList.add(isError ? 'alert-error' : 'alert-success');
+    if (isError) status.classList.add('is-error');
+    status.hidden = false;
+  };
+
+  const getAjaxErrorMessage = (data) => {
+    if (data?.errors && typeof data.errors === 'object') {
+      return Object.values(data.errors)
+        .flat()
+        .filter(Boolean)
+        .join(' ');
+    }
+
+    return data?.message || 'Please check the form and try again.';
+  };
+
+  const findAjaxStatus = (form) => {
+    const target = form.dataset.ajaxStatusTarget;
+    if (target) return document.querySelector(target);
+
+    return form.querySelector('[data-ajax-status]');
+  };
+
+  document.querySelectorAll('[data-ajax-form]:not([data-chat-form])').forEach((form) => {
+    form.addEventListener('submit', async (event) => {
+      if (!window.fetch || form.dataset.ajaxSubmitting === 'true') return;
+
+      event.preventDefault();
+
+      const status = findAjaxStatus(form);
+      const submitButtons = Array.from(form.querySelectorAll('button[type="submit"], input[type="submit"]'));
+      const originalLabels = submitButtons.map((button) => button.tagName === 'INPUT' ? button.value : button.textContent);
+
+      form.dataset.ajaxSubmitting = 'true';
+      submitButtons.forEach((button) => {
+        button.disabled = true;
+        if (button.tagName === 'INPUT') {
+          button.value = 'Sending...';
+        } else {
+          button.textContent = 'Sending...';
+        }
+      });
+
+      if (status) {
+        status.hidden = true;
+        status.textContent = '';
+      }
+
+      try {
+        const response = await fetch(form.action, {
+          method: form.method || 'POST',
+          headers: {
+            Accept: 'application/json',
+            'X-Requested-With': 'XMLHttpRequest',
+          },
+          body: new FormData(form),
+        });
+
+        const contentType = response.headers.get('content-type') || '';
+        const data = contentType.includes('application/json') ? await response.json() : null;
+
+        if (!response.ok) {
+          throw new Error(getAjaxErrorMessage(data));
+        }
+
+        setAjaxFormStatus(status, data?.message || 'Submitted successfully.');
+
+        if (data?.reset !== false) {
+          form.reset();
+          const startedAt = form.querySelector('input[name="form_started_at"]');
+          if (startedAt) startedAt.value = Math.floor(Date.now() / 1000).toString();
+        }
+      } catch (error) {
+        setAjaxFormStatus(status, error.message || 'We could not send this form. Please try again.', true);
+      } finally {
+        delete form.dataset.ajaxSubmitting;
+        submitButtons.forEach((button, index) => {
+          button.disabled = false;
+          if (button.tagName === 'INPUT') {
+            button.value = originalLabels[index] || 'Submit';
+          } else {
+            button.textContent = originalLabels[index] || 'Submit';
+          }
+        });
+      }
+    });
+  });
+
   const onScroll = () => {
     header?.classList.toggle('is-scrolled', window.scrollY > 8);
     if (!backToTop) return;

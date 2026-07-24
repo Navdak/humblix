@@ -22,42 +22,18 @@
             </div>
         @endif
 
-        <div class="grid grid-2">
-            <aside class="card">
-                <span class="eyebrow">Job Summary</span>
-                <h2>{{ $clientJob->statusLabel() }}</h2>
-                <p class="section-sub">This portal is private to your HUMELIX job. Keep the link safe and do not share it publicly.</p>
-                <dl class="system-list" style="margin-top:18px">
-                    <div><dt>Reference</dt><dd>{{ $clientJob->job_reference }}</dd></div>
-                    <div><dt>Service</dt><dd>{{ $enquiry?->display_type_of_work ?: 'Service request' }}</dd></div>
-                    <div><dt>Location</dt><dd>{{ $enquiry?->display_location ?: 'Location under review' }}</dd></div>
-                    <div><dt>Preferred Contact</dt><dd>{{ $enquiry?->preferred_contact ?: 'Not specified' }}</dd></div>
-                    <div><dt>Assigned Team</dt><dd>{{ $clientJob->assignedEngineer?->field_of_work ?: 'HUMELIX Operations' }}</dd></div>
-                </dl>
-            </aside>
-
-            <div class="card">
-                <span class="eyebrow">Message HUMELIX</span>
-                <h2>Send an update or question.</h2>
-                <div class="alert" data-job-message-status hidden></div>
-                <form method="POST" action="{{ route('client-jobs.messages.store', $clientJob->portal_token) }}" enctype="multipart/form-data" data-job-message-form>
-                    @csrf
-                    <input type="text" name="website" autocomplete="off" tabindex="-1" style="position:absolute;left:-9999px" aria-hidden="true">
-                    <input type="hidden" name="form_started_at" value="{{ now()->timestamp }}">
-                    <div class="form-field">
-                        <label>Your Message</label>
-                        <textarea name="body" rows="7" placeholder="Write your question, site update, access note, or progress feedback.">{{ old('body') }}</textarea>
-                        <small>You can send a message, attach files, or do both.</small>
-                    </div>
-                    <div class="form-field" style="margin-top:14px">
-                        <label>Optional Attachments</label>
-                        <input type="file" name="attachments[]" multiple accept=".jpg,.jpeg,.png,.webp,.pdf,.doc,.docx">
-                        <small>Max 3 files, 10MB each. Images and PDF/Word documents only. For video, please paste a link in the message.</small>
-                    </div>
-                    <button class="btn btn-primary" style="margin-top:16px" data-job-message-submit>Send Message</button>
-                </form>
-            </div>
-        </div>
+        <aside class="card">
+            <span class="eyebrow">Job Summary</span>
+            <h2>{{ $clientJob->statusLabel() }}</h2>
+            <p class="section-sub">This portal is private to your HUMELIX job. Keep the link safe and do not share it publicly.</p>
+            <dl class="system-list" style="margin-top:18px">
+                <div><dt>Reference</dt><dd>{{ $clientJob->job_reference }}</dd></div>
+                <div><dt>Service</dt><dd>{{ $enquiry?->display_type_of_work ?: 'Service request' }}</dd></div>
+                <div><dt>Location</dt><dd>{{ $enquiry?->display_location ?: 'Location under review' }}</dd></div>
+                <div><dt>Preferred Contact</dt><dd>{{ $enquiry?->preferred_contact ?: 'Not specified' }}</dd></div>
+                <div><dt>Assigned Team</dt><dd>{{ $clientJob->assignedEngineer?->field_of_work ?: 'HUMELIX Operations' }}</dd></div>
+            </dl>
+        </aside>
 
         <section class="card job-conversation-card" style="margin-top:24px">
             <div class="section-head section-head-row">
@@ -78,6 +54,28 @@
                     <div class="empty-state"><h3>No messages yet.</h3><p class="section-sub">HUMELIX will add updates here after your job conversation starts.</p></div>
                 @endforelse
             </div>
+        </section>
+
+        <section class="card" style="margin-top:24px">
+            <span class="eyebrow">Message HUMELIX</span>
+            <h2>Send an update or question.</h2>
+            <div class="alert" data-job-message-status hidden></div>
+            <form method="POST" action="{{ route('client-jobs.messages.store', $clientJob->portal_token) }}" enctype="multipart/form-data" data-job-message-form>
+                @csrf
+                <input type="text" name="website" autocomplete="off" tabindex="-1" style="position:absolute;left:-9999px" aria-hidden="true">
+                <input type="hidden" name="form_started_at" value="{{ now()->timestamp }}">
+                <div class="form-field">
+                    <label>Your Message</label>
+                    <textarea name="body" rows="6" placeholder="Write your question, site update, access note, or progress feedback.">{{ old('body') }}</textarea>
+                    <small>You can send a message, attach files, or do both.</small>
+                </div>
+                <div class="form-field" style="margin-top:14px">
+                    <label>Optional Attachments</label>
+                    <input type="file" name="attachments[]" multiple accept=".jpg,.jpeg,.png,.webp,.pdf,.doc,.docx">
+                    <small>Max 3 files, 10MB each. Images and PDF/Word documents only. For video, please paste a link in the message.</small>
+                </div>
+                <button class="btn btn-primary" style="margin-top:16px" data-job-message-submit>Send Message</button>
+            </form>
         </section>
     </div>
 </section>
