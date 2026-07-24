@@ -17,11 +17,6 @@
                     <p>{{ trim(($branch->state_city ? $branch->state_city.', ' : '').$branch->country) }}</p>
                     @if($branch->address)<p class="meta">{{ $branch->address }}</p>@endif
                     @if($branch->service_coverage)<p>{{ $branch->service_coverage }}</p>@endif
-                    <div class="phase6-chip-row">
-                        @if($branch->phone)<span>{{ $branch->phone }}</span>@endif
-                        @if($branch->email)<span>{{ $branch->email }}</span>@endif
-                        @if($branch->manager_name)<span>{{ $branch->manager_name }}</span>@endif
-                    </div>
                     <a class="card-link" href="{{ route('contact') }}?location={{ urlencode($branch->state_city ?: $branch->country) }}">Request local support <span>&rarr;</span></a>
                 </article>
             @empty
