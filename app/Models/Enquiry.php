@@ -3,6 +3,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Carbon;
 
 class Enquiry extends Model
@@ -44,6 +45,11 @@ class Enquiry extends Model
     public function assignedEngineer(): BelongsTo
     {
         return $this->belongsTo(Engineer::class, 'assigned_engineer_id');
+    }
+
+    public function clientJob(): HasOne
+    {
+        return $this->hasOne(ClientJob::class);
     }
 
     protected function casts(): array

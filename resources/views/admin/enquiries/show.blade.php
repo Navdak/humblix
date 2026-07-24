@@ -40,6 +40,28 @@
         @else
             <p class="section-sub">No uploaded files for this enquiry.</p>
         @endif
+
+        @if($canManageClientJobs)
+            <hr style="border:0;border-top:1px solid var(--line);margin:22px 0">
+            <h3>Client Job Portal</h3>
+            @if($enquiry->clientJob)
+                <p class="section-sub">This enquiry already has a private client job conversation.</p>
+                <div class="admin-actions" style="margin-top:12px">
+                    <a class="btn btn-primary" href="{{ route('admin.client-jobs.show', $enquiry->clientJob) }}">Open Client Job</a>
+                    <a class="btn btn-white" href="{{ $enquiry->clientJob->portalUrl() }}" target="_blank" rel="noopener">Preview Client Link</a>
+                </div>
+            @else
+                <p class="section-sub">Create this only after HUMELIX confirms the enquiry is real work worth tracking.</p>
+                @if(blank($enquiry->email) && blank($enquiry->phone))
+                    <div class="admin-note">Add a client email or phone/WhatsApp before creating a private portal.</div>
+                @else
+                    <form method="POST" action="{{ route('admin.enquiries.client-job.store', $enquiry) }}" style="margin-top:12px">
+                        @csrf
+                        <button class="btn btn-primary" type="submit">Create Client Job Portal</button>
+                    </form>
+                @endif
+            @endif
+        @endif
     </div>
 
     <form class="admin-card" method="POST" action="{{ route('admin.enquiries.update',$enquiry) }}">

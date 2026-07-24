@@ -10,6 +10,7 @@
 @case('videos')<rect x="3" y="5" width="18" height="14" rx="2"/><path d="m10 9 5 3-5 3V9Z"/>@break
 @case('team')<path d="M16 20v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M9 10a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm13 10v-2a4 4 0 0 0-3-3.9M16 2.1a4 4 0 0 1 0 7.8"/>@break
 @case('enquiries')<path d="M4 5h16v14H4zM4 7l8 6 8-6"/>@break
+@case('chat')<path d="M4 5h16v11H8l-4 4V5Z"/><path d="M8 9h8M8 12h5"/>@break
 @case('reviews')<path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1.1 6.2-5.6-3-5.6 3 1.1-6.2L3 9.6l6.2-.9z"/>@break
 @case('media')<rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="8.5" cy="9" r="1.5"/><path d="m4 17 5-5 3 3 2-2 6 5"/>@break
 @case('page-heroes')<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 14l4-4 3 3 3-4 8 8M8 9h.01M7 18h10"/>@break

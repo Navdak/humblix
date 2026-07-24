@@ -1000,6 +1000,30 @@ main nav[role="navigation"] p,
 .system-list { margin: 0; }
 .system-list > div { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 8px 0; border-bottom: 1px solid #edf1f6; }
 .system-list dt,.system-list dd { margin: 0; font-size: 9px; }.system-list dt { color:#64748b }.system-list dd { font-weight:700;text-align:right }
+.copy-field { display:flex; gap:8px; align-items:center; }
+.copy-field input { flex:1; min-width:0; font-family: ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace; font-size:11px; }
+.job-conversation-card { min-height: 360px; }
+.job-message-thread { display:grid; gap:12px; max-height:620px; overflow:auto; padding:4px 4px 4px 0; scroll-behavior:smooth; }
+.job-message { max-width:82%; padding:13px 14px; border:1px solid #dce8f5; border-radius:14px 14px 14px 4px; color:#102033; background:#f7fbff; box-shadow:0 8px 24px rgba(7,27,51,.045); }
+.job-message > div { display:flex; justify-content:space-between; gap:12px; margin-bottom:7px; }
+.job-message strong { font-size:12px; }
+.job-message small { color:#64748b; font-size:9px; white-space:nowrap; }
+.job-message p { margin:0; color:#334155; font-size:13px; line-height:1.65; white-space:pre-wrap; overflow-wrap:anywhere; }
+.job-attachments { display:grid; gap:8px; margin-top:10px; }
+.job-attachment { display:flex; align-items:center; gap:10px; max-width:100%; padding:8px; border:1px solid #dbe8f5; border-radius:12px; color:#102033; background:rgba(255,255,255,.78); text-decoration:none; transition:transform .2s ease,border-color .2s ease,box-shadow .2s ease; }
+.job-attachment:hover { transform:translateY(-1px); border-color:#8fc5ff; box-shadow:0 10px 24px rgba(7,27,51,.08); }
+.job-attachment img { width:72px; height:54px; flex:0 0 72px; object-fit:cover; border-radius:9px; background:#e8f2ff; }
+.job-attachment-icon { width:38px; height:38px; display:grid; place-items:center; flex:0 0 38px; border-radius:10px; background:#e8f2ff; }
+.job-attachment span:last-child { min-width:0; display:grid; gap:2px; }
+.job-attachment span:last-child strong { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:11px; }
+.job-attachment span:last-child small { font-size:9px; color:#64748b; }
+.job-message-admin { justify-self:end; border-radius:14px 14px 4px 14px; color:#fff; background:#075ed1; border-color:#075ed1; }
+.job-message-admin p,.job-message-admin small { color:rgba(255,255,255,.84); }
+.job-message-admin .job-attachment { color:#fff; border-color:rgba(255,255,255,.2); background:rgba(255,255,255,.12); }
+.job-message-admin .job-attachment small { color:rgba(255,255,255,.78); }
+.job-message-client { justify-self:start; }
+.job-message-system,.job-message.is-internal { max-width:100%; justify-self:stretch; border-style:dashed; color:#7c2d12; background:#fff7ed; border-color:#fed7aa; }
+.job-message-system p,.job-message.is-internal p { color:#7c2d12; }
 .status-dot { width: 7px; height: 7px; display: inline-block; margin-right: 4px; border-radius: 50%; }.status-dot.is-good { background:#16a34a }.status-dot.is-warn { background:#f59e0b }
 .mini-project-chart { height: 82px; margin-top: 10px; }
 .admin-empty { min-height: 130px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; padding: 18px; color: #64748b; text-align: center; }
@@ -1418,12 +1442,46 @@ main nav[role="navigation"] p,
 }
 .admin-theme-dark-root .admin-body .card,
 .admin-theme-dark-root .admin-note,
+.admin-theme-dark-root .copy-field input,
+.admin-theme-dark-root .job-message,
 .admin-theme-dark-root .quick-action-grid a,
 .admin-theme-dark-root .admin-row-card,
 .admin-theme-dark-root .admin-thumb,
 .admin-theme-dark-root .mobile-admin-card {
   border-color: rgba(148,163,184,.22);
   background: #0c1828;
+}
+.admin-theme-dark-root .job-message p {
+  color: #c8d7eb;
+}
+.admin-theme-dark-root .job-attachment {
+  color: #dbeafe;
+  border-color: rgba(148,163,184,.22);
+  background: rgba(15,23,42,.72);
+}
+.admin-theme-dark-root .job-attachment-icon {
+  background: rgba(37,99,235,.22);
+}
+.admin-theme-dark-root .job-attachment span:last-child small {
+  color: #9fb2ca;
+}
+.admin-theme-dark-root .job-message-admin {
+  border-color: #2563eb;
+  background: #075ed1;
+}
+.admin-theme-dark-root .job-message-admin p,
+.admin-theme-dark-root .job-message-admin small {
+  color: rgba(255,255,255,.86);
+}
+.admin-theme-dark-root .job-message-system,
+.admin-theme-dark-root .job-message.is-internal {
+  border-color: rgba(251,146,60,.32);
+  color: #fed7aa;
+  background: rgba(124,45,18,.2);
+}
+.admin-theme-dark-root .job-message-system p,
+.admin-theme-dark-root .job-message.is-internal p {
+  color: #fed7aa;
 }
 .admin-theme-dark-root .admin-body .badge,
 .admin-theme-dark-root .status-badge {

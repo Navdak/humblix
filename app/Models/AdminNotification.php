@@ -103,6 +103,28 @@ class AdminNotification extends Model
         ]);
     }
 
+    public static function createForClientJobMessage(ClientJob $clientJob, JobMessage $message): void
+    {
+        if (! self::notificationsTableIsReady()) {
+            return;
+        }
+
+        self::create([
+            'type' => 'client_job_message',
+            'title' => 'New client job message',
+            'message' => trim($clientJob->clientName().' replied on '.$clientJob->job_reference.'.'),
+            'permission' => 'client_jobs',
+            'action_url' => route('admin.client-jobs.show', $clientJob, false),
+            'data' => [
+                'module' => 'client_jobs',
+                'client_job_id' => $clientJob->id,
+                'message_id' => $message->id,
+                'job_reference' => $clientJob->job_reference,
+                'enquiry_id' => $clientJob->enquiry_id,
+            ],
+        ]);
+    }
+
     private static function notificationsTableIsReady(): bool
     {
         try {

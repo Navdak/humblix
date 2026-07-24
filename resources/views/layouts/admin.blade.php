@@ -16,7 +16,7 @@
             } catch (error) {}
         })();
     </script>
-    <link rel="stylesheet" href="{{ asset('css/uch.css') }}?v=20260722a">
+    <link rel="stylesheet" href="{{ asset('css/uch.css') }}?v=20260723a">
     @vite('resources/js/app.js')
     @stack('head')
 </head>
@@ -35,6 +35,7 @@
                     ],
                     'Operations' => [
                         ['admin.enquiries.*','admin.enquiries.index','enquiries','Enquiries','enquiries'],
+                        ['admin.client-jobs.*','admin.client-jobs.index','chat','Client Jobs','client_jobs'],
                         ['admin.engineers.*','admin.engineers.index','team','Engineers','engineers'],
                         ['admin.projects.*','admin.projects.index','projects','Projects','projects'],
                         ['admin.branches.*','admin.branches.index','branches','Branches','branches'],
@@ -103,7 +104,7 @@
                     data-read-endpoint-template="{{ url('/admin/notifications/__ID__/read') }}"
                     data-read-module-endpoint-template="{{ url('/admin/notifications/modules/__MODULE__/read') }}"
                     data-read-all-endpoint="{{ route('admin.notifications.read-all') }}"
-                    data-current-module="{{ request()->routeIs('admin.enquiries.index') ? 'enquiries' : '' }}"
+                    data-current-module="{{ request()->routeIs('admin.enquiries.index') ? 'enquiries' : (request()->routeIs('admin.client-jobs.index') ? 'client_jobs' : '') }}"
                     data-current-route="{{ Route::currentRouteName() }}">
                     <button type="button" class="admin-icon-button admin-notification-toggle" aria-label="Notifications" aria-expanded="false" data-notification-toggle>
                         <x-admin-icon name="bell"/>

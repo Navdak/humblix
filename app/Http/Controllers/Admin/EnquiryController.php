@@ -38,13 +38,14 @@ class EnquiryController extends Controller
 
     public function show(Enquiry $enquiry)
     {
-        $enquiry->load('assignedEngineer');
+        $enquiry->load('assignedEngineer', 'clientJob');
 
         return view('admin.enquiries.show', [
             'enquiry' => $enquiry,
             'statuses' => Enquiry::STATUSES,
             'engineers' => Engineer::assignable()->get(),
             'canAssignEngineers' => auth()->user()?->canManage('assign_engineers') ?? false,
+            'canManageClientJobs' => auth()->user()?->canManage('client_jobs') ?? false,
         ]);
     }
 

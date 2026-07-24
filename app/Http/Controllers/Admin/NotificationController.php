@@ -64,6 +64,7 @@ class NotificationController extends Controller
             ])->values(),
             'list_updates' => [
                 'enquiries' => (clone $unreadQuery)->where('type', 'new_enquiry')->count(),
+                'client_jobs' => (clone $unreadQuery)->where('type', 'client_job_message')->count(),
             ],
         ]);
     }
@@ -133,6 +134,7 @@ class NotificationController extends Controller
         return match ($module) {
             'enquiries' => ['new_enquiry'],
             'reviews' => ['new_review'],
+            'client_jobs' => ['client_job_message'],
             default => [],
         };
     }

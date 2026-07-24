@@ -64,6 +64,11 @@ class Engineer extends Model
         return $this->hasMany(Enquiry::class, 'assigned_engineer_id');
     }
 
+    public function clientJobs(): HasMany
+    {
+        return $this->hasMany(ClientJob::class, 'assigned_engineer_id');
+    }
+
     public function scopeAssignable(Builder $query): Builder
     {
         return $query

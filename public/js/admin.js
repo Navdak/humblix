@@ -221,9 +221,11 @@
         const count = Number(data?.list_updates?.[currentModule] || 0);
         liveBanner.hidden = count <= 0;
         if (liveMessage && count > 0) {
-            liveMessage.textContent = currentModule === 'enquiries'
-                ? `${count} new enquiry update${count === 1 ? '' : 's'} available.`
-                : `${count} fresh update${count === 1 ? '' : 's'} available.`;
+            const messages = {
+                enquiries: `${count} new enquiry update${count === 1 ? '' : 's'} available.`,
+                client_jobs: `${count} new client job message${count === 1 ? '' : 's'} available.`,
+            };
+            liveMessage.textContent = messages[currentModule] || `${count} fresh update${count === 1 ? '' : 's'} available.`;
         }
     };
 

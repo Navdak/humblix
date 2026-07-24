@@ -291,24 +291,37 @@ Production requirements:
 - If email images do not show during localhost or ngrok testing, re-test after the site is on the stable public domain.
 - Some email apps still block images by default; the emails keep HUMELIX LIMITED text as a fallback.
 
-## Future Client Job Portal on shared hosting
+## Client Job Portal on shared hosting
 
-The planned Client Job Portal / Job Conversations feature should be built in a shared-hosting safe way while HUMELIX is on Namecheap Stellar Plus or Stellar Business.
+The first Client Job Portal / Job Conversations feature is built in a shared-hosting safe way while HUMELIX is on Namecheap Stellar Plus or Stellar Business.
 
 Recommended hosting-safe rules:
 
 - store job conversations in MySQL using normal database tables;
 - use secure random portal tokens for client links, never predictable job IDs as the only access control;
 - keep client portal pages lightweight;
-- use manual refresh and optional lightweight polling instead of WebSockets in the first version;
-- if polling is added, use the same conservative style as admin notifications:
+- use normal form submissions and lightweight polling instead of WebSockets in the first version;
+- polling uses the same conservative style as admin notifications:
   - about 15 seconds normally;
   - about 10 seconds only when an active conversation is open;
   - pause or slow polling when the browser tab is hidden;
-- send client/admin message emails through the configured mail queue where possible;
+- send optional client message emails through the configured mail queue where possible;
 - keep WhatsApp, SMS, SSE, WebSockets, mobile app and full API-based real-time communication as future upgrades for VPS/cloud hosting.
 
-The private agreed job amount feature should also remain admin-only in the first version. It should be stored as job/enquiry commercial documentation, not shown on public pages or the client portal until HUMELIX intentionally approves client-visible quotes/invoices.
+The private agreed job amount feature is admin-only in the first version. It is stored as job/enquiry commercial documentation, not shown on public pages or the client portal until HUMELIX intentionally approves client-visible quotes/invoices.
+
+Client Job attachment rules for shared hosting:
+
+- attachments are allowed only inside private Client Job conversations;
+- accepted types: JPG, JPEG, PNG, WebP, PDF, DOC and DOCX;
+- max 3 files per message;
+- max 10MB per file;
+- do not allow local video uploads while on shared hosting;
+- ask clients/admins to share video links instead of uploading video files;
+- attachments are stored on Laravel's private local disk and served through authorized routes;
+- ensure `storage/app/private` is writable on Namecheap;
+- keep regular hosting backups enabled so private job attachments are included in site backups;
+- future cleanup/media-management tooling can be added if attachment volume grows.
 
 ## If SSH/cPanel Terminal is unavailable
 

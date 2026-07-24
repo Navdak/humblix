@@ -151,11 +151,11 @@ Future engineer workflow improvements:
 - technician portal or mobile view for “my assigned jobs”;
 - push notifications when the hosting stack supports it safely.
 
-## Planned Client Job Portal and job conversation system
+## Client Job Portal and job conversation system
 
-Status: planned, not yet implemented.
+Status: first shared-hosting-safe version implemented.
 
-The next major operations feature should turn a confirmed enquiry into a private client job portal. The goal is to let HUMELIX, the client and internal admins document job communication while work is ongoing, without building heavy real-time chat that may stress Namecheap shared hosting.
+Confirmed enquiries can now be turned into private client job portals. The goal is to let HUMELIX, the client and internal admins document job communication while work is ongoing, without building heavy real-time chat that may stress Namecheap shared hosting.
 
 Recommended name in the UI:
 
@@ -163,29 +163,30 @@ Recommended name in the UI:
 - Job Conversations;
 - Client Jobs.
 
-Recommended first implementation scope:
+Implemented first-version scope:
 
-- admin activates a job portal from a confirmed enquiry;
+- admin activates a job portal from an enquiry;
 - the system generates a long, random, secure client portal token;
-- admin can copy, email, regenerate or disable the client portal link;
-- client opens `/client/jobs/{secure-token}` or an equivalent private route;
+- admin can copy, regenerate, enable or disable the client portal link;
+- client opens `/client/jobs/{secure-token}`;
 - client can view only that specific job, never the admin dashboard or other client jobs;
 - admin can view all job conversations from a dedicated inbox-style page;
 - each job conversation stores messages in the database with sender type, sender name, timestamp and read/unread state;
-- admin and client can send messages without reloading the whole page after submit;
+- admin and client can send messages with normal shared-hosting-safe form submissions;
+- admin and client conversation threads can poll for new messages without refreshing the whole page;
 - conversation history remains documented for audit/dispute/reference purposes;
 - job status can be updated from admin, for example: Confirmed, Engineer Assigned, Site Visit Scheduled, In Progress, Awaiting Client, Completed, Closed;
 - internal notes should remain separate from client-visible messages.
 
-Recommended database structure:
+Implemented database structure:
 
 - keep `enquiries` as the original lead/request record;
-- add a `client_jobs` or `jobs` table linked to `enquiries.id`;
-- add a `job_messages` table linked to the job record;
-- later add `job_attachments` if HUMELIX wants clients/admins to exchange PDFs, photos or documents;
+- `client_jobs` table linked to `enquiries.id`;
+- `job_messages` table linked to the client job record;
+- `job_message_attachments` table linked to the client job and exact message for photos/documents;
 - later add `job_activity_logs` for status changes, portal-link regeneration and important admin actions.
 
-Recommended job fields:
+Implemented job fields:
 
 - enquiry ID;
 - job reference;
@@ -200,7 +201,7 @@ Recommended job fields:
 - unread counts;
 - created/updated timestamps.
 
-Recommended message fields:
+Implemented message fields:
 
 - job ID;
 - sender type: client, admin, engineer or system;
@@ -211,21 +212,35 @@ Recommended message fields:
 - read/unread state;
 - timestamps.
 
+Implemented attachment behavior:
+
+- client and admin can add optional files to a job conversation message;
+- attachments are linked to both the `client_jobs` record and the exact `job_messages` record;
+- first-version upload limit is 3 files per message;
+- each file is limited to 10MB;
+- allowed file types are JPG, JPEG, PNG, WebP, PDF, DOC and DOCX;
+- local video uploads are intentionally not allowed on shared hosting;
+- clients should paste video links in the message body if video evidence is needed;
+- files are stored on Laravel's private local disk and served through authorized admin/client routes;
+- admin access requires `client_jobs` permission;
+- client access requires the private job portal token;
+- client-visible emails mention that files were added and link back to the private portal instead of attaching heavy files directly to email.
+
 Shared-hosting safe update behavior:
 
 - do not use WebSockets in the first version;
 - use normal database-backed messages;
-- use a manual refresh button as a reliable fallback;
-- optionally use lightweight polling similar to the admin notification system;
+- use normal page reload/manual refresh as a reliable fallback;
+- use lightweight polling similar to the admin notification system;
 - poll about every 15 seconds normally;
 - poll about every 10 seconds when the active conversation is open;
 - pause or slow polling when the browser tab is hidden;
-- after a message is sent, immediately refresh that conversation thread only, not the whole page.
+- when polling finds new messages, append them to the conversation thread without refreshing the whole page.
 
 Notification behavior:
 
 - when the client sends a new message, permitted admins should see an admin notification/unread count;
-- when admin sends a message, client can receive an email with a link back to the private job portal;
+- when admin sends a client-visible message, admin can optionally email the client with a link back to the private job portal;
 - email should not expose sensitive internal notes;
 - WhatsApp/SMS alerts should remain future builds unless a provider is added.
 
@@ -246,15 +261,15 @@ Security rules:
 - allow admins to disable the portal when a job is closed;
 - consider optional client email/phone verification later for higher sensitivity jobs.
 
-## Planned private job financial documentation
+## Private job financial documentation
 
-Status: planned, not yet implemented.
+Status: first admin-only version implemented.
 
-After HUMELIX agrees a price with the client, permitted admins should be able to save the agreed commercial details inside admin. This should not appear on the public website or public enquiry form.
+After HUMELIX agrees a price with the client, permitted admins can save the agreed commercial details inside the Client Job admin screen. This does not appear on the public website, public enquiry form or first-version client portal.
 
-Recommended first implementation scope:
+Implemented first-version scope:
 
-- add a private Commercial Agreement section to admin enquiry/job details;
+- add a private Commercial Agreement section to admin Client Job details;
 - save agreed amount;
 - save currency, defaulting to NGN unless changed;
 - save payment status, for example Pending, Part Paid, Paid, Cancelled;

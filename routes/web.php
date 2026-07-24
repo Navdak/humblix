@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\ArticleController as AdminArticleController;
 use App\Http\Controllers\Admin\BranchController as AdminBranchController;
+use App\Http\Controllers\Admin\ClientJobController as AdminClientJobController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\EquipmentController as AdminEquipmentController;
 use App\Http\Controllers\Admin\EnquiryController as AdminEnquiryController;
@@ -24,6 +25,7 @@ use App\Http\Controllers\Admin\VideoController as AdminVideoController;
 use App\Http\Controllers\AdminAuthController;
 use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\ChatController;
+use App\Http\Controllers\ClientJobPortalController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LegalPageController;
@@ -70,6 +72,10 @@ Route::get('/{page}', LegalPageController::class)
 Route::get('/contact', [ContactController::class, 'create'])->name('contact');
 Route::post('/contact', [ContactController::class, 'store'])->middleware('throttle:5,1')->name('contact.store');
 Route::post('/chat/enquiry', ChatController::class)->middleware('throttle:10,1')->name('chat.enquiry');
+Route::get('/client/jobs/{token}', [ClientJobPortalController::class, 'show'])->name('client-jobs.show');
+Route::post('/client/jobs/{token}/messages', [ClientJobPortalController::class, 'storeMessage'])->middleware('throttle:10,1')->name('client-jobs.messages.store');
+Route::get('/client/jobs/{token}/messages', [ClientJobPortalController::class, 'messages'])->name('client-jobs.messages.index');
+Route::get('/client/jobs/{token}/attachments/{attachment}', [ClientJobPortalController::class, 'attachment'])->name('client-jobs.attachments.show');
 Route::redirect('/login', '/admin/login')->name('login');
 
 Route::middleware('guest')->group(function () {
@@ -104,6 +110,12 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin', 'admin.dele
     Route::patch('/newsletter/{newsletterSubscriber}/resubscribe', [AdminNewsletterSubscriberController::class, 'resubscribe'])->middleware('admin.module:newsletter')->name('newsletter.resubscribe');
     Route::delete('/newsletter/{newsletterSubscriber}', [AdminNewsletterSubscriberController::class, 'destroy'])->middleware('admin.module:newsletter')->name('newsletter.destroy');
     Route::resource('projects', AdminProjectController::class)->middleware('admin.module:projects')->except(['show']);
+    Route::post('/enquiries/{enquiry}/client-job', [AdminClientJobController::class, 'storeFromEnquiry'])->middleware('admin.module:client_jobs')->name('enquiries.client-job.store');
+    Route::get('/client-jobs/{clientJob}/messages', [AdminClientJobController::class, 'messages'])->middleware('admin.module:client_jobs')->name('client-jobs.messages.index');
+    Route::post('/client-jobs/{clientJob}/messages', [AdminClientJobController::class, 'storeMessage'])->middleware('admin.module:client_jobs')->name('client-jobs.messages.store');
+    Route::get('/client-jobs/{clientJob}/attachments/{attachment}', [AdminClientJobController::class, 'attachment'])->middleware('admin.module:client_jobs')->name('client-jobs.attachments.show');
+    Route::patch('/client-jobs/{clientJob}/regenerate-token', [AdminClientJobController::class, 'regenerateToken'])->middleware('admin.module:client_jobs')->name('client-jobs.regenerate-token');
+    Route::resource('client-jobs', AdminClientJobController::class)->middleware('admin.module:client_jobs')->only(['index', 'show', 'update']);
     Route::patch('/engineers/assignment-contact', [AdminEngineerController::class, 'updateAssignmentContact'])->middleware('admin.module:engineers')->name('engineers.assignment-contact');
     Route::resource('engineers', AdminEngineerController::class)->middleware('admin.module:engineers')->except(['show']);
     Route::resource('branches', AdminBranchController::class)->middleware('admin.module:branches')->except(['show']);
