@@ -1,6 +1,6 @@
 # HUMELIX LIMITED Project Documentation
 
-Last updated: 2026-07-23
+Last updated: 2026-07-24
 
 ## Project overview
 
@@ -172,7 +172,9 @@ Implemented first-version scope:
 - client can view only that specific job, never the admin dashboard or other client jobs;
 - admin can view all job conversations from a dedicated inbox-style page;
 - each job conversation stores messages in the database with sender type, sender name, timestamp and read/unread state;
-- admin and client can send messages with normal shared-hosting-safe form submissions;
+- admin and client can send messages without refreshing the whole page through AJAX/FormData, with normal form submission kept as a fallback;
+- client-facing admin messages display as "Humelix Project Team" instead of exposing individual admin names;
+- admin-side conversation history still keeps real sender names for accountability and audit/history;
 - admin and client conversation threads can poll for new messages without refreshing the whole page;
 - conversation history remains documented for audit/dispute/reference purposes;
 - job status can be updated from admin, for example: Confirmed, Engineer Assigned, Site Visit Scheduled, In Progress, Awaiting Client, Completed, Closed;
@@ -236,6 +238,7 @@ Shared-hosting safe update behavior:
 - poll about every 10 seconds when the active conversation is open;
 - pause or slow polling when the browser tab is hidden;
 - when polling finds new messages, append them to the conversation thread without refreshing the whole page.
+- message sending also appends the saved message bubble immediately after a successful response, clears the form and keeps attachments supported.
 
 Notification behavior:
 

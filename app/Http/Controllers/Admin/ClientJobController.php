@@ -147,7 +147,7 @@ class ClientJobController extends Controller
         return back()->with('success', 'Client job updated.');
     }
 
-    public function storeMessage(Request $request, ClientJob $clientJob): RedirectResponse
+    public function storeMessage(Request $request, ClientJob $clientJob): RedirectResponse|JsonResponse
     {
         abort_unless($request->user()?->canManage('client_jobs'), 403);
 
@@ -172,6 +172,7 @@ class ClientJobController extends Controller
         ]);
 
         $this->storeAttachments($clientJob, $message, $attachments, 'admin');
+        $message->load('attachments');
 
         $clientJob->forceFill([
             'last_admin_message_at' => now(),
@@ -189,8 +190,23 @@ class ClientJobController extends Controller
                     'error' => $exception->getMessage(),
                 ]);
 
+                if ($request->expectsJson()) {
+                    return response()->json([
+                        'message' => $this->messagePayload($message),
+                        'notice' => 'Message saved. Email could not be sent, so contact the client manually if urgent.',
+                        'email_failed' => true,
+                    ]);
+                }
+
                 return back()->with('success', 'Message saved. Email could not be sent, so contact the client manually if urgent.');
             }
+        }
+
+        if ($request->expectsJson()) {
+            return response()->json([
+                'message' => $this->messagePayload($message),
+                'notice' => $data['visibility'] === 'internal' ? 'Internal note saved.' : 'Client message saved.',
+            ]);
         }
 
         return back()->with('success', $data['visibility'] === 'internal' ? 'Internal note saved.' : 'Client message saved.');

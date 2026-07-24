@@ -29,7 +29,7 @@ class ClientJobPortalController extends Controller
         ]);
     }
 
-    public function storeMessage(Request $request, string $token): RedirectResponse
+    public function storeMessage(Request $request, string $token): RedirectResponse|JsonResponse
     {
         SpamProtection::validate($request);
 
@@ -59,7 +59,16 @@ class ClientJobPortalController extends Controller
             'admin_unread_count' => $clientJob->admin_unread_count + 1,
         ])->save();
 
+        $message->load('attachments');
+
         AdminNotification::createForClientJobMessage($clientJob->fresh(['enquiry']), $message);
+
+        if ($request->expectsJson()) {
+            return response()->json([
+                'message' => $this->messagePayload($message, $clientJob),
+                'notice' => 'Your message has been sent to HUMELIX.',
+            ]);
+        }
 
         return back()->with('success', 'Your message has been sent to HUMELIX.');
     }
@@ -79,24 +88,38 @@ class ClientJobPortalController extends Controller
         $this->markClientThreadRead($clientJob);
 
         return response()->json([
-            'messages' => $messages->map(fn (JobMessage $message) => [
-                'id' => $message->id,
-                'sender_type' => $message->sender_type,
-                'sender_name' => $message->senderLabel(),
-                'body' => $message->body,
-                'visibility' => $message->visibility,
-                'created_at' => $message->created_at?->toIso8601String(),
-                'human_time' => $message->created_at?->diffForHumans(),
-                'attachments' => $message->attachments->map(fn (JobMessageAttachment $attachment) => [
-                    'id' => $attachment->id,
-                    'name' => $attachment->original_name,
-                    'mime_type' => $attachment->mime_type,
-                    'is_image' => $attachment->isImage(),
-                    'size' => $attachment->formattedSize(),
-                    'url' => route('client-jobs.attachments.show', [$clientJob->portal_token, $attachment], false),
-                ])->values(),
-            ])->values(),
+            'messages' => $messages->map(fn (JobMessage $message) => $this->messagePayload($message, $clientJob))->values(),
         ]);
+    }
+
+    private function messagePayload(JobMessage $message, ClientJob $clientJob): array
+    {
+        return [
+            'id' => $message->id,
+            'sender_type' => $message->sender_type,
+            'sender_name' => $this->clientFacingSenderLabel($message),
+            'body' => $message->body,
+            'visibility' => $message->visibility,
+            'created_at' => $message->created_at?->toIso8601String(),
+            'human_time' => $message->created_at?->diffForHumans(),
+            'attachments' => $message->attachments->map(fn (JobMessageAttachment $attachment) => [
+                'id' => $attachment->id,
+                'name' => $attachment->original_name,
+                'mime_type' => $attachment->mime_type,
+                'is_image' => $attachment->isImage(),
+                'size' => $attachment->formattedSize(),
+                'url' => route('client-jobs.attachments.show', [$clientJob->portal_token, $attachment], false),
+            ])->values(),
+        ];
+    }
+
+    private function clientFacingSenderLabel(JobMessage $message): string
+    {
+        if ($message->sender_type === 'admin') {
+            return 'Humelix Project Team';
+        }
+
+        return $message->senderLabel();
     }
 
     public function attachment(string $token, JobMessageAttachment $attachment)

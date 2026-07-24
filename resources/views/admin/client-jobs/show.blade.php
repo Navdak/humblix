@@ -15,7 +15,7 @@
     <section class="admin-card">
         <span class="badge">{{ $clientJob->job_reference }}</span>
         <h2 style="margin-top:12px">{{ $clientJob->clientName() }}</h2>
-        <p class="section-sub">{{ $enquiry?->display_type_of_work ?: 'Client job' }}{{ $enquiry?->display_location ? ' · '.$enquiry->display_location : '' }}</p>
+        <p class="section-sub">{{ $enquiry?->display_type_of_work ?: 'Client job' }}{{ $enquiry?->display_location ? ' - '.$enquiry->display_location : '' }}</p>
 
         <dl class="system-list" style="margin-top:18px">
             <div><dt>Enquiry Reference</dt><dd><a href="{{ route('admin.enquiries.show', $enquiry) }}">{{ $enquiry?->reference_number }}</a></dd></div>
@@ -108,7 +108,7 @@
         <div class="job-message-thread" data-job-thread data-messages-endpoint="{{ route('admin.client-jobs.messages.index', $clientJob) }}" data-last-message-id="{{ $lastMessageId }}">
             @forelse($clientJob->messages as $message)
                 <article class="job-message job-message-{{ $message->sender_type }} {{ $message->visibility === 'internal' ? 'is-internal' : '' }}" data-message-id="{{ $message->id }}">
-                    <div><strong>{{ $message->senderLabel() }}</strong><small>{{ $message->visibility === 'internal' ? 'Internal note · ' : '' }}{{ $message->created_at->diffForHumans() }}</small></div>
+                    <div><strong>{{ $message->senderLabel() }}</strong><small>{{ $message->visibility === 'internal' ? 'Internal note - ' : '' }}{{ $message->created_at->diffForHumans() }}</small></div>
                     <p>{{ $message->body }}</p>
                     @include('client-jobs._message-attachments', ['message' => $message, 'clientJob' => $clientJob, 'context' => 'admin'])
                 </article>
@@ -118,9 +118,10 @@
         </div>
     </section>
 
-    <form class="admin-card" method="POST" action="{{ route('admin.client-jobs.messages.store', $clientJob) }}" enctype="multipart/form-data">
+    <form class="admin-card" method="POST" action="{{ route('admin.client-jobs.messages.store', $clientJob) }}" enctype="multipart/form-data" data-job-message-form>
         @csrf
         <h2>Send Message / Note</h2>
+        <div class="alert" data-job-message-status hidden></div>
         <div class="form-field">
             <label>Visibility</label>
             <select name="visibility">
@@ -145,7 +146,7 @@
                 <span><strong>Email client about this message</strong><br><small>The email includes the private portal link. Use only for client-visible messages.</small></span>
             </label>
         @endif
-        <button class="btn btn-primary" style="margin-top:18px">Save Message</button>
+        <button class="btn btn-primary" style="margin-top:18px" data-job-message-submit>Save Message</button>
     </form>
 </div>
 @endsection
@@ -170,9 +171,23 @@ document.querySelectorAll('[data-copy-button]').forEach((button) => {
 (() => {
     const thread = document.querySelector('[data-job-thread]');
     if (!thread) return;
+
+    const form = document.querySelector('[data-job-message-form]');
+    const submitButton = document.querySelector('[data-job-message-submit]');
+    const statusBox = document.querySelector('[data-job-message-status]');
     let lastId = Number(thread.dataset.lastMessageId || 0);
     let timer;
+
     const escapeHtml = (value) => String(value ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
+    const showStatus = (message, type = 'success') => {
+        if (!statusBox) return;
+        statusBox.textContent = message || '';
+        statusBox.className = `alert alert-${type}`;
+        statusBox.hidden = !message;
+    };
+    const scrollThread = () => {
+        thread.scrollTop = thread.scrollHeight;
+    };
     const renderMessage = (message) => {
         if (thread.querySelector(`[data-message-id="${message.id}"]`)) return;
         thread.querySelector('.admin-empty')?.remove();
@@ -184,11 +199,12 @@ document.querySelectorAll('[data-copy-button]').forEach((button) => {
                 return `<a class="job-attachment is-image" href="${escapeHtml(attachment.url)}" target="_blank" rel="noopener"><img src="${escapeHtml(attachment.url)}" alt="${escapeHtml(attachment.name)}" loading="lazy" decoding="async"><span><strong>${escapeHtml(attachment.name)}</strong><small>${escapeHtml(attachment.size)}</small></span></a>`;
             }
 
-            return `<a class="job-attachment is-file" href="${escapeHtml(attachment.url)}" target="_blank" rel="noopener"><span class="job-attachment-icon" aria-hidden="true">📎</span><span><strong>${escapeHtml(attachment.name)}</strong><small>${escapeHtml(attachment.size)}</small></span></a>`;
+            return `<a class="job-attachment is-file" href="${escapeHtml(attachment.url)}" target="_blank" rel="noopener"><span class="job-attachment-icon" aria-hidden="true">&#128206;</span><span><strong>${escapeHtml(attachment.name)}</strong><small>${escapeHtml(attachment.size)}</small></span></a>`;
         }).join('');
-        item.innerHTML = `<div><strong>${escapeHtml(message.sender_name)}</strong><small>${message.visibility === 'internal' ? 'Internal note · ' : ''}${escapeHtml(message.human_time || '')}</small></div><p>${escapeHtml(message.body)}</p>${attachments ? `<div class="job-attachments">${attachments}</div>` : ''}`;
+        item.innerHTML = `<div><strong>${escapeHtml(message.sender_name)}</strong><small>${message.visibility === 'internal' ? 'Internal note - ' : ''}${escapeHtml(message.human_time || '')}</small></div><p>${escapeHtml(message.body)}</p>${attachments ? `<div class="job-attachments">${attachments}</div>` : ''}`;
         thread.append(item);
         lastId = Math.max(lastId, Number(message.id));
+        scrollThread();
     };
     const interval = () => document.hidden ? 60000 : 10000;
     const poll = async () => {
@@ -205,10 +221,50 @@ document.querySelectorAll('[data-copy-button]').forEach((button) => {
             timer = window.setTimeout(poll, interval());
         }
     };
+
+    form?.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        showStatus('');
+        const defaultLabel = submitButton?.textContent || 'Save Message';
+        if (submitButton) {
+            submitButton.disabled = true;
+            submitButton.textContent = 'Saving...';
+        }
+
+        try {
+            const response = await fetch(form.action, {
+                method: 'POST',
+                body: new FormData(form),
+                headers: {Accept: 'application/json', 'X-Requested-With': 'XMLHttpRequest'},
+            });
+            const data = await response.json().catch(() => ({}));
+
+            if (!response.ok) {
+                const errors = data.errors ? Object.values(data.errors).flat().join(' ') : '';
+                throw new Error(errors || data.message || 'Message could not be saved. Please try again.');
+            }
+
+            if (data.message) {
+                renderMessage(data.message);
+            }
+
+            form.reset();
+            showStatus(data.notice || 'Message saved.', data.email_failed ? 'error' : 'success');
+        } catch (error) {
+            showStatus(error.message || 'Message could not be saved. Please try again.', 'error');
+        } finally {
+            if (submitButton) {
+                submitButton.disabled = false;
+                submitButton.textContent = defaultLabel;
+            }
+        }
+    });
+
     document.addEventListener('visibilitychange', () => {
         window.clearTimeout(timer);
         timer = window.setTimeout(poll, document.hidden ? 60000 : 1000);
     });
+    scrollThread();
     timer = window.setTimeout(poll, 10000);
 })();
 </script>

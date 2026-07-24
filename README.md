@@ -78,7 +78,9 @@ Recent operations features include:
 - Admin-only agreed job amount/currency/notes for private job financial documentation.
 - Private client job links generated from secure tokens.
 - Client/admin chat attached to a specific job/enquiry.
-- Chat polling designed for shared hosting rather than forced page refreshes.
+- Chat sends messages without refreshing the whole page, while keeping normal form submission as fallback.
+- Chat polling is designed for shared hosting rather than forced page refreshes.
+- Client-facing admin replies display as **Humelix Project Team** while real admin names remain visible internally for audit/history.
 - Private chat attachments saved to protected storage and served through authorized routes.
 
 ## Articles, resources and newsletters
